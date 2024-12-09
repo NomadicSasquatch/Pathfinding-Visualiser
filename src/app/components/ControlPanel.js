@@ -18,7 +18,6 @@ const GridPanel = ({ grid, setGrid, resetGrid, runAlgorithm }) => {
           </button>
           <button onClick={() => runAlgorithm("A*")} className="btn btn-algo">
             Run A*
-            console.log("hello");
           </button>
         </div>
       </div>
