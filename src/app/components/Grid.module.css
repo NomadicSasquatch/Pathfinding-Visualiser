@@ -1,0 +1,12 @@
+.grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  
+  .row {
+    display: flex;
+    gap: 2px;
+  }
+  
