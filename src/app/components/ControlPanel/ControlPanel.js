@@ -1,7 +1,7 @@
 "use client"; // Mark as a client component for interactivity
 
 import React from 'react';
-import Grid from './Grid'; // Import the Grid component
+import Grid from '../Grid'; // Import the Grid component
 import './ControlPanel.module.css'; // Import styles specific to the GridPanel
 
 const GridPanel = ({ grid, setGrid, resetGrid, runAlgorithm }) => {

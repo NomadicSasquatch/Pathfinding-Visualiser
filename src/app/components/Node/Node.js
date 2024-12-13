@@ -1,7 +1,7 @@
-"use client"; // Ensure it's a client component if interactivity is required
+"use client";
 
 import React from 'react';
-import './Node.module.css'; // Import styles specific to the Node component
+import './Node.module.css';
 
 const Node = ({ row, col, isStart, isEnd, isWall, onClick }) => {
   // Assign additional CSS classes based on the type of node

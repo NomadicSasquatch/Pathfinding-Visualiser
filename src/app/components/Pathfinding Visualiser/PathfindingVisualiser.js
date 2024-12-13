@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Grid from './Grid';
-import ControlPanel from './ControlPanel';
+import ControlPanel from '../ControlPanel/ControlPanel';
 import './PathfindingVisualiser.module.css';
 
 const PathfindingVisualiser = () => {

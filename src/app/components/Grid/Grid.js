@@ -1,11 +1,10 @@
-"use client"; // Required if React hooks are used here
+"use client";
 
 import React from 'react';
-import Node from './Node'; // Import the Node component
-import './Grid.module.css'; // Import any styles for the grid
+import Node from './Node';
+import './Grid.module.css';
 
 const Grid = ({ grid, setGrid }) => {
-  // Event handler for clicking a node
   const handleNodeClick = (row, col) => {
     const newGrid = grid.map((currentRow, rowIndex) =>
       currentRow.map((node, colIndex) => {
