@@ -1,26 +1,27 @@
+/* Node.module.css */
 .node {
-    width: 20px;
-    height: 20px;
-    border: 1px solid #ddd;
-    background-color: #f9f9f9;
-    transition: background-color 0.2s ease;
-    display: inline-block;
-    cursor: pointer;
-  }
-  
-  .node:hover {
-    background-color: #e0e0e0;
-  }
-  
-  .node-start {
-    background-color: green;
-  }
-  
-  .node-end {
-    background-color: red;
-  }
-  
-  .node-wall {
-    background-color: black;
-  }
-  
+  width: 30px; /* Width of a node */
+  height: 30px; /* Height of a node */
+  /*border: 25px solid black; /* Adds a border around each node */
+  box-sizing: border-box; /* Ensures padding/border are included in width/height */
+  cursor: pointer; /* Makes the nodes clickable */
+  background-color: white; /* Default background color */
+  transition: background-color 0.2s; /* Smooth transition for color changes */
+}
+
+/* Conditional classes */
+.node-wall {
+  background-color: black; /* Walls are black */
+}
+
+.node-start {
+  background-color: green; /* Start node is green */
+}
+
+.node-end {
+  background-color: red; /* End node is red */
+}
+
+/* .node:hover {
+  background-color: lightgray; /* Change color on hover */
+/*}

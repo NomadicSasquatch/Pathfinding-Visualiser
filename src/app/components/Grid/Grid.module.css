@@ -1,12 +1,16 @@
+/* Grid.module.css */
 .grid {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-  }
-  
-  .row {
-    display: flex;
-    gap: 2px;
-  }
-  
+  display: flex;
+  flex-direction: column; /* Stacks rows vertically */
+  /*align-items: center; /* Center rows horizontally */
+  margin: 20px auto; /* Adds spacing around the grid */
+  width: max-content;
+  height: max-content;
+  border: 3px dashed blue; /* Debugging border for the grid */
+}
+
+.row {
+  display: flex; /* Stacks nodes in a row horizontally */
+  width: 100px;
+  height: 100px;
+}
