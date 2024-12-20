@@ -22,6 +22,6 @@
   background-color: red; /* End node is red */
 }
 
-/* .node:hover {
+.node:hover {
   background-color: lightgray; /* Change color on hover */
-/*}
+}
