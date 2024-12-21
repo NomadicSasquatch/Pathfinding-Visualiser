@@ -3,7 +3,7 @@
   width: 30px; /* Width of a node */
   height: 30px; /* Height of a node */
   /*border: 25px solid black; /* Adds a border around each node */
-  box-sizing: border-box; /* Ensures padding/border are included in width/height */
+  /*box-sizing: border-box; /* Ensures padding/border are included in width/height */
   cursor: pointer; /* Makes the nodes clickable */
   background-color: white; /* Default background color */
   transition: background-color 0.2s; /* Smooth transition for color changes */
