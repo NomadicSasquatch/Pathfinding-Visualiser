@@ -11,11 +11,11 @@
   background-color: white;
 }
 /* Conditional classes */
-.node-wall {
-  background-color: black; /* Walls are black */
+.nodeWall {
+  background-color: blue; /* Walls are black */
 }
 
-.node-start {
+.nodeStart  {
   background-color: green; /* Start node is green */
 }
 

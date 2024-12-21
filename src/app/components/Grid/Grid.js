@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import Node from "../Node/Node";
 import styles from "./Grid.module.css";
 
-const Grid = ({ grid, setGrid, onMouseDown, onMouseUp, onMouseEnter }) => {
+const Grid = ({ grid, setGrid, onMouseDown, onMouseUp, onMouseEnter, actionState }) => {
   console.log("Grid received:", grid);
 
   if (!grid || grid.length === 0) {
@@ -23,9 +23,9 @@ const Grid = ({ grid, setGrid, onMouseDown, onMouseUp, onMouseEnter }) => {
               isStart={node.isStart}
               isEnd={node.isEnd}
               isWall={node.isWall}
-              onMouseDown={() => onMouseDown(rowIndex, colIndex)}
+              onMouseDown={() => onMouseDown(rowIndex, colIndex, actionState)}
               onMouseUp={() => onMouseUp()}
-              onMouseEnter={() => onMouseEnter(rowIndex, colIndex)}
+              onMouseEnter={() => onMouseEnter(rowIndex, colIndex, actionState)}
             />
           ))}
         </div>
