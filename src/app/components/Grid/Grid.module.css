@@ -6,7 +6,7 @@
   margin: 75px; /* Adds spacing around the grid */
   width: max-content;
   height: max-content;
-  border: 3px dashed blue; /* Debugging border for the grid */
+  border: 5px solid grey; /* Debugging border for the grid */
 }
 
 .row {

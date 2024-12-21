@@ -7,19 +7,19 @@
   cursor: pointer; /* Makes the nodes clickable */
   transition: background-color 0.2s; /* Smooth transition for color changes */
 }
-.nodeDefault {
+.default {
   background-color: white;
 }
 /* Conditional classes */
-.nodeWall {
+.node-wall {
   background-color: black; /* Walls are black */
 }
 
-.nodeStart {
+.node-start {
   background-color: green; /* Start node is green */
 }
 
-.nodeEnd {
+.node-end {
   background-color: red; /* End node is red */
 }
 

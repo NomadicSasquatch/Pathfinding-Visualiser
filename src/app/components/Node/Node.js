@@ -6,7 +6,6 @@ import { NODE_SIZE } from '../../config/config';
 
 const Node = ({ row, col, isStart, isEnd, isWall, onMouseDown, onMouseUp, onMouseEnter }) => {
   useEffect(() => {
-    // Set the CSS variable in the root element
     document.documentElement.style.setProperty('--node-size', `${NODE_SIZE}px`);
   }, []);
 
@@ -16,7 +15,7 @@ const Node = ({ row, col, isStart, isEnd, isWall, onMouseDown, onMouseUp, onMous
     ? styles.nodeEnd
     : isWall
     ? styles.nodeWall
-    : styles.nodeDefault;
+    : styles.default;
     
   return (
     <div
