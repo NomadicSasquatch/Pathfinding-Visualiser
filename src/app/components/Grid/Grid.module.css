@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: column; /* Stacks rows vertically */
   /*align-items: center; /* Center rows horizontally */
-  margin: 0; /* Adds spacing around the grid */
+  margin: 75px; /* Adds spacing around the grid */
   width: max-content;
   height: max-content;
   border: 3px dashed blue; /* Debugging border for the grid */
@@ -11,7 +11,7 @@
 
 .row {
   display: flex; /* Stacks nodes in a row horizontally */
-  width: 30*2px;
-  height: 20*20px;
+  width: max-content;
+  height: max-content;
   /*border: 3px dashed green;*/
 }

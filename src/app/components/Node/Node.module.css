@@ -1,24 +1,25 @@
 /* Node.module.css */
 .node {
-  width: 30px; /* Width of a node */
-  height: 30px; /* Height of a node */
-  /*border: 25px solid black; /* Adds a border around each node */
+  width: var(--node-size); /* Width of a node */
+  height: var(--node-size); /* Height of a node */
+  border: 2px solid black; /* Adds a border around each node */
   /*box-sizing: border-box; /* Ensures padding/border are included in width/height */
   cursor: pointer; /* Makes the nodes clickable */
-  background-color: white; /* Default background color */
   transition: background-color 0.2s; /* Smooth transition for color changes */
 }
-
+.nodeDefault {
+  background-color: white;
+}
 /* Conditional classes */
-.node-wall {
+.nodeWall {
   background-color: black; /* Walls are black */
 }
 
-.node-start {
+.nodeStart {
   background-color: green; /* Start node is green */
 }
 
-.node-end {
+.nodeEnd {
   background-color: red; /* End node is red */
 }
 

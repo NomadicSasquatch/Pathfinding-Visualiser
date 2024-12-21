@@ -1,30 +1,18 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Node from "../Node/Node";
 import styles from "./Grid.module.css";
 
-const Grid = ({ grid, setGrid }) => {
+const Grid = ({ grid, setGrid, onMouseDown, onMouseUp, onMouseEnter }) => {
   console.log("Grid received:", grid);
 
   if (!grid || grid.length === 0) {
     return <div>Loading grid...</div>;
   }
 
-  const handleNodeClick = (row, col) => {
-    const newGrid = grid.map((currentRow, rowIndex) =>
-      currentRow.map((node, colIndex) => {
-        if (rowIndex === row && colIndex === col) {
-          return { ...node, isWall: !node.isWall }; // Toggle wall status
-        }
-        return node;
-      })
-    );
-    setGrid(newGrid); // Update grid in the parent state
-  };
-
   return (
-    <div className={styles.grid}>
+    <div className={styles.grid} onMouseLeave={() => onMouseUp()}>
       {grid.map((row, rowIndex) => (
         <div key={rowIndex} className={styles.row}>
           {row.map((node, colIndex) => (
@@ -35,7 +23,9 @@ const Grid = ({ grid, setGrid }) => {
               isStart={node.isStart}
               isEnd={node.isEnd}
               isWall={node.isWall}
-              onClick={() => handleNodeClick(rowIndex, colIndex)}
+              onMouseDown={() => onMouseDown(rowIndex, colIndex)}
+              onMouseUp={() => onMouseUp()}
+              onMouseEnter={() => onMouseEnter(rowIndex, colIndex)}
             />
           ))}
         </div>
