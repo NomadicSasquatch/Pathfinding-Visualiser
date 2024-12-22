@@ -5,7 +5,7 @@ import Grid from '../Grid/Grid';
 import Dropdown from '../Dropdown/Dropdown';
 import styles from './ControlPanel.module.css';
 
-const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction, setSelectedAlgorithm, handleRunButton }) => {
+const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction, setSelectedAlgorithm, handleRunButton, isRunning }) => {
   const algorithms = [`Breadth-First Search`, `Depth-First Search`, `Dijkstra's Algorithm`, `A* Algorithm`];
 
   return (
@@ -23,7 +23,7 @@ const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction,
 
       </Dropdown>
       <button onClick = {()=>handleRunButton()} className={styles.button}>
-        Run Algorithm
+        {isRunning ? "Cancel Algorithm" : "Run Algorithm"}
       </button>
     </div>
   );
