@@ -37,11 +37,12 @@ export default function PathfindingVisualizer() {
         handleNodeState(row, col, 'isWall');
         break;
       case 'setStart':
-        tester(row, col);
-        console.log(`hit set start`);
+        handleNodeState(row, col, 'isStart');
+        setCurrentAction('idle');
         break;
       case 'setEnd':
         handleNodeState(row, col, 'isEnd');
+        setCurrentAction('idle');
         break;
       case 'idle':
         // NOP
@@ -58,10 +59,10 @@ export default function PathfindingVisualizer() {
           handleNodeState(row, col, 'isWall');
           break;
         case 'setStart':
-          tester(row, col);
+          setCurrentAction('idle');
           break;
         case 'setEnd':
-          handleNodeState(row, col, 'isEnd');
+          setCurrentAction('idle');
           break;  
         case 'idle':
           // NOP
@@ -91,20 +92,27 @@ export default function PathfindingVisualizer() {
     setGrid(newGrid);
   };
 
-
-  
-  const tester = (row, col) => {
-    const newGrid = grid.map((currentRow, rowIndex) =>
-      currentRow.map((node, colIndex) => {
-        if (rowIndex === row && colIndex === col) {
-          return { ...node, isStart: !node.isStart };
+  const handleSetStartButton = () => {
+    for(let row = 0; row < GRID_ROWS; row++) {
+      for(let col = 0; col < GRID_COLS; col++) {
+        if(grid[row][col].isStart) {
+          grid[row][col].isStart = !grid[row][col].isStart;
         }
-        return node;
-      })
-    );
-    setGrid(newGrid);
-  };
+      }
+    }
+    setCurrentAction('setStart');
+  }
 
+  const handleSetEndButton = () => {
+    for(let row = 0; row < GRID_ROWS; row++) {
+      for(let col = 0; col < GRID_COLS; col++) {
+        if(grid[row][col].isEnd) {
+          grid[row][col].isEnd = !grid[row][col].isEnd;
+        }
+      }
+    }
+    setCurrentAction('setEnd');
+  }
 
   const findPath = () => {
     console.log('Pathfinding algorithm starts here');
@@ -116,10 +124,10 @@ export default function PathfindingVisualizer() {
       <button onClick={findPath} className={styles.button}>
         Find Path
       </button>
-      <button onClick = {()=>setCurrentAction('setStart')} className={styles.button}>
+      <button onClick = {()=>handleSetStartButton()} className={styles.button}>
         Set Start Node
       </button>
-      <button onClick = {()=>setCurrentAction('setEnd')} className={styles.button}>
+      <button onClick = {()=>handleSetEndButton()} className={styles.button}>
         Set End Node
       </button>
       <button onClick = {()=>setCurrentAction('toggleWall')} className={styles.button}>

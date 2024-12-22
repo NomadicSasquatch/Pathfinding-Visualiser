@@ -12,14 +12,14 @@
 }
 /* Conditional classes */
 .nodeWall {
-  background-color: blue; /* Walls are black */
+  background-color: black; /* Walls are black */
 }
 
 .nodeStart  {
   background-color: green; /* Start node is green */
 }
 
-.node-end {
+.nodeEnd {
   background-color: red; /* End node is red */
 }
 
