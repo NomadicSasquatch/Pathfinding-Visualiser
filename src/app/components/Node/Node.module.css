@@ -23,6 +23,10 @@
   background-color: red; /* End node is red */
 }
 
+.nodeVisited {
+  background-color: blueviolet;
+}
+
 .node:hover {
   background-color: lightgray; /* Change color on hover */
 }

@@ -23,6 +23,7 @@ const Grid = ({ grid, setGrid, onMouseDown, onMouseUp, onMouseEnter, actionState
               isStart={node.isStart}
               isEnd={node.isEnd}
               isWall={node.isWall}
+              isVisited={node.isVisited}
               onMouseDown={() => onMouseDown(rowIndex, colIndex, actionState)}
               onMouseUp={() => onMouseUp()}
               onMouseEnter={() => onMouseEnter(rowIndex, colIndex, actionState)}

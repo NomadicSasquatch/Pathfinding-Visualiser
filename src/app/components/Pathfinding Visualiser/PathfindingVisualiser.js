@@ -17,13 +17,18 @@ export default function PathfindingVisualizer() {
         isStart: false,
         isEnd: false,
         isWall: false,
+        isVisited: false
       }))
     );
   });
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [currentAction, setCurrentAction] = useState('idle');
+  const [selectedAlgorithm, setSelectedAlgorithm] = useState('');
+  const [hasStart, setHasStart] = useState(null);
+  const [hasEnd, setHasEnd] = useState(null);
 
   const handleMouseDown = (row, col) => {
+    // TODO: add boundary checking  
     setIsMouseDown(true); 
     switch(currentAction) {
       case 'toggleWall':
@@ -31,10 +36,12 @@ export default function PathfindingVisualizer() {
         break;
       case 'setStart':
         handleNodeState(row, col, 'isStart');
+        setHasStart([row, col]);
         setCurrentAction('idle');
         break;
       case 'setEnd':
         handleNodeState(row, col, 'isEnd');
+        setHasEnd([row, col]);
         setCurrentAction('idle');
         break;
       case 'idle':
@@ -107,14 +114,71 @@ export default function PathfindingVisualizer() {
     setCurrentAction('setEnd');
   }
 
-  const findPath = () => {
-    console.log('Pathfinding algorithm starts here');
+  const handleRunButton = () => {
+    switch(selectedAlgorithm) {
+      case `Breadth-First Search`:
+        breadthFirstSearch();
+        break;
+      case `Depth-First Search`:
+      
+        break;
+      case `Dijkstra's Algorithm`:
+
+        break;
+      case `A* Algorithm`:
+
+        break;
+      default:
+        //NOP
+    }
+  }
+
+  const breadthFirstSearch = async () => {
+    if(hasStart && hasEnd && hasStart.length === 2 && hasEnd.length === 2) {
+      const dir = [[-1, 0], [0, 1], [1, 0], [0, -1]];
+      const queue = [];
+      queue.push([hasStart[0], hasStart[1]]);
+  
+      const updatedGrid = [...grid];
+      updatedGrid[hasStart[0]][hasStart[1]].isVisited = true;
+  
+      let delay = 10;
+
+      const animate = (callback) =>
+        new Promise((resolve) => setTimeout(() => resolve(callback()), delay));
+  
+  
+      while(queue.length > 0) {
+        const [curX, curY] = queue.shift();
+        for(let i = 0; i < 4; i++) {
+          const x = curX + dir[i][0];
+          const y = curY + dir[i][1];
+          if(x >= 0 && x < GRID_ROWS && y >= 0 && y < GRID_COLS && !updatedGrid[x][y].isWall && !updatedGrid[x][y].isVisited) {
+            if(x === hasEnd[0] && y === hasEnd[1]) {
+              updatedGrid[x][y].isVisited = true;
+              setGrid(updatedGrid);
+              return;
+            }
+  
+            updatedGrid[x][y].isVisited = true;
+            queue.push([x, y]);
+          }
+        }
+        setGrid([...updatedGrid]);
+        await animate(() => {});
+      }
+  
+      console.log("Path not found.");
+    } else {
+      console.error("Start or end node is invalid.");
+    }
   };
+  
 
   return (
     <div className={styles.visualizerContainer}>
       <h1 className={styles.h1}>Pathfinding Visualizer</h1>
-      <ControlPanel handleSetStartButton={handleSetStartButton} handleSetEndButton={handleSetEndButton} setCurrentAction={setCurrentAction}>
+      <ControlPanel handleSetStartButton={handleSetStartButton} handleSetEndButton={handleSetEndButton} setCurrentAction={setCurrentAction} setSelectedAlgorithm={setSelectedAlgorithm} handleRunButton={handleRunButton}>
 
       </ControlPanel>
       <Grid grid={grid} setGrid={setGrid} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseEnter={handleMouseEnter} actionState={currentAction}/>

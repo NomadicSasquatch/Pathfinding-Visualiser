@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import styles from './Node.module.css';
 import { NODE_SIZE } from '../../config/config';
 
-const Node = ({ row, col, isStart, isEnd, isWall, onMouseDown, onMouseUp, onMouseEnter }) => {
+const Node = React.memo(({ row, col, isStart, isEnd, isWall, isVisited, onMouseDown, onMouseUp, onMouseEnter }) => {
   useEffect(() => {
     document.documentElement.style.setProperty('--node-size', `${NODE_SIZE}px`);
   }, []);
@@ -15,6 +15,8 @@ const Node = ({ row, col, isStart, isEnd, isWall, onMouseDown, onMouseUp, onMous
     ? styles.nodeEnd
     : isWall
     ? styles.nodeWall
+    : isVisited
+    ? styles.nodeVisited
     : styles.default;
     
   return (
@@ -25,6 +27,6 @@ const Node = ({ row, col, isStart, isEnd, isWall, onMouseDown, onMouseUp, onMous
       onMouseEnter={onMouseEnter}
     />
   );
-};
+});
 
 export default Node;

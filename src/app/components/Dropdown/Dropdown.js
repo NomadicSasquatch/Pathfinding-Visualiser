@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './Dropdown.module.css';
 
-const Dropdown = ({ options, defaultText }) => {
+const Dropdown = ({ options, defaultText, setSelectedAlgorithm }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(defaultText);
 
@@ -10,6 +10,7 @@ const Dropdown = ({ options, defaultText }) => {
   const handleOptionClick = (option) => {
     setSelectedOption(option);
     setIsOpen(false);
+    setSelectedAlgorithm(option);
   };
 
   return (
