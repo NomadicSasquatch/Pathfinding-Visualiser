@@ -1,0 +1,40 @@
+.dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+.dropdownButton {
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    height: 30px;
+    font-size: 16px;
+}
+
+.dropdownButton:hover {
+    background-color: #0056b3;
+}
+
+.dropdownMenu {
+    position: absolute;
+    top: 100%; /* Below the button */
+    left: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    list-style: none;
+    padding: 0;
+    z-index: 1000;
+}
+
+.dropdownItem {
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    background-color: black;
+}
+
+.dropdownItem:hover {
+    background-color: gray;
+}

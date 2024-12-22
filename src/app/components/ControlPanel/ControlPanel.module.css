@@ -1,56 +1,25 @@
-.grid-panel {
+.gridPanel {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-  }
+}
   
-  .controls {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .controls h2 {
-    margin-bottom: 1rem;
-  }
-  
-  .buttons {
-    display: flex;
-    gap: 0.5rem;
-  }
-  
-  .btn {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.2s ease;
-  }
-  
-  .btn-reset {
-    background-color: #f44336;
-    color: white;
-  }
-  
-  .btn-reset:hover {
-    background-color: #d32f2f;
-  }
-  
-  .btn-algo {
-    background-color: #2196f3;
-    color: white;
-  }
-  
-  .btn-algo:hover {
-    background-color: #1976d2;
-  }
-  
-  .grid-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-  }
-  
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.button {
+  display: inline-block;
+  margin: 2px;
+  padding: 5px 5px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}

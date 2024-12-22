@@ -1,29 +1,30 @@
-"use client"; // Mark as a client component for interactivity
+"use client";
 
 import React from 'react';
-import Grid from '../Grid/Grid'; // Import the Grid component
-import './ControlPanel.module.css'; // Import styles specific to the GridPanel
+import Grid from '../Grid/Grid';
+import Dropdown from '../Dropdown/Dropdown';
+import styles from './ControlPanel.module.css';
 
-const GridPanel = ({ grid, setGrid, resetGrid, runAlgorithm }) => {
+const GridPanel = ( {handleSetStartButton, handleSetEndButton, setCurrentAction}) => {
+  const algorithms = [`Breadth-First Search`, `Depth-First Search`, `Dijkstra's Algorithm`, `A* Algorithm`];
+
   return (
-    <div className="grid-panel">
-      <div className="controls">
-        <h2>Pathfinding Visualizer</h2>
-        <div className="buttons">
-          <button onClick={resetGrid} className="btn btn-reset">
-            Reset Grid
-          </button>
-          <button onClick={() => runAlgorithm("Dijkstra")} className="btn btn-algo">
-            Run Dijkstra
-          </button>
-          <button onClick={() => runAlgorithm("A*")} className="btn btn-algo">
-            Run A*
-          </button>
-        </div>
-      </div>
-      <div className="grid-container">
-        <Grid grid={grid} setGrid={setGrid} />
-      </div>
+    <div className={styles.gridPanel}>
+      <button className={styles.button}>
+        Find Path
+      </button>
+      <button onClick = {()=>handleSetStartButton()} className={styles.button}>
+        Set Start Node
+      </button>
+      <button onClick = {()=>handleSetEndButton()} className={styles.button}>
+        Set End Node
+      </button>
+      <button onClick = {()=>setCurrentAction('toggleWall')} className={styles.button}>
+        Toggle Wall
+      </button>
+      <Dropdown options={algorithms} defaultText={`Select an Algorithm`}>
+
+      </Dropdown>
     </div>
   );
 };

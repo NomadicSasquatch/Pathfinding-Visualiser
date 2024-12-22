@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '../Grid/Grid';
 import styles from './PathfindingVisualiser.module.css';
+import ControlPanel from '../ControlPanel/ControlPanel';
 import { GRID_ROWS, GRID_COLS } from '../../config/config';
 
 export default function PathfindingVisualizer() {
@@ -21,17 +22,9 @@ export default function PathfindingVisualizer() {
   });
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [currentAction, setCurrentAction] = useState('idle');
-  
-  useEffect(() => {
-    const handleMouseUp = () => setIsMouseDown(false);
-    document.addEventListener('mouseup', handleMouseUp);
-    return () => {
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, []);
 
   const handleMouseDown = (row, col) => {
-    setIsMouseDown(true);
+    setIsMouseDown(true); 
     switch(currentAction) {
       case 'toggleWall':
         handleNodeState(row, col, 'isWall');
@@ -121,18 +114,9 @@ export default function PathfindingVisualizer() {
   return (
     <div className={styles.visualizerContainer}>
       <h1 className={styles.h1}>Pathfinding Visualizer</h1>
-      <button onClick={findPath} className={styles.button}>
-        Find Path
-      </button>
-      <button onClick = {()=>handleSetStartButton()} className={styles.button}>
-        Set Start Node
-      </button>
-      <button onClick = {()=>handleSetEndButton()} className={styles.button}>
-        Set End Node
-      </button>
-      <button onClick = {()=>setCurrentAction('toggleWall')} className={styles.button}>
-        Toggle Wall
-      </button>
+      <ControlPanel handleSetStartButton={handleSetStartButton} handleSetEndButton={handleSetEndButton} setCurrentAction={setCurrentAction}>
+
+      </ControlPanel>
       <Grid grid={grid} setGrid={setGrid} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseEnter={handleMouseEnter} actionState={currentAction}/>
       <div className={styles.debugDisplay}>
         <strong>Current Action:</strong> {currentAction}

@@ -1,19 +1,3 @@
-/* PathfindingVisualiser.module.css */
-.button {
-  margin: 2px;
-  padding: 5px 5px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.button:hover {
-  background-color: #0056b3;
-}
-
 .h1 {
   font-size: 30px;
   margin-bottom: 20px;
