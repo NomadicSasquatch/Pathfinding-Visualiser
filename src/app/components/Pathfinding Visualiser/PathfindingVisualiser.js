@@ -39,6 +39,11 @@ export default function PathfindingVisualizer() {
   const bfsQueueRef = useRef([]);
   const bfsVisitedRef = useRef(null);
   // DATA STRUCTURES FOR BFS //
+  
+  // DATA STRUCTURES FOR DFS //
+  const dfsStackRef = useRef([]);
+  const dfsVisitedRef = useRef(null);
+  // DATA STRUCTURES FOR BFS //
 
   const visitedDuringDrag = new Set();
 
@@ -138,7 +143,8 @@ export default function PathfindingVisualizer() {
           runBFS();
           break;
         case `Depth-First Search`:
-        
+          if(dfsStackRef.current.length === 0) initDFS();
+          runDFS();
           break;
         case `Dijkstra's Algorithm`:
 
@@ -218,6 +224,64 @@ export default function PathfindingVisualizer() {
     };
 
     BreadthFirstSearchStep();
+  };
+
+  const initDFS = () => {
+    if(hasStart && hasEnd && hasStart.length === 2 && hasEnd.length === 2) {
+      const updatedGrid = [...grid];
+      setGrid(updatedGrid);
+
+      dfsVisitedRef.current = updatedGrid;
+      dfsStackRef.current = [[hasStart[0], hasStart[1]]];
+      console.log(`DFS initialisation complete\n`, dfsStackRef.current);
+    }
+  };
+
+  const runDFS = () => {
+    if(!dfsVisitedRef.current || dfsStackRef.current.length === 0) {
+      console.log(`DFS has not been initialised\n`);
+      return;
+    }
+    const delay = 10;
+    const animate = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    const dir = [[-1, 0], [0, 1], [1, 0], [0, -1]];
+    console.log(`DFS begins\n`);
+    const depthFirstSearch = async () => {
+      if(!isRunningRef.current) {
+        console.log(`DFS is paused`);
+        return;
+      }
+      if(dfsStackRef.current.length === 0) {
+        console.log(`DFS complete (no path or stack exhausted).`, dfsStackRef.current);
+        isRunningRef.current = false;
+        setIsRunning(false);
+        return;
+      }
+
+      const [row, col] = dfsStackRef.current.pop();
+
+      if(row < 0 || row >= GRID_ROWS || col < 0 || col >= GRID_COLS || dfsVisitedRef.current[row][col].isWall || dfsVisitedRef.current[row][col].isVisited) {
+        await animate(delay);
+        depthFirstSearch();
+        return;
+      }
+      if(row === hasEnd[0] && col === hasEnd[1]) {
+        isRunningRef.current = false;
+        setIsRunning(false);
+        return;
+      }
+      dfsVisitedRef.current[row][col].isVisited = true;
+      setGrid([...dfsVisitedRef.current]);
+
+      for(let i = 0; i < 4; i++) {
+        const x = row + dir[i][0];
+        const y = col + dir[i][1];
+        dfsStackRef.current.push([x,y]);
+      }
+      await animate(delay);
+      depthFirstSearch();
+    }
+    depthFirstSearch();
   };
   
 
