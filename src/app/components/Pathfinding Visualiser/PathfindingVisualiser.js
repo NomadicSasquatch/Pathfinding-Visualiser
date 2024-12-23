@@ -133,6 +133,32 @@ export default function PathfindingVisualizer() {
     setCurrentAction('setEnd');
   };
 
+  const resetDataStructs = () => {
+    bfsQueueRef.current = [];
+    bfsVisitedRef.current = null;
+    dfsStackRef.current = [];
+    dfsVisitedRef.current = null;
+  
+    isRunningRef.current = false;
+    setIsRunning(false);
+  }
+
+  const handleClearPathButton = () => {
+    const newGrid = grid.map((row) =>
+      row.map((node) => ({ ...node, isVisited: false }))
+    );
+    setGrid(newGrid);
+    resetDataStructs()
+  };
+
+  const handleClearGridButton = () => {
+    const newGrid = grid.map((row) =>
+      row.map((node) => ({ ...node, isVisited: false, isWall: false, isStart: false, isEnd: false}))
+    );
+    setGrid(newGrid);
+    resetDataStructs();
+  };
+
   const handleRunButton = async () => {
     if(!isRunningRef.current) {
       isRunningRef.current = true;
@@ -179,7 +205,7 @@ export default function PathfindingVisualizer() {
       return;
     }
   
-    const delay = 10;
+    const delay = 0.5;
     const animate = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   
     const dir = [[-1, 0], [0, 1], [1, 0], [0, -1]];
@@ -242,7 +268,7 @@ export default function PathfindingVisualizer() {
       console.log(`DFS has not been initialised\n`);
       return;
     }
-    const delay = 10;
+    const delay = 0.5;
     const animate = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     const dir = [[-1, 0], [0, 1], [1, 0], [0, -1]];
     console.log(`DFS begins\n`);
@@ -288,7 +314,7 @@ export default function PathfindingVisualizer() {
   return (
     <div className={styles.visualizerContainer}>
       <h1 className={styles.h1}>Pathfinding Visualizer</h1>
-      <ControlPanel handleSetStartButton={handleSetStartButton} handleSetEndButton={handleSetEndButton} setCurrentAction={setCurrentAction} setSelectedAlgorithm={setSelectedAlgorithm} handleRunButton={handleRunButton} isRunning={isRunning}>
+      <ControlPanel handleSetStartButton={handleSetStartButton} handleSetEndButton={handleSetEndButton} setCurrentAction={setCurrentAction} setSelectedAlgorithm={setSelectedAlgorithm} handleRunButton={handleRunButton} isRunning={isRunning} handleClearPathButton={handleClearPathButton} handleClearGridButton={handleClearGridButton}>
 
       </ControlPanel>
       <Grid grid={grid} setGrid={setGrid} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseEnter={handleMouseEnter} actionState={currentAction}/>

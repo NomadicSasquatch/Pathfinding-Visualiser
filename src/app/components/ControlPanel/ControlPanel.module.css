@@ -1,5 +1,6 @@
 .gridPanel {
     display: flex;
+    gap: 50px;
 }
   
 .controls {
@@ -22,4 +23,13 @@
 
 .button:hover {
   background-color: #0056b3;
+}
+
+.leftGroup {
+  justify-content: flex-start;
+}
+
+.rightGroup {
+  display: flex;
+  justify-content: flex-end;
 }
