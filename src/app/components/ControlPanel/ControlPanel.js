@@ -5,7 +5,7 @@ import Grid from '../Grid/Grid';
 import Dropdown from '../Dropdown/Dropdown';
 import styles from './ControlPanel.module.css';
 
-const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction, setSelectedAlgorithm, handleRunButton, isRunning, handleClearPathButton, handleClearGridButton }) => {
+const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction, setSelectedAlgorithm, handleRunButton, isRunning, handleClearPathButton, handleClearGridButton, isRunningAlgo }) => {
   const algorithms = [`Breadth-First Search`, `Depth-First Search`, `Dijkstra's Algorithm`, `A* Algorithm`];
 
   return (
@@ -20,7 +20,7 @@ const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction,
         <button onClick = {()=>setCurrentAction('toggleWall')} className={styles.button}>
           Toggle Wall
         </button>
-        <Dropdown options={algorithms} defaultText={`Select an Algorithm`} setSelectedAlgorithm={setSelectedAlgorithm}>
+        <Dropdown options={algorithms} defaultText={`Select an Algorithm`} setSelectedAlgorithm={setSelectedAlgorithm} isRunningAlgo={isRunningAlgo}>
 
         </Dropdown>
         <button onClick = {()=>handleRunButton()} className={styles.button}>

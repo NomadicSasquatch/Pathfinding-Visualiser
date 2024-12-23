@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './Dropdown.module.css';
 
-const Dropdown = ({ options, defaultText, setSelectedAlgorithm }) => {
+const Dropdown = ({ options, defaultText, setSelectedAlgorithm, isRunningAlgo }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(defaultText);
 
@@ -15,12 +15,9 @@ const Dropdown = ({ options, defaultText, setSelectedAlgorithm }) => {
 
   return (
     <div className={styles.dropdown}>
-      {}
-      <button onClick={toggleDropdown} className={styles.dropdownButton}>
-        {selectedOption} {}
+      <button onClick={toggleDropdown} className={styles.dropdownButton} disabled={isRunningAlgo}>
+        {selectedOption}
       </button>
-
-      {}
       {isOpen && (
         <ul className={styles.dropdownMenu}>
           {options.map((option, index) => (

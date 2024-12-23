@@ -32,7 +32,9 @@ export default function PathfindingVisualizer() {
   const [hasStart, setHasStart] = useState(null);
   const [hasEnd, setHasEnd] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
+  const [isRunningAlgo, setIsRunningAlgo] = useState(false);
   const isRunningRef = useRef(false);
+  const isRunningAlgoRef = useRef(false);
 
   useEffect(() => {
     console.log(`isRunning changed to: ${isRunning}`);
@@ -170,6 +172,8 @@ export default function PathfindingVisualizer() {
     );
     setGrid(newGrid);
     resetDataStructs()
+    isRunningAlgoRef.current = false;
+    setIsRunningAlgo(false);
   };
 
   const handleClearGridButton = () => {
@@ -178,12 +182,17 @@ export default function PathfindingVisualizer() {
     );
     setGrid(newGrid);
     resetDataStructs();
+    isRunningAlgoRef.current = false;
+    setIsRunningAlgo(false);
+    setHasEnd(null);
   };
-
+ // TODO: can run algo when there is no start or end
   const handleRunButton = async () => {
     if(!isRunningRef.current) {
       isRunningRef.current = true;
+      isRunningAlgoRef.current = true;
       setIsRunning(true);
+      setIsRunningAlgo(true);
       switch(selectedAlgorithm) {
         case `Breadth-First Search`:
           if(bfsQueueRef.current.length === 0) initBFS();
@@ -249,6 +258,8 @@ export default function PathfindingVisualizer() {
               console.log("Path found!");
               isRunningRef.current = false;
               setIsRunning(false);
+              isRunningAlgoRef.current = false;
+              setIsRunningAlgo(false);
               return;
             }
   
@@ -313,6 +324,8 @@ export default function PathfindingVisualizer() {
       if(row === hasEnd[0] && col === hasEnd[1]) {
         isRunningRef.current = false;
         setIsRunning(false);
+        isRunningAlgoRef.current = false;
+        setIsRunningAlgo(false);
         return;
       }
       dfsVisitedRef.current[row][col].isVisited = true;
@@ -383,6 +396,8 @@ export default function PathfindingVisualizer() {
         isRunningRef.current = false;
         setIsRunning(false);
         setGrid([...aStarVisitedRef.current]);
+        isRunningAlgoRef.current = false;
+        setIsRunningAlgo(false);
         return;
       }
 
@@ -422,7 +437,7 @@ export default function PathfindingVisualizer() {
   return (
     <div className={styles.visualizerContainer}>
       <h1 className={styles.h1}>Pathfinding Visualizer</h1>
-      <ControlPanel handleSetStartButton={handleSetStartButton} handleSetEndButton={handleSetEndButton} setCurrentAction={setCurrentAction} setSelectedAlgorithm={setSelectedAlgorithm} handleRunButton={handleRunButton} isRunning={isRunning} handleClearPathButton={handleClearPathButton} handleClearGridButton={handleClearGridButton}>
+      <ControlPanel handleSetStartButton={handleSetStartButton} handleSetEndButton={handleSetEndButton} setCurrentAction={setCurrentAction} setSelectedAlgorithm={setSelectedAlgorithm} handleRunButton={handleRunButton} isRunning={isRunning} handleClearPathButton={handleClearPathButton} handleClearGridButton={handleClearGridButton} isRunningAlgo={isRunningAlgo} >
 
       </ControlPanel>
       <Grid grid={grid} setGrid={setGrid} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseEnter={handleMouseEnter} actionState={currentAction}/>
