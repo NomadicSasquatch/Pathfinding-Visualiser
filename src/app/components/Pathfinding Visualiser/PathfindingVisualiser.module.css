@@ -3,7 +3,11 @@
   margin-bottom: 20px;
 }
 
-.visualizer-container {
-  text-align: center;
+.visualizerContainer {
   padding: 20px;
+  width: max-content;
+}
+
+.tester {
+  width: 100%;
 }

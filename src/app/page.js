@@ -1,11 +1,11 @@
 import Image from "next/image";
-import styles from "./page.module.css";
 import PathfindingVisualiser from './components/Pathfinding Visualiser/PathfindingVisualiser';
+import styles from './components/Pathfinding Visualiser/PathfindingVisualiser.module.css';
 
 export default function Home() {
   return (
     <main>
-      <PathfindingVisualiser />
+      <PathfindingVisualiser className={styles.visualizerContainer}/>
     </main>
   );
 }
