@@ -24,6 +24,10 @@ const Grid = ({ grid, setGrid, onMouseDown, onMouseUp, onMouseEnter, actionState
               isEnd={node.isEnd}
               isWall={node.isWall}
               isVisited={node.isVisited}
+              gCost={node.gCost}
+              hCost={node.hCost}
+              fCost={node.fCost}
+              parent={node.parent}
               onMouseDown={() => onMouseDown(rowIndex, colIndex, actionState)}
               onMouseUp={() => onMouseUp()}
               onMouseEnter={() => onMouseEnter(rowIndex, colIndex, actionState)}

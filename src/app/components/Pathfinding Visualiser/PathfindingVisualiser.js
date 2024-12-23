@@ -17,7 +17,12 @@ export default function PathfindingVisualizer() {
         isStart: false,
         isEnd: false,
         isWall: false,
-        isVisited: false
+        isVisited: false,
+        // attributes for A* (consider workarounds)
+        gCost: Infinity,
+        hCost: Infinity,
+        fCost: Infinity,
+        parent: null,
       }))
     );
   });
@@ -34,6 +39,7 @@ export default function PathfindingVisualizer() {
   }, [isRunning]);
 
 
+  const dir = [[-1, 0], [0, 1], [1, 0], [0, -1]];
 
   // DATA STRUCTURES FOR BFS //
   const bfsQueueRef = useRef([]);
@@ -43,7 +49,12 @@ export default function PathfindingVisualizer() {
   // DATA STRUCTURES FOR DFS //
   const dfsStackRef = useRef([]);
   const dfsVisitedRef = useRef(null);
-  // DATA STRUCTURES FOR BFS //
+  // DATA STRUCTURES FOR DFS //
+
+  // DATA STRUCTURES FOR A* //
+  const aStarOpenSetRef = useRef([]);
+  const aStarVisitedRef = useRef(null);
+  // DATA STRUCTURES FOR A* //
 
   const visitedDuringDragRef = useRef(new Set());
 
@@ -112,7 +123,7 @@ export default function PathfindingVisualizer() {
     setIsMouseDown(false);
     visitedDuringDragRef.current.clear();
   };
-  
+
   const handleNodeState = (row, col, attribute) => {
     const newGrid = grid.map((currentRow, rowIndex) =>
       currentRow.map((node, colIndex) => {
@@ -146,6 +157,8 @@ export default function PathfindingVisualizer() {
     bfsVisitedRef.current = null;
     dfsStackRef.current = [];
     dfsVisitedRef.current = null;
+    aStarOpenSetRef.current = [];
+    aStarVisitedRef.current = null;
   
     isRunningRef.current = false;
     setIsRunning(false);
@@ -153,7 +166,7 @@ export default function PathfindingVisualizer() {
 
   const handleClearPathButton = () => {
     const newGrid = grid.map((row) =>
-      row.map((node) => ({ ...node, isVisited: false }))
+      row.map((node) => ({ ...node, isVisited: false, gCost: Infinity, hCost: Infinity, fCost: Infinity, parent: null}))
     );
     setGrid(newGrid);
     resetDataStructs()
@@ -161,7 +174,7 @@ export default function PathfindingVisualizer() {
 
   const handleClearGridButton = () => {
     const newGrid = grid.map((row) =>
-      row.map((node) => ({ ...node, isVisited: false, isWall: false, isStart: false, isEnd: false}))
+      row.map((node) => ({ ...node, isVisited: false, isWall: false, isStart: false, isEnd: false, gCost: Infinity, hCost: Infinity, fCost: Infinity, parent: null}))
     );
     setGrid(newGrid);
     resetDataStructs();
@@ -184,7 +197,8 @@ export default function PathfindingVisualizer() {
 
           break;
         case `A* Algorithm`:
-
+          if(aStarOpenSetRef.current.length === 0) initAStar();
+          runAStar();
           break;
         default:
           //NOP
@@ -215,8 +229,6 @@ export default function PathfindingVisualizer() {
   
     const delay = 0.5;
     const animate = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  
-    const dir = [[-1, 0], [0, 1], [1, 0], [0, -1]];
   
     const BreadthFirstSearchStep = async () => {
       if(!isRunningRef.current) {
@@ -278,7 +290,6 @@ export default function PathfindingVisualizer() {
     }
     const delay = 0.5;
     const animate = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-    const dir = [[-1, 0], [0, 1], [1, 0], [0, -1]];
     console.log(`DFS begins\n`);
     const depthFirstSearch = async () => {
       if(!isRunningRef.current) {
@@ -316,6 +327,98 @@ export default function PathfindingVisualizer() {
       depthFirstSearch();
     }
     depthFirstSearch();
+  };
+
+  const initAStar = () => {
+    if (hasStart && hasEnd) {
+      // Copy the grid fully
+      const newGrid = grid.map((row) => row.map((node) => ({ ...node })));
+
+      // Mark start node's costs
+      const [sr, sc] = hasStart;
+      const [er, ec] = hasEnd;
+
+      newGrid[sr][sc].gCost = 0;
+      newGrid[sr][sc].hCost = manhattanDist(sr, sc, er, ec);
+      newGrid[sr][sc].fCost = newGrid[sr][sc].gCost + newGrid[sr][sc].hCost;
+
+      setGrid(newGrid);
+
+      aStarVisitedRef.current = newGrid;
+      // Use an array as a "priority queue" for simplicity
+      aStarOpenSetRef.current = [[sr, sc]]; // store row,col
+    }
+  };
+
+  const runAStar = () => {
+    if(!aStarVisitedRef.current || aStarOpenSetRef.current.length === 0) {
+      console.log('A* cannot run; not initialized or openSet empty.');
+      return;
+    }
+
+    const delay = 0.5;
+    const animate = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    const AStarStep = async () => {
+      if(!isRunningRef.current) {
+        console.log('A* paused.');
+        return;
+      }
+
+      if(aStarOpenSetRef.current.length === 0) {
+        console.log('A* complete: no path found.');
+        isRunningRef.current = false;
+        setIsRunning(false);
+        return;
+      }
+
+      aStarOpenSetRef.current.sort((a, b) => {
+        const nodeA = aStarVisitedRef.current[a[0]][a[1]];
+        const nodeB = aStarVisitedRef.current[b[0]][b[1]];
+        return nodeA.fCost - nodeB.fCost;
+      });
+
+      const [row, col] = aStarOpenSetRef.current.shift();
+      const currentNode = aStarVisitedRef.current[row][col];
+      currentNode.isVisited = true;
+
+      if(row === hasEnd[0] && col === hasEnd[1]) {
+        isRunningRef.current = false;
+        setIsRunning(false);
+        setGrid([...aStarVisitedRef.current]);
+        return;
+      }
+
+      for(let i = 0; i < 4; i++) {
+        const x = row + dir[i][0];
+        const y = col + dir[i][1];
+        if(x < 0 || x >= GRID_ROWS || y < 0 || y >= GRID_COLS || aStarVisitedRef.current[x][y].isWall || aStarVisitedRef.current[x][y].isVisited) {
+          continue;
+        }
+
+        const tentativeG = currentNode.gCost + 1;
+        const neighborNode = aStarVisitedRef.current[x][y];
+        if(tentativeG < neighborNode.gCost) {
+          neighborNode.gCost = tentativeG;
+          neighborNode.hCost = manhattanDist(x, y, hasEnd[0], hasEnd[1]);
+          neighborNode.fCost = neighborNode.gCost + neighborNode.hCost;
+          neighborNode.parent = currentNode;
+
+          aStarOpenSetRef.current.push([x, y]);
+        }
+      }
+
+      setGrid([...aStarVisitedRef.current]);
+
+      await animate(delay);
+      AStarStep();
+    };
+
+    AStarStep();
+  };
+
+  const manhattanDist = (r1, c1, r2, c2) => {
+    return Math.abs(r1 - r2) + Math.abs(c1 - c2);
   };
   
 
