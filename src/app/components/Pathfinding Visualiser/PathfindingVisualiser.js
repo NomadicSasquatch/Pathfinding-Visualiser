@@ -211,7 +211,7 @@ export default function PathfindingVisualizer() {
   }
 
   const initBFS = () => {
-    if(hasStart && hasEnd && hasStart.length === 2 && hasEnd.length === 2) {
+    if(hasStart && hasEnd) {
       const updatedGrid = [...grid];
       updatedGrid[hasStart[0]][hasStart[1]].isVisited = true;
       setGrid(updatedGrid);
@@ -273,7 +273,7 @@ export default function PathfindingVisualizer() {
   };
 
   const initDFS = () => {
-    if(hasStart && hasEnd && hasStart.length === 2 && hasEnd.length === 2) {
+    if(hasStart && hasEnd) {
       const updatedGrid = [...grid];
       setGrid(updatedGrid);
 
