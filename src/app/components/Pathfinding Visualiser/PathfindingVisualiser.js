@@ -1,4 +1,13 @@
 'use client';
+/*- gradient
+- collapsible path comparison
+- current algo, selection dropdown remains a dropdown
+- add sounds
+- highlight the completed path
+- scaling issue
+- dropdown closes when anything else is clicked(the cheese)
+- disable toggle wall when algo is running
+*/
 
 import React, { useState, useEffect, useRef } from 'react';
 import Grid from '../Grid/Grid';
