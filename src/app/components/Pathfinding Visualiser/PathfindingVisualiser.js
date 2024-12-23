@@ -45,62 +45,72 @@ export default function PathfindingVisualizer() {
   const dfsVisitedRef = useRef(null);
   // DATA STRUCTURES FOR BFS //
 
-  const visitedDuringDrag = new Set();
+  const visitedDuringDragRef = useRef(new Set());
 
   const handleMouseDown = (row, col) => {
     // TODO: add boundary checking  
-    setIsMouseDown(true); 
-    visitedDuringDrag.clear();
+    setIsMouseDown(true);
     switch(currentAction) {
       case 'toggleWall':
         handleNodeState(row, col, 'isWall');
-        visitedDuringDrag.add(`${row},${col}`);
+        visitedDuringDragRef.current.add(`${row},${col}`); // Use backticks here
         break;
+  
       case 'setStart':
         handleNodeState(row, col, 'isStart');
         setHasStart([row, col]);
         setCurrentAction('idle');
         break;
+  
       case 'setEnd':
         handleNodeState(row, col, 'isEnd');
         setHasEnd([row, col]);
         setCurrentAction('idle');
         break;
+  
       case 'idle':
-        // NOP
+        //NOP
         break;
       default:
         console.warn('STATE HANDLING ERROR!');
     }
   };
-
+  
   const handleMouseEnter = (row, col) => {
-    if(isMouseDown) {
-      switch(currentAction) {
-        case 'toggleWall':
-          if(!visitedDuringDrag.has(`${row},${col}`)) {
-            handleNodeState(row, col, 'isWall');
-            visitedDuringDrag.add(`${row},${col}`);
-          }
-          break;
-        case 'setStart':
-          setCurrentAction('idle');
-          break;
-        case 'setEnd':
-          setCurrentAction('idle');
-          break;  
-        case 'idle':
-          // NOP
-          break;
-        default:
-          console.warn('STATE HANDLING ERROR!');
-      }
+    if(!isMouseDown) return;
+  
+    switch(currentAction) {
+      case 'toggleWall':
+        const key = `${row},${col}`;
+        if(!visitedDuringDragRef.current.has(key)) {
+          handleNodeState(row, col, 'isWall');
+          console.log(`the set is`, visitedDuringDragRef.current);
+          visitedDuringDragRef.current.add(key);
+          console.log(` + `, visitedDuringDragRef.current);
+        }
+        else {
+          console.log(`THE CURRENT TOTAL SET:`, visitedDuringDragRef.current);
+        }
+        break;
+  
+      case 'setStart':
+        setCurrentAction('idle');
+        break;
+      case 'setEnd':
+        setCurrentAction('idle');
+        break;
+      case 'idle':
+        //NOP
+        break;
+      default:
+        console.warn('STATE HANDLING ERROR!');
+        break;
     }
   };
-
+  
   const handleMouseUp = () => {
     setIsMouseDown(false);
-    visitedDuringDrag.clear();
+    visitedDuringDragRef.current.clear();
   };
   /* TODO: make it such that in a single stroke(from when M1 is pressed to when it is released) when a node is toggled,
   it cannot be toggled back. Via a static visited array or something */
@@ -323,6 +333,9 @@ export default function PathfindingVisualizer() {
       </div>
       <div className={styles.debugDisplay}>
         <strong>Algo Status:</strong> {isRunning? "running" : "not running"}
+      </div>
+      <div className={styles.debugDisplay}>
+        <strong> Mouse Status:</strong> {isMouseDown? "mouseDown" : "mouseUp"}
       </div>
     </div>
   );

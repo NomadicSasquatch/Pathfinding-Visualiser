@@ -27,6 +27,7 @@ const Grid = ({ grid, setGrid, onMouseDown, onMouseUp, onMouseEnter, actionState
               onMouseDown={() => onMouseDown(rowIndex, colIndex, actionState)}
               onMouseUp={() => onMouseUp()}
               onMouseEnter={() => onMouseEnter(rowIndex, colIndex, actionState)}
+              actionState
             />
           ))}
         </div>
