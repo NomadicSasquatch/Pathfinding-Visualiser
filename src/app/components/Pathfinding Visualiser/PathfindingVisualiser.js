@@ -53,7 +53,7 @@ export default function PathfindingVisualizer() {
     switch(currentAction) {
       case 'toggleWall':
         handleNodeState(row, col, 'isWall');
-        visitedDuringDragRef.current.add(`${row},${col}`); // Use backticks here
+        visitedDuringDragRef.current.add(`${row},${col}`);
         break;
   
       case 'setStart':
@@ -112,9 +112,7 @@ export default function PathfindingVisualizer() {
     setIsMouseDown(false);
     visitedDuringDragRef.current.clear();
   };
-  /* TODO: make it such that in a single stroke(from when M1 is pressed to when it is released) when a node is toggled,
-  it cannot be toggled back. Via a static visited array or something */
-
+  
   const handleNodeState = (row, col, attribute) => {
     const newGrid = grid.map((currentRow, rowIndex) =>
       currentRow.map((node, colIndex) => {
