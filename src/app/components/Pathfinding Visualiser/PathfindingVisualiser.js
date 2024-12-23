@@ -127,7 +127,7 @@ export default function PathfindingVisualizer() {
   const handleNodeState = (row, col, attribute) => {
     const newGrid = grid.map((currentRow, rowIndex) =>
       currentRow.map((node, colIndex) => {
-        if (rowIndex === row && colIndex === col) {
+        if(rowIndex === row && colIndex === col) {
           return { ...node, [attribute]: !node[attribute] };
         }
         return node;
@@ -330,11 +330,9 @@ export default function PathfindingVisualizer() {
   };
 
   const initAStar = () => {
-    if (hasStart && hasEnd) {
-      // Copy the grid fully
+    if(hasStart && hasEnd) {
       const newGrid = grid.map((row) => row.map((node) => ({ ...node })));
 
-      // Mark start node's costs
       const [sr, sc] = hasStart;
       const [er, ec] = hasEnd;
 
@@ -345,8 +343,7 @@ export default function PathfindingVisualizer() {
       setGrid(newGrid);
 
       aStarVisitedRef.current = newGrid;
-      // Use an array as a "priority queue" for simplicity
-      aStarOpenSetRef.current = [[sr, sc]]; // store row,col
+      aStarOpenSetRef.current = [[sr, sc]];
     }
   };
 
