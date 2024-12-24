@@ -29,6 +29,7 @@ export default function PathfindingVisualizer() {
         isEnd: false,
         isWall: false,
         isVisited: false,
+        isInFinalPath: false,
         // attributes for A* (consider workarounds)
         gCost: Infinity,
         hCost: Infinity,
@@ -179,7 +180,7 @@ export default function PathfindingVisualizer() {
 
   const handleClearPathButton = () => {
     const newGrid = grid.map((row) =>
-      row.map((node) => ({ ...node, isVisited: false, gCost: Infinity, hCost: Infinity, fCost: Infinity, parent: null}))
+      row.map((node) => ({ ...node, isVisited: false, isInFinalPath: false, gCost: Infinity, hCost: Infinity, fCost: Infinity, parent: null}))
     );
     setGrid(newGrid);
     resetDataStructs()
@@ -189,7 +190,7 @@ export default function PathfindingVisualizer() {
 
   const handleClearGridButton = () => {
     const newGrid = grid.map((row) =>
-      row.map((node) => ({ ...node, isVisited: false, isWall: false, isStart: false, isEnd: false, gCost: Infinity, hCost: Infinity, fCost: Infinity, parent: null}))
+      row.map((node) => ({ ...node, isVisited: false, isWall: false, isStart: false, isEnd: false, isInFinalPath: false, gCost: Infinity, hCost: Infinity, fCost: Infinity, parent: null}))
     );
     setGrid(newGrid);
     resetDataStructs();
@@ -197,8 +198,20 @@ export default function PathfindingVisualizer() {
     setIsRunningAlgo(false);
     setHasEnd(null);
   };
- // TODO: can run algo when there is no start or end
+
+  const constructFinalPath = (row, col) => {
+    if(row == hasStart[0] && col == hasStart[1]) {
+      return;
+    }
+
+    grid[row][col].isInFinalPath = true;
+    const parentNode = grid[row][col].parent;
+    constructFinalPath(parentNode.row, parentNode.col);
+  }
+
+ // TODO: disable run algo when there is no start or end
   const handleRunButton = async () => {
+    setCurrentAction('idle');
     if(!isRunningRef.current) {
       isRunningRef.current = true;
       isRunningAlgoRef.current = true;
@@ -263,6 +276,7 @@ export default function PathfindingVisualizer() {
           const x = curX + dir[i][0];
           const y = curY + dir[i][1];
           if(x >= 0 && x < GRID_ROWS && y >= 0 && y < GRID_COLS && !bfsVisitedRef.current[x][y].isWall && !bfsVisitedRef.current[x][y].isVisited) {
+            bfsVisitedRef.current[x][y].parent = bfsVisitedRef.current[curX][curY];
             if(x === hasEnd[0] && y === hasEnd[1]) {
               bfsVisitedRef.current[x][y].isVisited = true;
               setGrid([...bfsVisitedRef.current]);
@@ -271,6 +285,7 @@ export default function PathfindingVisualizer() {
               setIsRunning(false);
               isRunningAlgoRef.current = false;
               setIsRunningAlgo(false);
+              constructFinalPath(x, y);
               return;
             }
   
@@ -332,6 +347,7 @@ export default function PathfindingVisualizer() {
         depthFirstSearch();
         return;
       }
+      
       if(row === hasEnd[0] && col === hasEnd[1]) {
         isRunningRef.current = false;
         setIsRunning(false);

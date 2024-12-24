@@ -27,6 +27,10 @@
   background-color: blueviolet;
 }
 
+.isInFinalPath {
+  background-color: greenyellow;
+}
+
 .node:hover {
   background-color: lightgray; /* Change color on hover */
 }
