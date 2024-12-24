@@ -25,6 +25,10 @@
   background-color: #0056b3;
 }
 
+.button:disabled {
+  background-color: grey;
+}
+
 .leftGroup {
   justify-content: flex-start;
 }

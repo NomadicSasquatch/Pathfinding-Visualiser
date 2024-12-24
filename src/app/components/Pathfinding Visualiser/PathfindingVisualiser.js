@@ -1,5 +1,6 @@
 'use client';
-/*- gradient
+/*
+- gradient
 - collapsible path comparison
 - current algo, selection dropdown remains a dropdown
 - add sounds
@@ -7,13 +8,14 @@
 - scaling issue
 - dropdown closes when anything else is clicked(the cheese)
 - disable toggle wall when algo is running
+- tutorial/walkthrough that can runs on first render and when user clicks on the tutorial button
 */
 
 import React, { useState, useEffect, useRef } from 'react';
 import Grid from '../Grid/Grid';
 import styles from './PathfindingVisualiser.module.css';
 import ControlPanel from '../ControlPanel/ControlPanel';
-import { GRID_ROWS, GRID_COLS } from '../../config/config';
+import { GRID_ROWS, GRID_COLS, DEFAULT_ALGO_DROPDOWN_TEXT } from '../../config/config';
 
 export default function PathfindingVisualizer() {
   const [grid, setGrid] = useState(() => {
@@ -37,7 +39,7 @@ export default function PathfindingVisualizer() {
   });
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [currentAction, setCurrentAction] = useState('idle');
-  const [selectedAlgorithm, setSelectedAlgorithm] = useState('');
+  const [selectedAlgorithm, setSelectedAlgorithm] = useState(DEFAULT_ALGO_DROPDOWN_TEXT);
   const [hasStart, setHasStart] = useState(null);
   const [hasEnd, setHasEnd] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
@@ -245,7 +247,7 @@ export default function PathfindingVisualizer() {
       return;
     }
   
-    const delay = 0.5;
+    const delay = 0.05;
     const animate = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   
     const BreadthFirstSearchStep = async () => {
@@ -308,7 +310,7 @@ export default function PathfindingVisualizer() {
       console.log(`DFS has not been initialised\n`);
       return;
     }
-    const delay = 0.5;
+    const delay = 0.05;
     const animate = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     console.log(`DFS begins\n`);
     const depthFirstSearch = async () => {
@@ -375,7 +377,7 @@ export default function PathfindingVisualizer() {
       return;
     }
 
-    const delay = 0.5;
+    const delay = 0.05;
     const animate = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
     const AStarStep = async () => {
@@ -446,7 +448,7 @@ export default function PathfindingVisualizer() {
   return (
     <div className={styles.visualizerContainer}>
       <h1 className={styles.h1}>Pathfinding Visualizer</h1>
-      <ControlPanel handleSetStartButton={handleSetStartButton} handleSetEndButton={handleSetEndButton} setCurrentAction={setCurrentAction} setSelectedAlgorithm={setSelectedAlgorithm} handleRunButton={handleRunButton} isRunning={isRunning} handleClearPathButton={handleClearPathButton} handleClearGridButton={handleClearGridButton} isRunningAlgo={isRunningAlgo} >
+      <ControlPanel handleSetStartButton={handleSetStartButton} handleSetEndButton={handleSetEndButton} setCurrentAction={setCurrentAction} selectedAlgorithm={selectedAlgorithm} setSelectedAlgorithm={setSelectedAlgorithm} handleRunButton={handleRunButton} isRunning={isRunning} handleClearPathButton={handleClearPathButton} handleClearGridButton={handleClearGridButton} isRunningAlgo={isRunningAlgo} >
 
       </ControlPanel>
       <Grid grid={grid} setGrid={setGrid} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseEnter={handleMouseEnter} actionState={currentAction}/>
