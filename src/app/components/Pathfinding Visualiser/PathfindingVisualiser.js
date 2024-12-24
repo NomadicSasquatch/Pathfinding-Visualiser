@@ -2,8 +2,7 @@
 /*
 - gradient
 - collapsible path comparison
-- current algo, selection dropdown remains a dropdown
-- add sounds
+- fixed sets of wall patterns to choose from
 - scaling issue
 - tutorial/walkthrough that can runs on first render and when user clicks on the tutorial button
 */
@@ -424,7 +423,7 @@ export default function PathfindingVisualizer() {
       return;
     }
 
-    const delay = 0.05;
+    const delay = 0;
     const animate = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
     const AStarStep = async () => {
