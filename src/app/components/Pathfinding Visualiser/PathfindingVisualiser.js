@@ -207,48 +207,34 @@ export default function PathfindingVisualizer() {
   };
 
   const constructFinalPath = (row, col) => {
-    // Mark the path in the grid copy
-    const newGrid = [...grid];
-    
-    // Recursively traverse from the end node to the start node
-    function backtrack(r, c) {
-      if (r === hasStart[0] && c === hasStart[1]) {
-        // Optionally mark the start node as well
-        newGrid[r][c].isInFinalPath = true;
-        return;
-      }
-      newGrid[r][c].isInFinalPath = true;
-      const parentNode = newGrid[r][c].parent;
-      if (parentNode) {
-        backtrack(parentNode.row, parentNode.col);
-      }
+    if(row === hasStart[0] && col === hasStart[1]) {
+      return;
     }
-  
-    backtrack(row, col);
-  
-    // Trigger a React re-render
-    setGrid(newGrid);
-  };
+
+    grid[row][col].isInFinalPath = true;
+    const parentNode = grid[row][col].parent;
+    if(!parentNode) {
+      return;
+    }
+
+    constructFinalPath(parentNode.row, parentNode.col);
+  }
 
   const constructFinalPathAStar = (row, col) => {
-    // We do the path marking directly in aStarVisitedRef.current
     function backtrack(r, c) {
-      // Mark the start node as well, or skip it—your preference
-      if (r === hasStart[0] && c === hasStart[1]) {
+      if(r === hasStart[0] && c === hasStart[1]) {
         aStarVisitedRef.current[r][c].isInFinalPath = true;
         return;
       }
   
       aStarVisitedRef.current[r][c].isInFinalPath = true;
       const parentNode = aStarVisitedRef.current[r][c].parent;
-      if (parentNode) {
+      if(parentNode) {
         backtrack(parentNode.row, parentNode.col);
       }
     }
   
     backtrack(row, col);
-  
-    // Trigger a re-render to show the final path
     setGrid([...aStarVisitedRef.current]);
   };
   
@@ -386,18 +372,13 @@ export default function PathfindingVisualizer() {
       }
 
       const [row, col] = dfsStackRef.current.pop();
-
-      if(row < 0 || row >= GRID_ROWS || col < 0 || col >= GRID_COLS || dfsVisitedRef.current[row][col].isWall || dfsVisitedRef.current[row][col].isVisited) {
-        await animate(delay);
-        depthFirstSearch();
-        return;
-      }
       
       if(row === hasEnd[0] && col === hasEnd[1]) {
         isRunningRef.current = false;
         setIsRunning(false);
         isRunningAlgoRef.current = false;
         setIsRunningAlgo(false);
+        constructFinalPath(row, col);
         return;
       }
       dfsVisitedRef.current[row][col].isVisited = true;
@@ -406,7 +387,10 @@ export default function PathfindingVisualizer() {
       for(let i = 0; i < 4; i++) {
         const x = row + dir[i][0];
         const y = col + dir[i][1];
-        dfsStackRef.current.push([x,y]);
+        if(x >= 0 && x < GRID_ROWS && y >= 0 && y < GRID_COLS && !dfsVisitedRef.current[x][y].isWall && !dfsVisitedRef.current[x][y].isVisited) {
+          dfsStackRef.current.push([x,y]);
+          dfsVisitedRef.current[x][y].parent = dfsVisitedRef.current[row][col];
+        }
       }
       await animate(delay);
       depthFirstSearch();
