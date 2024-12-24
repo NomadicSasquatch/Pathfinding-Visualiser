@@ -12,16 +12,16 @@ const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction,
   return (
     <div className={styles.gridPanel}>
       <div className={styles.leftGroup}>
-        <button onClick = {()=>handleSetStartButton()} className={styles.button} disabled={isRunningAlgo}>
+        <button onClick = {()=>handleSetStartButton()} className={styles.button} disabled={isAlgoStart}>
           Set Start Node
         </button>
-        <button onClick = {()=>handleSetEndButton()} className={styles.button} disabled={isRunningAlgo}>
+        <button onClick = {()=>handleSetEndButton()} className={styles.button} disabled={isAlgoStart}>
           Set End Node
         </button>
-        <button onClick = {()=>setCurrentAction('toggleWall')} className={styles.button} disabled={isRunningAlgo}>
+        <button onClick = {()=>setCurrentAction('toggleWall')} className={styles.button} disabled={isAlgoStart}>
           Toggle Wall
         </button>
-        <Dropdown options={algorithms} defaultText={DEFAULT_ALGO_DROPDOWN_TEXT} setSelectedAlgorithm={setSelectedAlgorithm} isRunningAlgo={isRunningAlgo}>
+        <Dropdown options={algorithms} defaultText={DEFAULT_ALGO_DROPDOWN_TEXT} setSelectedAlgorithm={setSelectedAlgorithm} isAlgoStart={isAlgoStart}>
 
         </Dropdown>
         <button onClick = {()=>handleRunButton()} className={styles.button} disabled={!(DEFAULT_ALGO_DROPDOWN_TEXT.localeCompare(selectedAlgorithm) && hasStart && hasEnd)}>
