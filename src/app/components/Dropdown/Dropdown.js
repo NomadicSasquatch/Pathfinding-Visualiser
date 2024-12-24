@@ -15,11 +15,11 @@ const Dropdown = ({ options, defaultText, setSelectedAlgorithm, isRunningAlgo })
   };
 
   const handleClickOutside = (event) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    if(dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setIsOpen(false);
     }
   };
-
+  // look more into event listener and document
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
 
