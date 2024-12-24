@@ -9,7 +9,6 @@
 */
 
 import React, { useState, useEffect, useRef } from 'react';
-import { flushSync } from 'react-dom';
 import Grid from '../Grid/Grid';
 import styles from './PathfindingVisualiser.module.css';
 import ControlPanel from '../ControlPanel/ControlPanel';
