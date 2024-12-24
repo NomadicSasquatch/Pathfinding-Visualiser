@@ -12,6 +12,7 @@
 */
 
 import React, { useState, useEffect, useRef } from 'react';
+import { flushSync } from 'react-dom';
 import Grid from '../Grid/Grid';
 import styles from './PathfindingVisualiser.module.css';
 import ControlPanel from '../ControlPanel/ControlPanel';
@@ -186,6 +187,12 @@ export default function PathfindingVisualizer() {
     resetDataStructs()
     isRunningAlgoRef.current = false;
     setIsRunningAlgo(false);
+          for(let i = 0; i < GRID_ROWS; i++) {
+          for(let j = 0; j < GRID_COLS; j++) {
+            console.log(`${i},${j}: `, grid[i][j].parent);
+          }
+          console.log(`\n`);
+        }
   };
 
   const handleClearGridButton = () => {
@@ -200,14 +207,52 @@ export default function PathfindingVisualizer() {
   };
 
   const constructFinalPath = (row, col) => {
-    if(row == hasStart[0] && col == hasStart[1]) {
-      return;
+    // Mark the path in the grid copy
+    const newGrid = [...grid];
+    
+    // Recursively traverse from the end node to the start node
+    function backtrack(r, c) {
+      if (r === hasStart[0] && c === hasStart[1]) {
+        // Optionally mark the start node as well
+        newGrid[r][c].isInFinalPath = true;
+        return;
+      }
+      newGrid[r][c].isInFinalPath = true;
+      const parentNode = newGrid[r][c].parent;
+      if (parentNode) {
+        backtrack(parentNode.row, parentNode.col);
+      }
     }
+  
+    backtrack(row, col);
+  
+    // Trigger a React re-render
+    setGrid(newGrid);
+  };
 
-    grid[row][col].isInFinalPath = true;
-    const parentNode = grid[row][col].parent;
-    constructFinalPath(parentNode.row, parentNode.col);
-  }
+  const constructFinalPathAStar = (row, col) => {
+    // We do the path marking directly in aStarVisitedRef.current
+    function backtrack(r, c) {
+      // Mark the start node as well, or skip it—your preference
+      if (r === hasStart[0] && c === hasStart[1]) {
+        aStarVisitedRef.current[r][c].isInFinalPath = true;
+        return;
+      }
+  
+      aStarVisitedRef.current[r][c].isInFinalPath = true;
+      const parentNode = aStarVisitedRef.current[r][c].parent;
+      if (parentNode) {
+        backtrack(parentNode.row, parentNode.col);
+      }
+    }
+  
+    backtrack(row, col);
+  
+    // Trigger a re-render to show the final path
+    setGrid([...aStarVisitedRef.current]);
+  };
+  
+  
 
  // TODO: disable run algo when there is no start or end
   const handleRunButton = async () => {
@@ -425,6 +470,8 @@ export default function PathfindingVisualizer() {
         setGrid([...aStarVisitedRef.current]);
         isRunningAlgoRef.current = false;
         setIsRunningAlgo(false);
+        constructFinalPathAStar(row, col);
+        setGrid([...aStarVisitedRef.current]);
         return;
       }
 
