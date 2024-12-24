@@ -40,14 +40,14 @@ export default function PathfindingVisualizer() {
   const [selectedAlgorithm, setSelectedAlgorithm] = useState(DEFAULT_ALGO_DROPDOWN_TEXT);
   const [hasStart, setHasStart] = useState(null);
   const [hasEnd, setHasEnd] = useState(null);
-  const [isRunning, setIsRunning] = useState(false);
   const [isRunningAlgo, setIsRunningAlgo] = useState(false);
+  const [isAlgoStart, setIsAlgoStart] = useState(false);
   const isRunningRef = useRef(false);
   const isRunningAlgoRef = useRef(false);
 
-  useEffect(() => {
-    console.log(`isRunning changed to: ${isRunning}`);
-  }, [isRunning]);
+  // useEffect(() => {
+  //   console.log(`isRunning changed to: ${isRunning}`);
+  // }, [isRunning]);
 
 
   const dir = [[-1, 0], [0, 1], [1, 0], [0, -1]];
@@ -172,7 +172,6 @@ export default function PathfindingVisualizer() {
     aStarVisitedRef.current = null;
   
     isRunningRef.current = false;
-    setIsRunning(false);
   }
 
   const handleClearPathButton = () => {
@@ -183,13 +182,19 @@ export default function PathfindingVisualizer() {
     resetDataStructs()
     isRunningAlgoRef.current = false;
     setIsRunningAlgo(false);
-          for(let i = 0; i < GRID_ROWS; i++) {
-          for(let j = 0; j < GRID_COLS; j++) {
-            console.log(`${i},${j}: `, grid[i][j].parent);
-          }
-          console.log(`\n`);
-        }
+    setIsAlgoStart(false);
   };
+
+  const handleClearWallsButton = () => {
+    const newGrid = grid.map((row) =>
+      row.map((node) => ({ ...node, isWall: false}))
+    );
+    setGrid(newGrid);
+    resetDataStructs();
+    isRunningAlgoRef.current = false;
+    setIsRunningAlgo(false);
+    setIsAlgoStart(false);
+  }
 
   const handleClearGridButton = () => {
     const newGrid = grid.map((row) =>
@@ -199,7 +204,9 @@ export default function PathfindingVisualizer() {
     resetDataStructs();
     isRunningAlgoRef.current = false;
     setIsRunningAlgo(false);
+    setHasStart(null);
     setHasEnd(null);
+    setIsAlgoStart(false);
   };
 
   const constructFinalPath = (row, col) => {
@@ -236,10 +243,10 @@ export default function PathfindingVisualizer() {
   
   const handleRunButton = async () => {
     setCurrentAction('idle');
+    setIsAlgoStart(true);
     if(!isRunningRef.current) {
       isRunningRef.current = true;
       isRunningAlgoRef.current = true;
-      setIsRunning(true);
       setIsRunningAlgo(true);
       switch(selectedAlgorithm) {
         case `Breadth-First Search`:
@@ -263,7 +270,7 @@ export default function PathfindingVisualizer() {
     }
     else {
       isRunningRef.current = false;
-      setIsRunning(false);
+      setIsRunningAlgo(false);
     }
   }
 
@@ -306,10 +313,10 @@ export default function PathfindingVisualizer() {
               setGrid([...bfsVisitedRef.current]);
               console.log("Path found!");
               isRunningRef.current = false;
-              setIsRunning(false);
               isRunningAlgoRef.current = false;
               setIsRunningAlgo(false);
               constructFinalPath(x, y);
+              setIsAlgoStart(false);
               return;
             }
   
@@ -322,7 +329,6 @@ export default function PathfindingVisualizer() {
       } 
       else {
         isRunningRef.current = false;
-        setIsRunning(false);
         return;
       }
   
@@ -360,7 +366,6 @@ export default function PathfindingVisualizer() {
       if(dfsStackRef.current.length === 0) {
         console.log(`DFS complete (no path or stack exhausted).`, dfsStackRef.current);
         isRunningRef.current = false;
-        setIsRunning(false);
         return;
       }
 
@@ -368,10 +373,10 @@ export default function PathfindingVisualizer() {
       
       if(row === hasEnd[0] && col === hasEnd[1]) {
         isRunningRef.current = false;
-        setIsRunning(false);
         isRunningAlgoRef.current = false;
         setIsRunningAlgo(false);
         constructFinalPath(row, col);
+        setIsAlgoStart(false);
         return;
       }
       dfsVisitedRef.current[row][col].isVisited = true;
@@ -427,7 +432,6 @@ export default function PathfindingVisualizer() {
       if(aStarOpenSetRef.current.length === 0) {
         console.log('A* complete: no path found.');
         isRunningRef.current = false;
-        setIsRunning(false);
         return;
       }
 
@@ -443,12 +447,12 @@ export default function PathfindingVisualizer() {
 
       if(row === hasEnd[0] && col === hasEnd[1]) {
         isRunningRef.current = false;
-        setIsRunning(false);
         setGrid([...aStarVisitedRef.current]);
         isRunningAlgoRef.current = false;
         setIsRunningAlgo(false);
         constructFinalPathAStar(row, col);
         setGrid([...aStarVisitedRef.current]);
+        setIsAlgoStart(false);
         return;
       }
 
@@ -488,7 +492,7 @@ export default function PathfindingVisualizer() {
   return (
     <div className={styles.visualizerContainer}>
       <h1 className={styles.h1}>Pathfinding Visualizer</h1>
-      <ControlPanel handleSetStartButton={handleSetStartButton} handleSetEndButton={handleSetEndButton} setCurrentAction={setCurrentAction} selectedAlgorithm={selectedAlgorithm} setSelectedAlgorithm={setSelectedAlgorithm} hasStart={hasStart} hasEnd={hasEnd} handleRunButton={handleRunButton} isRunning={isRunning} handleClearPathButton={handleClearPathButton} handleClearGridButton={handleClearGridButton} isRunningAlgo={isRunningAlgo} >
+      <ControlPanel handleSetStartButton={handleSetStartButton} handleSetEndButton={handleSetEndButton} setCurrentAction={setCurrentAction} selectedAlgorithm={selectedAlgorithm} setSelectedAlgorithm={setSelectedAlgorithm} hasStart={hasStart} hasEnd={hasEnd} handleRunButton={handleRunButton} handleClearPathButton={handleClearPathButton} handleClearWallsButton={handleClearWallsButton} handleClearGridButton={handleClearGridButton} isRunningAlgo={isRunningAlgo} isAlgoStart={isAlgoStart}>
 
       </ControlPanel>
       <Grid grid={grid} setGrid={setGrid} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseEnter={handleMouseEnter} actionState={currentAction}/>
@@ -496,7 +500,7 @@ export default function PathfindingVisualizer() {
         <strong>Current Action:</strong> {currentAction}
       </div>
       <div className={styles.debugDisplay}>
-        <strong>Algo Status:</strong> {isRunning? "running" : "not running"}
+        <strong>Algo Status:</strong> {isRunningAlgo? "running" : "not running"}
       </div>
       <div className={styles.debugDisplay}>
         <strong> Mouse Status:</strong> {isMouseDown? "mouseDown" : "mouseUp"}

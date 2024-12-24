@@ -6,7 +6,7 @@ import Dropdown from '../Dropdown/Dropdown';
 import styles from './ControlPanel.module.css';
 import { DEFAULT_ALGO_DROPDOWN_TEXT  } from '../../config/config';
 
-const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction, selectedAlgorithm, setSelectedAlgorithm, hasStart, hasEnd, handleRunButton, isRunning, handleClearPathButton, handleClearGridButton, isRunningAlgo }) => {
+const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction, selectedAlgorithm, setSelectedAlgorithm, hasStart, hasEnd, handleRunButton, handleClearPathButton, handleClearWallsButton, handleClearGridButton, isRunningAlgo, isAlgoStart }) => {
   const algorithms = [`Breadth-First Search`, `Depth-First Search`, `Dijkstra's Algorithm`, `A* Algorithm`];
 
   return (
@@ -25,12 +25,15 @@ const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction,
 
         </Dropdown>
         <button onClick = {()=>handleRunButton()} className={styles.button} disabled={!(DEFAULT_ALGO_DROPDOWN_TEXT.localeCompare(selectedAlgorithm) && hasStart && hasEnd)}>
-          {isRunning ? "Pause Algorithm" : "Run Algorithm"}
+          {isRunningAlgo ? "Pause Algorithm" : "Run Algorithm"}
         </button>
       </div>
       <div className={styles.rightGroup}>
         <button onClick = {()=>handleClearPathButton()} className={styles.button}>
           Clear Paths
+        </button>
+        <button onClick = {()=>handleClearWallsButton()} disabled={isAlgoStart} className={styles.button}>
+          Clear Walls
         </button>
         <button onClick = {()=>handleClearGridButton()} className={styles.button}>
           Clear Grid
