@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import styles from './Dropdown.module.css';
 
 const Dropdown = ({ options, defaultText, setSelectedAlgorithm, isRunningAlgo }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(defaultText);
+  const dropdownRef = useRef(null);
 
   const toggleDropdown = () => setIsOpen((prev) => !prev);
 
@@ -13,8 +14,22 @@ const Dropdown = ({ options, defaultText, setSelectedAlgorithm, isRunningAlgo })
     setSelectedAlgorithm(option);
   };
 
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className={styles.dropdown}>
+    <div className={styles.dropdown} ref={dropdownRef}>
       <button onClick={toggleDropdown} className={styles.dropdownButton} disabled={isRunningAlgo}>
         {selectedOption}
       </button>
