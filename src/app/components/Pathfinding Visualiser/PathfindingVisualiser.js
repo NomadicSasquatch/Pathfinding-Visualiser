@@ -42,6 +42,7 @@ export default function PathfindingVisualizer() {
   const [hasEnd, setHasEnd] = useState(null);
   const [isRunningAlgo, setIsRunningAlgo] = useState(false);
   const [isAlgoStart, setIsAlgoStart] = useState(false);
+  const [isAlgoEnd, setIsAlgoEnd] = useState(false);
   const isRunningRef = useRef(false);
   const isRunningAlgoRef = useRef(false);
 
@@ -183,6 +184,7 @@ export default function PathfindingVisualizer() {
     isRunningAlgoRef.current = false;
     setIsRunningAlgo(false);
     setIsAlgoStart(false);
+    setIsAlgoEnd(false);
   };
 
   const handleClearWallsButton = () => {
@@ -194,6 +196,7 @@ export default function PathfindingVisualizer() {
     isRunningAlgoRef.current = false;
     setIsRunningAlgo(false);
     setIsAlgoStart(false);
+    setIsAlgoEnd(false);
   }
 
   const handleClearGridButton = () => {
@@ -207,6 +210,7 @@ export default function PathfindingVisualizer() {
     setHasStart(null);
     setHasEnd(null);
     setIsAlgoStart(false);
+    setIsAlgoEnd(false);
   };
 
   const constructFinalPath = (row, col) => {
@@ -316,7 +320,7 @@ export default function PathfindingVisualizer() {
               isRunningAlgoRef.current = false;
               setIsRunningAlgo(false);
               constructFinalPath(x, y);
-              setIsAlgoStart(false);
+              setIsAlgoEnd(true);
               return;
             }
   
@@ -376,7 +380,7 @@ export default function PathfindingVisualizer() {
         isRunningAlgoRef.current = false;
         setIsRunningAlgo(false);
         constructFinalPath(row, col);
-        setIsAlgoStart(false);
+        setIsAlgoEnd(true);
         return;
       }
       dfsVisitedRef.current[row][col].isVisited = true;
@@ -452,7 +456,7 @@ export default function PathfindingVisualizer() {
         setIsRunningAlgo(false);
         constructFinalPathAStar(row, col);
         setGrid([...aStarVisitedRef.current]);
-        setIsAlgoStart(false);
+        setIsAlgoEnd(true);
         return;
       }
 
@@ -492,7 +496,7 @@ export default function PathfindingVisualizer() {
   return (
     <div className={styles.visualizerContainer}>
       <h1 className={styles.h1}>Pathfinding Visualizer</h1>
-      <ControlPanel handleSetStartButton={handleSetStartButton} handleSetEndButton={handleSetEndButton} setCurrentAction={setCurrentAction} selectedAlgorithm={selectedAlgorithm} setSelectedAlgorithm={setSelectedAlgorithm} hasStart={hasStart} hasEnd={hasEnd} handleRunButton={handleRunButton} handleClearPathButton={handleClearPathButton} handleClearWallsButton={handleClearWallsButton} handleClearGridButton={handleClearGridButton} isRunningAlgo={isRunningAlgo} isAlgoStart={isAlgoStart}>
+      <ControlPanel handleSetStartButton={handleSetStartButton} handleSetEndButton={handleSetEndButton} setCurrentAction={setCurrentAction} selectedAlgorithm={selectedAlgorithm} setSelectedAlgorithm={setSelectedAlgorithm} hasStart={hasStart} hasEnd={hasEnd} handleRunButton={handleRunButton} handleClearPathButton={handleClearPathButton} handleClearWallsButton={handleClearWallsButton} handleClearGridButton={handleClearGridButton} isRunningAlgo={isRunningAlgo} isAlgoStart={isAlgoStart} isAlgoEnd={isAlgoEnd}>
 
       </ControlPanel>
       <Grid grid={grid} setGrid={setGrid} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseEnter={handleMouseEnter} actionState={currentAction}/>
