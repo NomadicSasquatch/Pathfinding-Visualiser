@@ -6,7 +6,7 @@ import Dropdown from '../Dropdown/Dropdown';
 import styles from './ControlPanel.module.css';
 import { DEFAULT_ALGO_DROPDOWN_TEXT  } from '../../config/config';
 
-const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction, selectedAlgorithm, setSelectedAlgorithm, handleRunButton, isRunning, handleClearPathButton, handleClearGridButton, isRunningAlgo }) => {
+const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction, selectedAlgorithm, setSelectedAlgorithm, hasStart, hasEnd, handleRunButton, isRunning, handleClearPathButton, handleClearGridButton, isRunningAlgo }) => {
   const algorithms = [`Breadth-First Search`, `Depth-First Search`, `Dijkstra's Algorithm`, `A* Algorithm`];
 
   return (
@@ -24,7 +24,7 @@ const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction,
         <Dropdown options={algorithms} defaultText={DEFAULT_ALGO_DROPDOWN_TEXT} setSelectedAlgorithm={setSelectedAlgorithm} isRunningAlgo={isRunningAlgo}>
 
         </Dropdown>
-        <button onClick = {()=>handleRunButton()} className={styles.button} disabled={!(DEFAULT_ALGO_DROPDOWN_TEXT.localeCompare(selectedAlgorithm))}>
+        <button onClick = {()=>handleRunButton()} className={styles.button} disabled={!(DEFAULT_ALGO_DROPDOWN_TEXT.localeCompare(selectedAlgorithm) && hasStart && hasEnd)}>
           {isRunning ? "Pause Algorithm" : "Run Algorithm"}
         </button>
       </div>

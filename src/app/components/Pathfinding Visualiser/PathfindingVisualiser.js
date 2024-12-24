@@ -4,10 +4,7 @@
 - collapsible path comparison
 - current algo, selection dropdown remains a dropdown
 - add sounds
-- highlight the completed path
 - scaling issue
-- dropdown closes when anything else is clicked(the cheese)
-- disable toggle wall when algo is running
 - tutorial/walkthrough that can runs on first render and when user clicks on the tutorial button
 */
 
@@ -238,9 +235,6 @@ export default function PathfindingVisualizer() {
     setGrid([...aStarVisitedRef.current]);
   };
   
-  
-
- // TODO: disable run algo when there is no start or end
   const handleRunButton = async () => {
     setCurrentAction('idle');
     if(!isRunningRef.current) {
@@ -495,7 +489,7 @@ export default function PathfindingVisualizer() {
   return (
     <div className={styles.visualizerContainer}>
       <h1 className={styles.h1}>Pathfinding Visualizer</h1>
-      <ControlPanel handleSetStartButton={handleSetStartButton} handleSetEndButton={handleSetEndButton} setCurrentAction={setCurrentAction} selectedAlgorithm={selectedAlgorithm} setSelectedAlgorithm={setSelectedAlgorithm} handleRunButton={handleRunButton} isRunning={isRunning} handleClearPathButton={handleClearPathButton} handleClearGridButton={handleClearGridButton} isRunningAlgo={isRunningAlgo} >
+      <ControlPanel handleSetStartButton={handleSetStartButton} handleSetEndButton={handleSetEndButton} setCurrentAction={setCurrentAction} selectedAlgorithm={selectedAlgorithm} setSelectedAlgorithm={setSelectedAlgorithm} hasStart={hasStart} hasEnd={hasEnd} handleRunButton={handleRunButton} isRunning={isRunning} handleClearPathButton={handleClearPathButton} handleClearGridButton={handleClearGridButton} isRunningAlgo={isRunningAlgo} >
 
       </ControlPanel>
       <Grid grid={grid} setGrid={setGrid} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseEnter={handleMouseEnter} actionState={currentAction}/>
