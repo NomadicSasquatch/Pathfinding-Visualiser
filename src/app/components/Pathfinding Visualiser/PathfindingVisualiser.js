@@ -45,6 +45,10 @@ export default function PathfindingVisualizer() {
   const isRunningRef = useRef(false);
   const isRunningAlgoRef = useRef(false);
 
+  //testing mouse dragging queue:
+
+  const mouseOpQueue = useRef([]);
+
   // useEffect(() => {
   //   console.log(`isRunning changed to: ${isRunning}`);
   // }, [isRunning]);
@@ -100,18 +104,15 @@ export default function PathfindingVisualizer() {
   
   const handleMouseEnter = (row, col) => {
     if(!isMouseDown) return;
+    mouseOpQueue.current.push([row, col]);
   
     switch(currentAction) {
       case 'toggleWall':
-        const key = `${row},${col}`;
+        const [curX, curY] = mouseOpQueue.current.shift();
+        const key = `${curX},${curY}`;
         if(!visitedDuringDragRef.current.has(key)) {
-          handleNodeState(row, col, 'isWall');
-          console.log(`the set is`, visitedDuringDragRef.current);
+          handleNodeState(curX, curY, 'isWall');
           visitedDuringDragRef.current.add(key);
-          console.log(` + `, visitedDuringDragRef.current);
-        }
-        else {
-          console.log(`THE CURRENT TOTAL SET:`, visitedDuringDragRef.current);
         }
         break;
   
@@ -349,7 +350,6 @@ export default function PathfindingVisualizer() {
 
       dfsVisitedRef.current = updatedGrid;
       dfsStackRef.current = [[hasStart[0], hasStart[1]]];
-      console.log(`DFS initialisation complete\n`, dfsStackRef.current);
     }
   };
 
@@ -360,7 +360,6 @@ export default function PathfindingVisualizer() {
     }
     const delay = 0.05;
     const animate = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-    console.log(`DFS begins\n`);
     const depthFirstSearch = async () => {
       if(!isRunningRef.current) {
         console.log(`DFS is paused`);
