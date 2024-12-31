@@ -46,7 +46,7 @@ export default function PathfindingVisualizer() {
   const isRunningAlgoRef = useRef(false);
 
   //testing mouse dragging queue:
-
+  // fuuuuuuuuckkkkkkkkk
   const mouseOpQueue = useRef([]);
 
   // useEffect(() => {
@@ -55,6 +55,7 @@ export default function PathfindingVisualizer() {
 
 
   const dir = [[-1, 0], [0, 1], [1, 0], [0, -1]];
+  const eightDir = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
 
   // DATA STRUCTURES FOR BFS //
   const bfsQueueRef = useRef([]);
@@ -78,6 +79,7 @@ export default function PathfindingVisualizer() {
     setIsMouseDown(true);
     switch(currentAction) {
       case 'toggleWall':
+        mouseOpQueue.current.push([row, col]);
         handleNodeState(row, col, 'isWall');
         visitedDuringDragRef.current.add(`${row},${col}`);
         break;
@@ -104,15 +106,18 @@ export default function PathfindingVisualizer() {
   
   const handleMouseEnter = (row, col) => {
     if(!isMouseDown) return;
-    mouseOpQueue.current.push([row, col]);
   
     switch(currentAction) {
       case 'toggleWall':
-        const [curX, curY] = mouseOpQueue.current.shift();
-        const key = `${curX},${curY}`;
+        const key = `${row},${col}`;
         if(!visitedDuringDragRef.current.has(key)) {
-          handleNodeState(curX, curY, 'isWall');
+          handleNodeState(row, col, 'isWall');
+          console.log(`the current mouseOpQueue:`, mouseOpQueue);
           visitedDuringDragRef.current.add(key);
+          const [curX, curY] = mouseOpQueue.current.shift();
+          patchWalls(grid[curX][curY], grid[row][col]);
+          mouseOpQueue.current.push([row, col])
+          setGrid([...grid]);
         }
         break;
   
@@ -134,7 +139,50 @@ export default function PathfindingVisualizer() {
   const handleMouseUp = () => {
     setIsMouseDown(false);
     visitedDuringDragRef.current.clear();
+    mouseOpQueue.current = [];
   };
+
+  function patchWalls(node1, node2) {
+    let x1 = node1.row;
+    let y1 = node1.col;
+    const x2 = node2.row;
+    const y2 = node2.col;
+  
+    if(x1 === x2 && y1 === y2) {
+      grid[x1][y1].isWall = true;
+      return;
+    }
+    if(Math.abs(x2 - x1) <= 1 && Math.abs(y2 - y1) <= 1) {
+      grid[x2][y2].isWall = true;
+      return;
+    }
+  
+    const dx = Math.abs(x2 - x1);
+    const sx = x1 < x2 ? 1 : -1;
+    const dy = -Math.abs(y2 - y1);
+    const sy = y1 < y2 ? 1 : -1;
+  
+    let err = dx + dy;
+  
+    while(true) {
+      grid[x1][y1].isWall = true;
+  
+      if(x1 === x2 && y1 === y2) {
+        break;
+      }
+  
+      const e2 = 2 * err;
+  
+      if(e2 >= dy) {
+        err += dy;
+        x1 += sx;
+      }
+      if(e2 <= dx) {
+        err += dx;
+        y1 += sy;
+      }
+    }
+  }
 
   const handleNodeState = (row, col, attribute) => {
     const newGrid = grid.map((currentRow, rowIndex) =>
