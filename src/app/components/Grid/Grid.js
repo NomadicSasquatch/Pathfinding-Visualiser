@@ -12,7 +12,7 @@ const Grid = ({ grid, setGrid, onMouseDown, onMouseUp, onMouseEnter, actionState
   }
 
   return (
-    <div className={styles.grid} onMouseLeave={() => onMouseUp()}>
+    <div className={styles.grid} onDragStart={(e) => e.preventDefault()} onMouseLeave={() => onMouseUp() }>
       {grid.map((row, rowIndex) => (
         <div key={rowIndex} className={styles.row}>
           {row.map((node, colIndex) => (
