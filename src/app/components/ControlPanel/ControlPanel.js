@@ -4,6 +4,7 @@ import React from 'react';
 import Grid from '../Grid/Grid';
 import Dropdown from '../Dropdown/Dropdown';
 import styles from './ControlPanel.module.css';
+import dropStyle from '../Dropdown/Dropdown.module.css'
 import { DEFAULT_ALGO_DROPDOWN_TEXT  } from '../../config/config';
 
 const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction, selectedAlgorithm, setSelectedAlgorithm, hasStart, hasEnd, handleRunButton, handleClearPathButton, handleClearWallsButton, handleClearGridButton, isRunningAlgo, isAlgoStart, isAlgoEnd }) => {

@@ -5,7 +5,7 @@ import Node from "../Node/Node";
 import styles from "./Grid.module.css";
 
 const Grid = ({ grid, setGrid, onMouseDown, onMouseUp, onMouseEnter, actionState }) => {
-  console.log("Grid received:", grid);
+  //console.log("Grid received:", grid);
 
   if (!grid || grid.length === 0) {
     return <div>Loading grid...</div>;

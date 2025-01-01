@@ -1,18 +1,15 @@
-.dropdown {
-    position: relative;
-    display: inline-block;
-    border: none;
-  }
-  
 .dropdownButton {
+    position: relative;
+    display: flex;
     background-color: #007bff;
     border: 2px solid #a7c8eb;
     color: white;
     cursor: pointer;
-    height: 30px;
-    font-size: 16px;
-    margin: 2px;
+    font-size: 24px;
     border-radius: 5px;
+    width: 230px;
+    height: 40px;
+    align-items: center;
 }
 
 .dropdownButton:hover {
@@ -34,12 +31,13 @@
     list-style: none;
     padding: 0;
     z-index: 1000;
+    width: 200px;
 }
 
 .dropdownItem {
     padding: 10px 20px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 24px;
     background-color: black;
 }
 

@@ -29,7 +29,7 @@ const Dropdown = ({ options, defaultText, setSelectedAlgorithm, isAlgoStart, isA
   }, []);
 
   return (
-    <div className={styles.dropdown} ref={dropdownRef}>
+    <div className={styles.dropdownButton} ref={dropdownRef}>
       <button onClick={toggleDropdown} className={styles.dropdownButton} disabled={isAlgoStart && !isAlgoEnd}>
         {selectedOption}
       </button>

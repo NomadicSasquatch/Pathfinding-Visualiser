@@ -7,6 +7,7 @@
 - tutorial/walkthrough that can runs on first render and when user clicks on the tutorial button
 */
 
+// TODO: end and start node wall overlap logic bug
 import React, { useState, useEffect, useRef } from 'react';
 import Grid from '../Grid/Grid';
 import styles from './PathfindingVisualiser.module.css';
@@ -46,7 +47,6 @@ export default function PathfindingVisualizer() {
   const isRunningAlgoRef = useRef(false);
 
   //testing mouse dragging queue:
-  // fuuuuuuuuckkkkkkkkk
   const mouseOpQueue = useRef([]);
 
   // useEffect(() => {
@@ -55,7 +55,6 @@ export default function PathfindingVisualizer() {
 
 
   const dir = [[-1, 0], [0, 1], [1, 0], [0, -1]];
-  const eightDir = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
 
   // DATA STRUCTURES FOR BFS //
   const bfsQueueRef = useRef([]);
@@ -343,7 +342,7 @@ export default function PathfindingVisualizer() {
       return;
     }
   
-    const delay = 0.05;
+    const delay = 0;
     const animate = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   
     const BreadthFirstSearchStep = async () => {
