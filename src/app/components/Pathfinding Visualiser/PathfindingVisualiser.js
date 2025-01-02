@@ -7,7 +7,6 @@
 - tutorial/walkthrough that can runs on first render and when user clicks on the tutorial button
 */
 
-// TODO: end and start node wall overlap logic bug
 import React, { useState, useEffect, useRef } from 'react';
 import Grid from '../Grid/Grid';
 import styles from './PathfindingVisualiser.module.css';
@@ -567,7 +566,7 @@ export default function PathfindingVisualizer() {
 
       </ControlPanel>
       <Grid grid={grid} setGrid={setGrid} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseEnter={handleMouseEnter} actionState={currentAction}/>
-      <div className={styles.debugDisplay}>
+      {/* <div className={styles.debugDisplay}>
         <strong>Current Action:</strong> {currentAction}
       </div>
       <div className={styles.debugDisplay}>
@@ -575,7 +574,7 @@ export default function PathfindingVisualizer() {
       </div>
       <div className={styles.debugDisplay}>
         <strong> Mouse Status:</strong> {isMouseDown? "mouseDown" : "mouseUp"}
-      </div>
+      </div> */}
     </div>
   );
 }
