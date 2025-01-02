@@ -1,17 +1,14 @@
-/* Grid.module.css */
 .grid {
   display: flex;
-  flex-direction: column; /* Stacks rows vertically */
-  /*align-items: center; /* Center rows horizontally */
-  margin: 75px; /* Adds spacing around the grid */
+  flex-direction: column;
+  margin: 75px;
   width: max-content;
   height: max-content;
-  border: 5px solid grey; /* Debugging border for the grid */
+  border: 5px solid grey;
 }
 
 .row {
-  display: flex; /* Stacks nodes in a row horizontally */
+  display: flex;
   width: max-content;
   height: max-content;
-  /*border: 3px dashed green;*/
 }
