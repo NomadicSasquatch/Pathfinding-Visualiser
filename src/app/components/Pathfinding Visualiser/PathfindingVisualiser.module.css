@@ -4,13 +4,7 @@
 }
 
 .visualizerContainer {
-  padding: 20px;
   width: max-content;
   height: max-content;
-  transform: scale(0.90);
-  transform-origin: top left;
-}
-
-.tester {
-  width: 100%;
+  overflow: hidden;
 }

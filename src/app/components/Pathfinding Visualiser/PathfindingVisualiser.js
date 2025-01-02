@@ -545,7 +545,7 @@ export default function PathfindingVisualizer() {
 
       </ControlPanel>
       <Grid grid={grid} setGrid={setGrid} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseEnter={handleMouseEnter} actionState={currentAction}/>
-      <div className={styles.debugDisplay}>
+      {/* <div className={styles.debugDisplay}>
         <strong>Current Action:</strong> {currentAction}
       </div>
       <div className={styles.debugDisplay}>
@@ -553,7 +553,7 @@ export default function PathfindingVisualizer() {
       </div>
       <div className={styles.debugDisplay}>
         <strong> Mouse Status:</strong> {isMouseDown? "mouseDown" : "mouseUp"}
-      </div>
+      </div> */}
     </div>
   );
 }
