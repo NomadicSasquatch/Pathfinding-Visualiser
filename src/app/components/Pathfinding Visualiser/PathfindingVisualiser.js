@@ -78,11 +78,12 @@ export default function PathfindingVisualizer() {
     setIsMouseDown(true);
     switch(currentAction) {
       case 'toggleWall':
-        mouseOpQueue.current.push([row, col]);
-        handleNodeState(row, col, 'isWall');
+        const flag = handleNodeState(row, col, 'isWall');
         visitedDuringDragRef.current.add(`${row},${col}`);
+        if(flag === 1) {
+          mouseOpQueue.current.push([row, col]);
+        }
         break;
-  
       case 'setStart':
         handleNodeState(row, col, 'isStart');
         setHasStart([row, col]);
@@ -110,12 +111,24 @@ export default function PathfindingVisualizer() {
       case 'toggleWall':
         const key = `${row},${col}`;
         if(!visitedDuringDragRef.current.has(key)) {
-          handleNodeState(row, col, 'isWall');
-          console.log(`the current mouseOpQueue:`, mouseOpQueue);
           visitedDuringDragRef.current.add(key);
-          const [curX, curY] = mouseOpQueue.current.shift();
-          patchWalls(grid[curX][curY], grid[row][col]);
-          mouseOpQueue.current.push([row, col])
+          const flag = handleNodeState(row, col, 'isWall');
+          // console.log(`the current mouseOpQueue:`, mouseOpQueue);
+          if(flag === 0) {
+            if(mouseOpQueue.current.length !== 0) {
+              mouseOpQueue.current.shift();
+            }
+            setGrid([...grid]);
+            break;
+          }
+          if(mouseOpQueue.current.length !== 0) {
+            const [curX, curY] = mouseOpQueue.current.shift();
+            patchWalls(grid[curX][curY], grid[row][col]);
+          }
+          else {
+            patchWalls(grid[row][col], grid[row][col]);
+          }
+          mouseOpQueue.current.push([row,col]);
           setGrid([...grid]);
         }
         break;
@@ -184,6 +197,14 @@ export default function PathfindingVisualizer() {
   }
 
   const handleNodeState = (row, col, attribute) => {
+    if(attribute.localeCompare(`isWall`) === 0) {
+      if(hasEnd && hasEnd[0] === row && hasEnd[1] === col) {
+        return 0;
+      }
+      if(hasStart && hasStart[0] === row && hasStart[1] === col) {
+        return 0;
+      }
+    }
     const newGrid = grid.map((currentRow, rowIndex) =>
       currentRow.map((node, colIndex) => {
         if(rowIndex === row && colIndex === col) {
@@ -193,6 +214,7 @@ export default function PathfindingVisualizer() {
       })
     );
     setGrid(newGrid);
+    return 1;
   };
 
   const handleSetStartButton = () => {
@@ -545,7 +567,7 @@ export default function PathfindingVisualizer() {
 
       </ControlPanel>
       <Grid grid={grid} setGrid={setGrid} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseEnter={handleMouseEnter} actionState={currentAction}/>
-      {/* <div className={styles.debugDisplay}>
+      <div className={styles.debugDisplay}>
         <strong>Current Action:</strong> {currentAction}
       </div>
       <div className={styles.debugDisplay}>
@@ -553,7 +575,7 @@ export default function PathfindingVisualizer() {
       </div>
       <div className={styles.debugDisplay}>
         <strong> Mouse Status:</strong> {isMouseDown? "mouseDown" : "mouseUp"}
-      </div> */}
+      </div>
     </div>
   );
 }

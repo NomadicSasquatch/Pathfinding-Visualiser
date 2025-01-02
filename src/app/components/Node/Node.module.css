@@ -1,26 +1,24 @@
-/* Node.module.css */
 .node {
-  width: var(--node-size); /* Width of a node */
-  height: var(--node-size); /* Height of a node */
-  border: 2px solid black; /* Adds a border around each node */
-  /*box-sizing: border-box; /* Ensures padding/border are included in width/height */
-  cursor: pointer; /* Makes the nodes clickable */
-  transition: background-color 0.2s; /* Smooth transition for color changes */
+  width: var(--node-size);
+  height: var(--node-size);
+  border: 2px solid black;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
 .default {
   background-color: white;
 }
-/* Conditional classes */
+
 .nodeWall {
-  background-color: black; /* Walls are black */
+  background-color: black;
 }
 
 .nodeStart  {
-  background-color: green; /* Start node is green */
+  background-color: green;
 }
 
 .nodeEnd {
-  background-color: red; /* End node is red */
+  background-color: red;
 }
 
 .nodeVisited {
@@ -32,5 +30,5 @@
 }
 
 .node:hover {
-  background-color: lightgray; /* Change color on hover */
+  background-color: lightgray;
 }
