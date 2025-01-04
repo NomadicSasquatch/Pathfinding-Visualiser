@@ -25,7 +25,7 @@ export default function PathfindingVisualizer() {
         isEnd: false,
         isWall: false,
         isVisited: false,
-        isFrontier: false,
+        waveIndex: -1,
         isInFinalPath: false,
         // attributes for A* (consider workarounds)
         gCost: Infinity,
@@ -89,6 +89,11 @@ export default function PathfindingVisualizer() {
   const handleMouseDown = (row, col) => {
     // TODO: add boundary checking  
     setIsMouseDown(true);
+    // for(let i = 0; i < GRID_ROWS; i++) {
+    //   for(let j = 0; j < GRID_COLS; j++){
+    //     console.log(grid[i][j].waveIndex);
+    //   }
+    // }
     switch(currentAction) {
       case 'toggleWall':
         const flag = handleNodeState(row, col, 'isWall');
@@ -264,7 +269,7 @@ export default function PathfindingVisualizer() {
 
   const handleClearPathButton = () => {
     const newGrid = grid.map((row) =>
-      row.map((node) => ({ ...node, isVisited: false, isFrontier: false, isInFinalPath: false, gCost: Infinity, hCost: Infinity, fCost: Infinity, parent: null}))
+      row.map((node) => ({ ...node, isVisited: false, waveIndex: -1, isInFinalPath: false, gCost: Infinity, hCost: Infinity, fCost: Infinity, parent: null}))
     );
     setGrid(newGrid);
     resetDataStructs()
@@ -288,7 +293,7 @@ export default function PathfindingVisualizer() {
 
   const handleClearGridButton = () => {
     const newGrid = grid.map((row) =>
-      row.map((node) => ({ ...node, isVisited: false, isFrontier: false, isWall: false, isStart: false, isEnd: false, isInFinalPath: false, gCost: Infinity, hCost: Infinity, fCost: Infinity, parent: null}))
+      row.map((node) => ({ ...node, isVisited: false, waveIndex: -1, isWall: false, isStart: false, isEnd: false, isInFinalPath: false, gCost: Infinity, hCost: Infinity, fCost: Infinity, parent: null}))
     );
     setGrid(newGrid);
     resetDataStructs();
@@ -564,12 +569,13 @@ export default function PathfindingVisualizer() {
           neighborNode.hCost = manhattanDist(x, y, hasEnd[0], hasEnd[1]);
           neighborNode.fCost = neighborNode.gCost + neighborNode.hCost;
           neighborNode.parent = currentNode;
-
+          aStarVisitedRef.current[x][y].waveIndex = aStarVisitedRef.current[row][col].waveIndex + 1;
           aStarOpenSetRef.current.push([x, y]);
         }
       }
 
       setGrid([...aStarVisitedRef.current]);
+      //console.log(aStarVisitedRef.current[row][col].waveIndex);
 
       await animate(delay);
       AStarStep();
@@ -597,26 +603,29 @@ export default function PathfindingVisualizer() {
   //     setGrid(newGrid);
   //   }
   // };
+  const newGridBFS = useRef(null);
 
   const runGreedyBfs = () => {
-    const newGrid = grid.map((row) => row.map((node) => ({ ...node })));
+    const newGrid =  grid.map((row) => row.map((node) => ({ ...node })));
+    newGridBFS.current = newGrid;
+    console.log(newGridBFS.current);
     let openSet = [];
     openSet.push([hasStart[0], hasStart[1], 0]);
 
-    newGrid[hasStart[0]][hasStart[1]].hCost = manhattanDist(hasStart[0], hasStart[1], hasEnd[0], hasEnd[1]);
+    newGridBFS.current[hasStart[0]][hasStart[1]].hCost = manhattanDist(hasStart[0], hasStart[1], hasEnd[0], hasEnd[1]);
 
     while(openSet.length > 0) {
       frontierTimeline.push([...openSet]);
 
       openSet.sort((a, b) => {
-        const nodeA = newGrid[a[0]][a[1]];
-        const nodeB = newGrid[b[0]][b[1]];
+        const nodeA = newGridBFS.current[a[0]][a[1]];
+        const nodeB = newGridBFS.current[b[0]][b[1]];
 
         return nodeA.hCost - nodeB.hCost;
       });
 
       const [curX, curY, steps] = openSet.shift();
-      const curNode = newGrid[curX][curY];
+      const curNode = newGridBFS.current[curX][curY];
 
       if(curNode.isVisited) {
         continue;
@@ -633,12 +642,14 @@ export default function PathfindingVisualizer() {
         const x = curX + dir[i][0];
         const y = curY + dir[i][1];
 
-        if(x < 0 || x >= GRID_ROWS || y < 0 || y >= GRID_COLS || newGrid[x][y].isVisited || newGrid[x][y].isWall) {
+        if(x < 0 || x >= GRID_ROWS || y < 0 || y >= GRID_COLS || newGridBFS.current[x][y].isVisited || newGridBFS.current[x][y].isWall) {
           continue;
         }
-        newGrid[x][y].hCost = manhattanDist(x, y, hasEnd[0], hasEnd[1]);
+        newGridBFS.current[x][y].hCost = manhattanDist(x, y, hasEnd[0], hasEnd[1]);
         // newGrid marked for nodes since it does not need to be visualised first, grid marked for parents for reconstruction
         grid[x][y].parent = curNode;
+        newGridBFS.current[x][y].waveIndex = newGridBFS.current.waveIndex + 1;
+        console.log(`fuck up`, newGridBFS.current[x][y].waveIndex);
 
         openSet.push([x, y, steps+1]);
       }
@@ -667,7 +678,8 @@ export default function PathfindingVisualizer() {
   
       for(const frontierSnap of chunk) {
         frontierSnap.forEach(([fx, fy, tmpStep]) => {
-            grid[fx][fy].isVisited = true;
+            grid[fx][fy].waveIndex = newGridBFS.current[fx][fy].waveIndex;
+            console.log(`testing`, grid[fx][fy].waveIndex, newGridBFS.current[fx][fy].waveIndex);
         });
       }
   

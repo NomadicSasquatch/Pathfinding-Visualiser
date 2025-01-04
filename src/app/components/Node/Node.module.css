@@ -22,15 +22,15 @@
 }
 
 .nodeVisited {
-  background-color: blueviolet;
+  background-color: hsl(271, 76%, 53%);
 }
 
 .isInFinalPath {
   background-color: greenyellow;
 }
 
-.nodeFrontier {
-  background-color: rgb(200, 141, 255);
+.waveColour {
+  background-color: hsl(271, 25%, 42%);;
 }
 
 .node:hover {
