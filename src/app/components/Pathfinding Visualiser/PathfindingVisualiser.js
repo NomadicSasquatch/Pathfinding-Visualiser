@@ -481,6 +481,7 @@ export default function PathfindingVisualizer() {
         return;
       }
       dfsVisitedRef.current[row][col].isVisited = true;
+      dfsVisitedRef.current[row][col].waveIndex = -1;
       setGrid([...dfsVisitedRef.current]);
 
       for(let i = 0; i < 4; i++) {
@@ -488,6 +489,7 @@ export default function PathfindingVisualizer() {
         const y = col + dir[i][1];
         if(x >= 0 && x < GRID_ROWS && y >= 0 && y < GRID_COLS && !dfsVisitedRef.current[x][y].isWall && !dfsVisitedRef.current[x][y].isVisited) {
           dfsStackRef.current.push([x,y]);
+          dfsVisitedRef.current[x][y].waveIndex = 1;
           dfsVisitedRef.current[x][y].parent = dfsVisitedRef.current[row][col];
         }
       }
