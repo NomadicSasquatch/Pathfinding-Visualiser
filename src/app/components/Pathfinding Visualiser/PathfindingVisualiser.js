@@ -49,6 +49,7 @@ export default function PathfindingVisualizer() {
 
   //testing mouse dragging queue:
   const mouseOpQueue = useRef([]);
+  const animationIndexRef = useRef(0);
 
   // useEffect(() => {
   //   console.log(`isRunning changed to: ${isRunning}`);
@@ -76,6 +77,7 @@ export default function PathfindingVisualizer() {
   // const greedyBfsSetRef = useRef([]);
   // const greedyBfsVisitedRef = useRef(null);
   // const greedyBfsVisitOrder = useRef([]); // probably in js you can push arrays into a 1D array to make 2D (tbc)
+  const revealedVisitedCountRef = useRef(0);
   // DATA STRUCTURES FOR GREEDY BEST-FIRST SEARCH //
 
   // general replay data struct
@@ -254,7 +256,9 @@ export default function PathfindingVisualizer() {
 
     frontierTimeline = [];
     visitedOrder = [];
-  
+    animationIndexRef.current = 0;
+    revealedVisitedCountRef.current = 0;
+
     isRunningRef.current = false;
   }
 
@@ -345,7 +349,7 @@ export default function PathfindingVisualizer() {
           runDFS();
           break;
         case `Greedy Best-First Search`:
-          runGreedyBfs();
+          if(visitedOrder.length === 0) runGreedyBfs();
           animateGreedyBFS();
           break;
         case `A* Algorithm`:
@@ -597,7 +601,7 @@ export default function PathfindingVisualizer() {
   const runGreedyBfs = () => {
     const newGrid = grid.map((row) => row.map((node) => ({ ...node })));
     let openSet = [];
-    openSet.push(hasStart);
+    openSet.push([hasStart[0], hasStart[1], 0]);
 
     newGrid[hasStart[0]][hasStart[1]].hCost = manhattanDist(hasStart[0], hasStart[1], hasEnd[0], hasEnd[1]);
 
@@ -611,7 +615,7 @@ export default function PathfindingVisualizer() {
         return nodeA.hCost - nodeB.hCost;
       });
 
-      const [curX, curY] = openSet.shift();
+      const [curX, curY, steps] = openSet.shift();
       const curNode = newGrid[curX][curY];
 
       if(curNode.isVisited) {
@@ -636,71 +640,67 @@ export default function PathfindingVisualizer() {
         // newGrid marked for nodes since it does not need to be visualised first, grid marked for parents for reconstruction
         grid[x][y].parent = curNode;
 
-        openSet.push([x, y]);
+        openSet.push([x, y, steps+1]);
       }
     }
 
     return { frontierTimeline, visitedOrder };
   };
-  
-  async function animateGreedyBFS() {
+
+  const animateGreedyBFS = async () => {
+    if(!isRunningRef.current) {
+      console.log(`Greedy Best-First Search is paused.`);
+      return;
+    }
     const [endRow, endCol] = hasEnd;
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+    
+    const CHUNK_SIZE = (frontierTimeline[animationIndexRef.current].length)*10;
+    const delay = 10;
   
-    const CHUNK_SIZE = 10;
-    const delay = 30;
+    let i = animationIndexRef.current;
+    let revealed = revealedVisitedCountRef.current;
   
-    for (let row = 0; row < grid.length; row++) {
-      for (let col = 0; col < grid[0].length; col++) {
-        grid[row][col].isFrontier = false;
-      }
-    }
-  
-    let revealedVisitedCount = 0;
-  
-    for (let i = 0; i < frontierTimeline.length; i += CHUNK_SIZE) {
+    while(i < frontierTimeline.length && isRunningRef.current) {
       const chunk = frontierTimeline.slice(i, i + CHUNK_SIZE);
+      //console.log(chunk);
   
-      for (const frontierSnap of chunk) {
-        for (let r = 0; r < grid.length; r++) {
-          for (let c = 0; c < grid[0].length; c++) {
-            grid[r][c].isFrontier = false;
-          }
-        }
-  
-        frontierSnap.forEach(([fx, fy]) => {
-          if (!grid[fx][fy].isVisited) {
-            grid[fx][fy].isFrontier = true;
-          }
+      for(const frontierSnap of chunk) {
+        frontierSnap.forEach(([fx, fy, tmpStep]) => {
+            grid[fx][fy].isVisited = true;
         });
-
-        if (revealedVisitedCount < visitedOrder.length) {
-          const [vx, vy] = visitedOrder[revealedVisitedCount];
-          grid[vx][vy].isVisited = true;
-          revealedVisitedCount++;
-        }
       }
   
       setGrid([...grid]);
-      await sleep(delay);
+      for (let msGone = 0; msGone < delay && isRunningRef.current; msGone += 5) {
+        await sleep(5); 
+      }
+  
+      i += CHUNK_SIZE;
     }
   
-    for (; revealedVisitedCount < visitedOrder.length; revealedVisitedCount++) {
-      const [vx, vy] = visitedOrder[revealedVisitedCount];
-      grid[vx][vy].isVisited = true;
-    }
-    setGrid([...grid]);
-    await sleep(delay);
+    animationIndexRef.current = i;
+    revealedVisitedCountRef.current = revealed;
   
-    if (grid[endRow][endCol].parent) {
-      constructFinalPath(endRow, endCol);
+    if(i >= frontierTimeline.length && isRunningRef.current) {
+      visitedOrder.forEach(([vx, vy]) => {
+        grid[vx][vy].isVisited = true;
+      });
       setGrid([...grid]);
+  
+      if(grid[endRow][endCol].parent) {
+        constructFinalPath(endRow, endCol);
+        setGrid([...grid]);
+      }
+  
+      animationIndexRef.current = 0;
+      console.log("Greedy BFS animation complete");
+      isRunningRef.current = false;
+      isRunningAlgoRef.current = false;
+      setIsRunningAlgo(false);
+      setIsAlgoEnd(true);
     }
-  
-    console.log("Greedy BFS animation complete");
-  }
-  
-  
+  };
   
   
   return (
