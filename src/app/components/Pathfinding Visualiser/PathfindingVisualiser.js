@@ -25,6 +25,7 @@ export default function PathfindingVisualizer() {
         isEnd: false,
         isWall: false,
         isVisited: false,
+        isFrontier: false,
         isInFinalPath: false,
         // attributes for A* (consider workarounds)
         gCost: Infinity,
@@ -44,6 +45,7 @@ export default function PathfindingVisualizer() {
   const [isAlgoEnd, setIsAlgoEnd] = useState(false);
   const isRunningRef = useRef(false);
   const isRunningAlgoRef = useRef(false);
+  let chunkSize = 10;
 
   //testing mouse dragging queue:
   const mouseOpQueue = useRef([]);
@@ -69,6 +71,16 @@ export default function PathfindingVisualizer() {
   const aStarOpenSetRef = useRef([]);
   const aStarVisitedRef = useRef(null);
   // DATA STRUCTURES FOR A* //
+
+  // DATA STRUCTURES FOR GREEDY BEST-FIRST SEARCH //
+  // const greedyBfsSetRef = useRef([]);
+  // const greedyBfsVisitedRef = useRef(null);
+  // const greedyBfsVisitOrder = useRef([]); // probably in js you can push arrays into a 1D array to make 2D (tbc)
+  // DATA STRUCTURES FOR GREEDY BEST-FIRST SEARCH //
+
+  // general replay data struct
+  let frontierTimeline = [];
+  let visitedOrder = [];
 
   const visitedDuringDragRef = useRef(new Set());
 
@@ -239,13 +251,16 @@ export default function PathfindingVisualizer() {
     dfsVisitedRef.current = null;
     aStarOpenSetRef.current = [];
     aStarVisitedRef.current = null;
+
+    frontierTimeline = [];
+    visitedOrder = [];
   
     isRunningRef.current = false;
   }
 
   const handleClearPathButton = () => {
     const newGrid = grid.map((row) =>
-      row.map((node) => ({ ...node, isVisited: false, isInFinalPath: false, gCost: Infinity, hCost: Infinity, fCost: Infinity, parent: null}))
+      row.map((node) => ({ ...node, isVisited: false, isFrontier: false, isInFinalPath: false, gCost: Infinity, hCost: Infinity, fCost: Infinity, parent: null}))
     );
     setGrid(newGrid);
     resetDataStructs()
@@ -269,7 +284,7 @@ export default function PathfindingVisualizer() {
 
   const handleClearGridButton = () => {
     const newGrid = grid.map((row) =>
-      row.map((node) => ({ ...node, isVisited: false, isWall: false, isStart: false, isEnd: false, isInFinalPath: false, gCost: Infinity, hCost: Infinity, fCost: Infinity, parent: null}))
+      row.map((node) => ({ ...node, isVisited: false, isFrontier: false, isWall: false, isStart: false, isEnd: false, isInFinalPath: false, gCost: Infinity, hCost: Infinity, fCost: Infinity, parent: null}))
     );
     setGrid(newGrid);
     resetDataStructs();
@@ -329,8 +344,9 @@ export default function PathfindingVisualizer() {
           if(dfsStackRef.current.length === 0) initDFS();
           runDFS();
           break;
-        case `Dijkstra's Algorithm`:
-
+        case `Greedy Best-First Search`:
+          runGreedyBfs();
+          animateGreedyBFS();
           break;
         case `A* Algorithm`:
           if(aStarOpenSetRef.current.length === 0) initAStar();
@@ -395,9 +411,13 @@ export default function PathfindingVisualizer() {
             bfsVisitedRef.current[x][y].isVisited = true;
             bfsQueueRef.current.push([x, y]);
           }
+          chunkSize++;
         }
   
-        setGrid([...bfsVisitedRef.current]);
+        if(chunkSize >= 10) {
+          setGrid([...bfsVisitedRef.current]);
+          chunkSize = 0;
+        }
       } 
       else {
         isRunningRef.current = false;
@@ -557,8 +577,132 @@ export default function PathfindingVisualizer() {
   const manhattanDist = (r1, c1, r2, c2) => {
     return Math.abs(r1 - r2) + Math.abs(c1 - c2);
   };
-  
 
+  // const initGreedyBfs = () => {
+  //   if(hasStart && hasEnd) {
+  //     const newGrid = grid.map((row) => row.map((node) => ({ ...node })));
+
+  //     const [sr, sc] = hasStart;
+  //     const [er, ec] = hasEnd;
+
+  //     newGrid[sr][sc].hCost = manhattanDist(sr, sc, er, ec);
+  //     greedyBfsVisitedRef.current = newGrid;
+  //     greedyBfsSetRef.current = [[sr, sc]];
+  //     greedyBfsVisitOrder.current = [];
+
+  //     setGrid(newGrid);
+  //   }
+  // };
+
+  const runGreedyBfs = () => {
+    const newGrid = grid.map((row) => row.map((node) => ({ ...node })));
+    let openSet = [];
+    openSet.push(hasStart);
+
+    newGrid[hasStart[0]][hasStart[1]].hCost = manhattanDist(hasStart[0], hasStart[1], hasEnd[0], hasEnd[1]);
+
+    while(openSet.length > 0) {
+      frontierTimeline.push([...openSet]);
+
+      openSet.sort((a, b) => {
+        const nodeA = newGrid[a[0]][a[1]];
+        const nodeB = newGrid[b[0]][b[1]];
+
+        return nodeA.hCost - nodeB.hCost;
+      });
+
+      const [curX, curY] = openSet.shift();
+      const curNode = newGrid[curX][curY];
+
+      if(curNode.isVisited) {
+        continue;
+      }
+
+      curNode.isVisited = true;
+      visitedOrder.push([curX, curY]);
+
+      if(curX === hasEnd[0] && curY === hasEnd[1]) {
+        return { frontierTimeline, visitedOrder };
+      }
+
+      for(let i = 0; i < 4; i++) {
+        const x = curX + dir[i][0];
+        const y = curY + dir[i][1];
+
+        if(x < 0 || x >= GRID_ROWS || y < 0 || y >= GRID_COLS || newGrid[x][y].isVisited || newGrid[x][y].isWall) {
+          continue;
+        }
+        newGrid[x][y].hCost = manhattanDist(x, y, hasEnd[0], hasEnd[1]);
+        // newGrid marked for nodes since it does not need to be visualised first, grid marked for parents for reconstruction
+        grid[x][y].parent = curNode;
+
+        openSet.push([x, y]);
+      }
+    }
+
+    return { frontierTimeline, visitedOrder };
+  };
+  
+  async function animateGreedyBFS() {
+    const [endRow, endCol] = hasEnd;
+    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  
+    const CHUNK_SIZE = 10;
+    const delay = 30;
+  
+    for (let row = 0; row < grid.length; row++) {
+      for (let col = 0; col < grid[0].length; col++) {
+        grid[row][col].isFrontier = false;
+      }
+    }
+  
+    let revealedVisitedCount = 0;
+  
+    for (let i = 0; i < frontierTimeline.length; i += CHUNK_SIZE) {
+      const chunk = frontierTimeline.slice(i, i + CHUNK_SIZE);
+  
+      for (const frontierSnap of chunk) {
+        for (let r = 0; r < grid.length; r++) {
+          for (let c = 0; c < grid[0].length; c++) {
+            grid[r][c].isFrontier = false;
+          }
+        }
+  
+        frontierSnap.forEach(([fx, fy]) => {
+          if (!grid[fx][fy].isVisited) {
+            grid[fx][fy].isFrontier = true;
+          }
+        });
+
+        if (revealedVisitedCount < visitedOrder.length) {
+          const [vx, vy] = visitedOrder[revealedVisitedCount];
+          grid[vx][vy].isVisited = true;
+          revealedVisitedCount++;
+        }
+      }
+  
+      setGrid([...grid]);
+      await sleep(delay);
+    }
+  
+    for (; revealedVisitedCount < visitedOrder.length; revealedVisitedCount++) {
+      const [vx, vy] = visitedOrder[revealedVisitedCount];
+      grid[vx][vy].isVisited = true;
+    }
+    setGrid([...grid]);
+    await sleep(delay);
+  
+    if (grid[endRow][endCol].parent) {
+      constructFinalPath(endRow, endCol);
+      setGrid([...grid]);
+    }
+  
+    console.log("Greedy BFS animation complete");
+  }
+  
+  
+  
+  
   return (
     <div className={styles.visualizerContainer}>
       <h1 className={styles.h1}>Pathfinding Visualizer</h1>

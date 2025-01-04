@@ -29,6 +29,10 @@
   background-color: greenyellow;
 }
 
+.nodeFrontier {
+  background-color: rgb(159, 92, 223);
+}
+
 .node:hover {
   background-color: lightgray;
 }

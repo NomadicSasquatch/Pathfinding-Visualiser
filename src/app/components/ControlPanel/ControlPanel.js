@@ -8,7 +8,7 @@ import dropStyle from '../Dropdown/Dropdown.module.css'
 import { DEFAULT_ALGO_DROPDOWN_TEXT  } from '../../config/config';
 
 const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction, selectedAlgorithm, setSelectedAlgorithm, hasStart, hasEnd, handleRunButton, handleClearPathButton, handleClearWallsButton, handleClearGridButton, isRunningAlgo, isAlgoStart, isAlgoEnd }) => {
-  const algorithms = [`Breadth-First Search`, `Depth-First Search`, `Dijkstra's Algorithm`, `A* Algorithm`];
+  const algorithms = [`Breadth-First Search`, `Depth-First Search`, `Greedy Best-First Search`, `A* Algorithm`];
 
   return (
     <div className={styles.gridPanel}>

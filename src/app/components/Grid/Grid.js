@@ -24,6 +24,7 @@ const Grid = ({ grid, setGrid, onMouseDown, onMouseUp, onMouseEnter, actionState
               isEnd={node.isEnd}
               isWall={node.isWall}
               isVisited={node.isVisited}
+              isFrontier={node.isFrontier}
               isInFinalPath={node.isInFinalPath}
               gCost={node.gCost}
               hCost={node.hCost}
