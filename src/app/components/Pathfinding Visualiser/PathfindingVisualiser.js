@@ -96,6 +96,7 @@ export default function PathfindingVisualizer() {
     // }
     switch(currentAction) {
       case 'toggleWall':
+        generateRandomMaze();
         const flag = handleNodeState(row, col, 'isWall');
         visitedDuringDragRef.current.add(`${row},${col}`);
         if(flag === 1) {
@@ -717,6 +718,126 @@ export default function PathfindingVisualizer() {
       setIsRunningAlgo(false);
       setIsAlgoEnd(true);
     }
+  };
+
+  const getRandomInt = (max) => {
+    return Math.floor(Math.random() * max);
+  }
+  
+  const setWall = (r, c) => {
+    if (r >= 0 && r < GRID_ROWS && c >= 0 && c < GRID_COLS) {
+      grid[r][c].isWall = true;
+    }
+  };
+
+  const generateT = (row, col) => {
+    for(let i = 0; i < 5; i++) {
+      setWall(row, col + i);
+    }
+    setWall(row, col + 5);
+    for(let i = 0; i < 5; i++) {
+      setWall(row + i, col + 2);
+    }
+    setWall(row + 5, col + 2);
+  }
+
+  const generateUpsideDownT = (row, col) => {
+    for(let i = 0; i < 5; i++) {
+      setWall(row + 4, col + i);
+    }
+    setWall(row + 4, col + 5);
+    for(let i = 0; i < 5; i++) {
+      setWall(row + i, col + 2);
+    }
+    setWall(row + 5, col + 2);
+  }
+
+  const generateL = (row, col) => {
+    for(let i = 0; i < 5; i++) {
+      setWall(row + i, col);
+    }
+    setWall(row + 5, col);
+    for(let i = 1; i < 5; i++) {
+      setWall(row + 4, col + i);
+    }
+    setWall(row + 4, col + 5);
+  }
+
+  const generateFlippedL = (row, col) => {
+    for(let i = 0; i < 5; i++) {
+      setWall(row, col + i);
+    }
+    setWall(row, col + 5);
+    for(let i = 0; i < 5; i++) {
+      setWall(row + i, col + 4);
+    }
+    setWall(row + 5, col + 4);
+  }
+
+  const generatePlus = (row, col) => {
+    for(let i = 0; i < 5; i++) {
+      setWall(row + i, col + 2);
+    }
+    setWall(row + 5, col + 2);
+    for(let i = 0; i < 5; i++) {
+      setWall(row + 2, col + i);
+    }
+    setWall(row + 2, col + 5);
+  }
+
+  function generateRandomMaze() {
+    for (let r = 0; r < GRID_ROWS; r++) {
+      for (let c = 0; c < GRID_COLS; c++) {
+        grid[r][c].isWall = true;
+      }
+    }
+  
+    function inBounds(row, col) {
+      return (
+        row >= 0 && row < GRID_ROWS &&
+        col >= 0 && col < GRID_COLS
+      );
+    }
+  
+    // something called (Fisher-Yates shuffle)
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    const directions = [
+      [-2, 0],
+      [2, 0],
+      [0, -2],
+      [0, 2]
+    ];
+
+    function carvePassage(row, col) {
+      grid[row][col].isWall = false;
+      const dirs = shuffle([...directions]);
+  
+      for (const [dr, dc] of dirs) {
+        const newRow = row + dr;
+        const newCol = col + dc;
+  
+        if (inBounds(newRow, newCol) && grid[newRow][newCol].isWall) {
+          const midRow = row + dr / 2;
+          const midCol = col + dc / 2;
+          grid[midRow][midCol].isWall = false;
+          carvePassage(newRow, newCol);
+        }
+      }
+    }
+    let startRow = Math.floor(Math.random() * Math.floor(GRID_ROWS / 2)) * 2 + 1;
+    let startCol = Math.floor(Math.random() * Math.floor(GRID_COLS / 2)) * 2 + 1;
+  
+    if (startRow >= GRID_ROWS) startRow = GRID_ROWS - 2; 
+    if (startCol >= GRID_COLS) startCol = GRID_COLS - 2; 
+  
+    carvePassage(startRow, startCol);
   };
   
   

@@ -7,7 +7,7 @@
     cursor: pointer;
     font-size: 24px;
     border-radius: 5px;
-    width: 230px;
+    width: 300px;
     height: 40px;
     align-items: center;
     justify-content: center;
@@ -33,7 +33,7 @@
     list-style: none;
     padding: 0;
     z-index: 1000;
-    width: 230px;
+    width: 300px;
     align-items: center;
 }
 
