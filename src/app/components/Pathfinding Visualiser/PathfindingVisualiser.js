@@ -399,12 +399,14 @@ export default function PathfindingVisualizer() {
   
       if(bfsQueueRef.current.length > 0) {
         const [curX, curY] = bfsQueueRef.current.shift();
+        bfsVisitedRef.current[curX][curY].waveIndex = -1;
   
         for(let i = 0; i < 4; i++) {
           const x = curX + dir[i][0];
           const y = curY + dir[i][1];
           if(x >= 0 && x < GRID_ROWS && y >= 0 && y < GRID_COLS && !bfsVisitedRef.current[x][y].isWall && !bfsVisitedRef.current[x][y].isVisited) {
             bfsVisitedRef.current[x][y].parent = bfsVisitedRef.current[curX][curY];
+            bfsVisitedRef.current[x][y].waveIndex = 1;
             if(x === hasEnd[0] && y === hasEnd[1]) {
               bfsVisitedRef.current[x][y].isVisited = true;
               setGrid([...bfsVisitedRef.current]);
@@ -543,6 +545,7 @@ export default function PathfindingVisualizer() {
       const [row, col] = aStarOpenSetRef.current.shift();
       const currentNode = aStarVisitedRef.current[row][col];
       currentNode.isVisited = true;
+      currentNode.waveIndex = -1;
 
       if(row === hasEnd[0] && col === hasEnd[1]) {
         isRunningRef.current = false;
@@ -569,7 +572,7 @@ export default function PathfindingVisualizer() {
           neighborNode.hCost = manhattanDist(x, y, hasEnd[0], hasEnd[1]);
           neighborNode.fCost = neighborNode.gCost + neighborNode.hCost;
           neighborNode.parent = currentNode;
-          aStarVisitedRef.current[x][y].waveIndex = aStarVisitedRef.current[row][col].waveIndex + 1;
+          aStarVisitedRef.current[x][y].waveIndex = 1
           aStarOpenSetRef.current.push([x, y]);
         }
       }
@@ -603,29 +606,27 @@ export default function PathfindingVisualizer() {
   //     setGrid(newGrid);
   //   }
   // };
-  const newGridBFS = useRef(null);
 
   const runGreedyBfs = () => {
     const newGrid =  grid.map((row) => row.map((node) => ({ ...node })));
-    newGridBFS.current = newGrid;
-    console.log(newGridBFS.current);
+    console.log(newGrid);
     let openSet = [];
-    openSet.push([hasStart[0], hasStart[1], 0]);
+    openSet.push([hasStart[0], hasStart[1]]);
 
-    newGridBFS.current[hasStart[0]][hasStart[1]].hCost = manhattanDist(hasStart[0], hasStart[1], hasEnd[0], hasEnd[1]);
+    newGrid[hasStart[0]][hasStart[1]].hCost = manhattanDist(hasStart[0], hasStart[1], hasEnd[0], hasEnd[1]);
 
     while(openSet.length > 0) {
       frontierTimeline.push([...openSet]);
 
       openSet.sort((a, b) => {
-        const nodeA = newGridBFS.current[a[0]][a[1]];
-        const nodeB = newGridBFS.current[b[0]][b[1]];
+        const nodeA = newGrid[a[0]][a[1]];
+        const nodeB = newGrid[b[0]][b[1]];
 
         return nodeA.hCost - nodeB.hCost;
       });
 
-      const [curX, curY, steps] = openSet.shift();
-      const curNode = newGridBFS.current[curX][curY];
+      const [curX, curY] = openSet.shift();
+      const curNode = newGrid[curX][curY];
 
       if(curNode.isVisited) {
         continue;
@@ -635,6 +636,7 @@ export default function PathfindingVisualizer() {
       visitedOrder.push([curX, curY]);
 
       if(curX === hasEnd[0] && curY === hasEnd[1]) {
+        newGrid[curX][curY].waveIndex = -1;
         return { frontierTimeline, visitedOrder };
       }
 
@@ -642,16 +644,14 @@ export default function PathfindingVisualizer() {
         const x = curX + dir[i][0];
         const y = curY + dir[i][1];
 
-        if(x < 0 || x >= GRID_ROWS || y < 0 || y >= GRID_COLS || newGridBFS.current[x][y].isVisited || newGridBFS.current[x][y].isWall) {
+        if(x < 0 || x >= GRID_ROWS || y < 0 || y >= GRID_COLS || newGrid[x][y].isVisited || newGrid[x][y].isWall) {
           continue;
         }
-        newGridBFS.current[x][y].hCost = manhattanDist(x, y, hasEnd[0], hasEnd[1]);
+        newGrid[x][y].hCost = manhattanDist(x, y, hasEnd[0], hasEnd[1]);
         // newGrid marked for nodes since it does not need to be visualised first, grid marked for parents for reconstruction
         grid[x][y].parent = curNode;
-        newGridBFS.current[x][y].waveIndex = newGridBFS.current.waveIndex + 1;
-        console.log(`fuck up`, newGridBFS.current[x][y].waveIndex);
 
-        openSet.push([x, y, steps+1]);
+        openSet.push([x, y]);
       }
     }
 
@@ -666,20 +666,23 @@ export default function PathfindingVisualizer() {
     const [endRow, endCol] = hasEnd;
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     
-    const CHUNK_SIZE = (frontierTimeline[animationIndexRef.current].length)*10;
-    const delay = 10;
+    const CHUNK_SIZE = (frontierTimeline[animationIndexRef.current].length)*5;
+    const delay = 5;
   
     let i = animationIndexRef.current;
     let revealed = revealedVisitedCountRef.current;
   
     while(i < frontierTimeline.length && isRunningRef.current) {
       const chunk = frontierTimeline.slice(i, i + CHUNK_SIZE);
-      //console.log(chunk);
+      for(let j = 0; j < i; j++) {
+        const arr = frontierTimeline[j];
+        grid[arr[0][0]][arr[0][1]].waveIndex = -1;
+      }
   
       for(const frontierSnap of chunk) {
-        frontierSnap.forEach(([fx, fy, tmpStep]) => {
-            grid[fx][fy].waveIndex = newGridBFS.current[fx][fy].waveIndex;
-            console.log(`testing`, grid[fx][fy].waveIndex, newGridBFS.current[fx][fy].waveIndex);
+        frontierSnap.forEach(([fx, fy]) => {
+            grid[fx][fy].waveIndex = 1;
+            grid[fx][fy].isVisited = true;
         });
       }
   

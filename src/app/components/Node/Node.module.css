@@ -26,11 +26,33 @@
 }
 
 .isInFinalPath {
-  background-color: greenyellow;
+  background-color: greenyellow !important;
 }
 
 .waveColour {
   background-color: hsl(271, 25%, 42%);;
+}
+
+@keyframes wavePulse {
+  0% {
+    background-color: hsl(271, 60%, 40%);
+  }
+  50% {
+    background-color: hsl(271, 70%, 50%);
+  }
+  100% {
+    background-color: hsl(271, 60%, 40%);
+  }
+}
+
+.wave-0 {
+  animation: wavePulse 1s ease-in-out infinite;
+}
+.wave-1 {
+  animation: wavePulse 1.5s ease-in-out infinite;
+}
+.wave-2 {
+  animation: wavePulse 2.25s ease-in-out infinite;
 }
 
 .node:hover {

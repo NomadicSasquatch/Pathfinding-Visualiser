@@ -25,13 +25,12 @@ const Node = React.memo(({ row, col, isStart, isEnd, isWall, isVisited, waveInde
     
   return (
     <div
-      className={`${styles.node} ${extraClassName}`}
+    className={`${styles.node} ${extraClassName} ${
+      waveIndex >= 0 ? styles[`wave-${waveIndex % 2}`] : ""
+    }`}
       onMouseDown={onMouseDown}
       onMouseUp={onMouseUp}
       onMouseEnter={onMouseEnter}
-      style={{
-        backgroundColor: waveIndex >= 0? `hsl(271, ${waveIndex + 30 >= 100? 100 : waveIndex + 30}%, ${(waveIndex*1.2 + 30) >= 53? 53 : waveIndex*1.2 + 30}%)` : `undefined`
-      }}
     />
   );
 });
