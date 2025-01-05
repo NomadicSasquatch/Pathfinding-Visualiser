@@ -104,12 +104,14 @@ export default function PathfindingVisualizer() {
         }
         break;
       case 'setStart':
+        grid[row][col].isWall = false;
         handleNodeState(row, col, 'isStart');
         setHasStart([row, col]);
         setCurrentAction('idle');
         break;
   
       case 'setEnd':
+        grid[row][col].isWall = false;
         handleNodeState(row, col, 'isEnd');
         setHasEnd([row, col]);
         setCurrentAction('idle');
@@ -726,7 +728,8 @@ export default function PathfindingVisualizer() {
         generateRandomMaze();
         break;
       case `Box Pattern`:
-        generateBoxPattern();
+        testFract(0, 0, GRID_COLS, GRID_ROWS, 3);
+        clearWall();
         break;
       case `Select A Wall Pattern`:
         console.log(`No Wall Patterns Selected Yet`);
@@ -846,6 +849,128 @@ export default function PathfindingVisualizer() {
       }
     }
   };
+
+  const testBox = (srow, scol, width, height) => {
+    const rlim = Math.min(GRID_ROWS, srow + height);
+    const clim = Math.min(GRID_COLS, scol + width);
+  
+    const maxLayers = Math.min(Math.floor(width / 2), Math.floor(height / 2));
+  
+    for (let layer = 0; layer <= maxLayers; layer++) {
+      const top = srow + layer;
+      const bottom = rlim - 1 - layer;
+      const left = scol + layer;
+      const right = clim - 1 - layer;
+      let counter = 0, flag = 0;
+  
+      if (top >= bottom || left >= right) break;
+  
+      const isWallLayer = layer % 2 === 0;
+  
+      for (let col = left; col <= right; col++) {
+        counter++;
+        if (!checkStartOrEnd(top, col)) grid[top][col].isWall = isWallLayer;
+        if (!checkStartOrEnd(bottom, col)) grid[bottom][col].isWall = isWallLayer;
+      }
+
+      if(isWallLayer) {
+        flag = Math.floor(Math.random() * counter);
+        for (let col = left; col <= right; col++) {
+          if(flag === counter) {
+            grid[top][col].isWall = (Math.floor(Math.random() * 2) === 0)? false : true;
+            grid[bottom][col].isWall = grid[top][col].isWall? false : true;
+            break;
+          }
+          else {
+            counter--;
+          }
+        }
+      }
+
+      counter = 0;
+  
+      for (let row = top + 1; row <= bottom - 1; row++) {
+        counter++;
+        if (!checkStartOrEnd(row, left)) grid[row][left].isWall = isWallLayer;
+        if (!checkStartOrEnd(row, right)) grid[row][right].isWall = isWallLayer;
+      }
+
+      if(isWallLayer) {
+        flag = Math.floor(Math.random() * counter);
+        for (let row = top + 1; row <= bottom - 1; row++) {
+          if(flag === counter) {
+            grid[row][left].isWall = (Math.floor(Math.random() * 2) === 0)? false : true;
+            grid[row][right].isWall = grid[row][left].isWall? false : true;
+            break;
+          }
+          else {
+            counter--;
+          }
+        }
+      }
+    }
+  };
+
+  const testFract = (srow, scol, width, height, depth) => {
+    // Base condition: stop recursion if too small or no depth left
+    if (depth <= 0 || width < 2 || height < 2) return;
+  
+    // Draw a box in the current region
+    testBox(srow, scol, width, height);
+  
+    // Instead of splitting exactly in half, use a random ratio
+    const splitRatioW = 0.3 + Math.random() * 0.4; // e.g., random between 0.3 and 0.7
+    const splitRatioH = 0.3 + Math.random() * 0.4; // random between 0.3 and 0.7
+  
+    const splitW = Math.floor(width * splitRatioW);
+    const splitH = Math.floor(height * splitRatioH);
+  
+    // Ensure at least 1 cell remains, to avoid infinite recursion
+    if (splitW < 1 || splitW >= width) return;
+    if (splitH < 1 || splitH >= height) return;
+  
+    // Recur on top-left
+    testFract(srow, scol, splitW, splitH, depth - 1);
+  
+    // Recur on top-right
+    testFract(srow, scol + splitW, width - splitW, splitH, depth - 1);
+  
+    // Recur on bottom-left
+    testFract(srow + splitH, scol, splitW, height - splitH, depth - 1);
+  
+    // Recur on bottom-right
+    testFract(
+      srow + splitH,
+      scol + splitW,
+      width - splitW,
+      height - splitH,
+      depth - 1
+    );
+  };
+
+  const clearWall = () => {
+    let counter = 0;
+    let tmpx = 0, tmpy = 0;
+    for(let i = 0; i < GRID_ROWS; i++) {
+      for(let j = 0; j < GRID_COLS; j++) {
+        for(let k = 0; k < 4 && counter < 2; k++) {
+          let x = i + dir[k][0];
+          let y = j + dir[k][1];
+          if(x >= 0 && x < GRID_ROWS && y >= 0 && y < GRID_COLS && !grid[x][y].isWall) {
+            counter++;
+            tmpx = i - dir[k][0];
+            tmpy = j - dir[k][1];
+            console.log(tmpx, tmpy);
+          }
+        }
+        if(counter < 2 && tmpx >= 0 && tmpx < GRID_ROWS && tmpy >= 0 && tmpy < GRID_COLS) {
+          grid[tmpx][tmpy].isWall = false;
+        }
+        counter = 0;
+      }
+    }
+  }
+  
   
   return (
     <div className={styles.visualizerContainer}>  
