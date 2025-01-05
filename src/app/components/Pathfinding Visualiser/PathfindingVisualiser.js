@@ -38,6 +38,7 @@ export default function PathfindingVisualizer() {
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [currentAction, setCurrentAction] = useState('idle');
   const [selectedAlgorithm, setSelectedAlgorithm] = useState(DEFAULT_ALGO_DROPDOWN_TEXT);
+  const [selectedWallPattern, setSelectedWallPattern] = useState(`Select A Wall Pattern`);
   const [hasStart, setHasStart] = useState(null);
   const [hasEnd, setHasEnd] = useState(null);
   const [isRunningAlgo, setIsRunningAlgo] = useState(false);
@@ -96,7 +97,6 @@ export default function PathfindingVisualizer() {
     // }
     switch(currentAction) {
       case 'toggleWall':
-        generateRandomMaze();
         const flag = handleNodeState(row, col, 'isWall');
         visitedDuringDragRef.current.add(`${row},${col}`);
         if(flag === 1) {
@@ -719,6 +719,25 @@ export default function PathfindingVisualizer() {
       setIsAlgoEnd(true);
     }
   };
+
+  const handleGenerateWallButton = () => {
+    switch(selectedWallPattern) {
+      case `Random Maze`:
+        console.log(`inside random maze`);
+        generateRandomMaze();
+        setGrid([...grid]);
+        break;
+      case `Box`:
+        //generate box pattern
+        break;
+      case `Select A Wall Pattern`:
+        console.log(`No Wall Patterns Selected Yet`);
+        break;
+      default:
+        console.log(`Unexpected selectedWallPattern behaviour`);
+        return;
+    }
+  };
   
   function generateRandomMaze() {
     for (let r = 0; r < GRID_ROWS; r++) {
@@ -728,9 +747,7 @@ export default function PathfindingVisualizer() {
     }
   
     function inBounds(row, col) {
-      return (
-        row >= 0 && row < GRID_ROWS &&
-        col >= 0 && col < GRID_COLS
+      return (row >= 0 && row < GRID_ROWS && col >= 0 && col < GRID_COLS
       );
     }
   
@@ -743,12 +760,7 @@ export default function PathfindingVisualizer() {
       return array;
     }
 
-    const directions = [
-      [-2, 0],
-      [2, 0],
-      [0, -2],
-      [0, 2]
-    ];
+    const directions = [[-2, 0], [2, 0], [0, -2], [0, 2]];
 
     function carvePassage(row, col) {
       grid[row][col].isWall = false;
@@ -779,7 +791,7 @@ export default function PathfindingVisualizer() {
   return (
     <div className={styles.visualizerContainer}>
       <h1 className={styles.h1}>Pathfinding Visualizer</h1>
-      <ControlPanel handleSetStartButton={handleSetStartButton} handleSetEndButton={handleSetEndButton} setCurrentAction={setCurrentAction} selectedAlgorithm={selectedAlgorithm} setSelectedAlgorithm={setSelectedAlgorithm} hasStart={hasStart} hasEnd={hasEnd} handleRunButton={handleRunButton} handleClearPathButton={handleClearPathButton} handleClearWallsButton={handleClearWallsButton} handleClearGridButton={handleClearGridButton} isRunningAlgo={isRunningAlgo} isAlgoStart={isAlgoStart} isAlgoEnd={isAlgoEnd}>
+      <ControlPanel handleSetStartButton={handleSetStartButton} handleSetEndButton={handleSetEndButton} setCurrentAction={setCurrentAction} selectedAlgorithm={selectedAlgorithm} setSelectedAlgorithm={setSelectedAlgorithm} selectedWallPattern={selectedWallPattern} setSelectedWallPattern={setSelectedWallPattern} hasStart={hasStart} hasEnd={hasEnd} handleRunButton={handleRunButton} handleGenerateWallButton={handleGenerateWallButton} handleClearPathButton={handleClearPathButton} handleClearWallsButton={handleClearWallsButton} handleClearGridButton={handleClearGridButton} isRunningAlgo={isRunningAlgo} isAlgoStart={isAlgoStart} isAlgoEnd={isAlgoEnd}>
 
       </ControlPanel>
       <Grid grid={grid} setGrid={setGrid} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseEnter={handleMouseEnter} actionState={currentAction}/>

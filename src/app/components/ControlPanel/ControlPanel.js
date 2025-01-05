@@ -7,8 +7,9 @@ import styles from './ControlPanel.module.css';
 import dropStyle from '../Dropdown/Dropdown.module.css'
 import { DEFAULT_ALGO_DROPDOWN_TEXT  } from '../../config/config';
 
-const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction, selectedAlgorithm, setSelectedAlgorithm, hasStart, hasEnd, handleRunButton, handleClearPathButton, handleClearWallsButton, handleClearGridButton, isRunningAlgo, isAlgoStart, isAlgoEnd }) => {
+const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction, selectedAlgorithm, setSelectedAlgorithm, setSelectedWallPattern, hasStart, hasEnd, handleRunButton, handleGenerateWallButton, handleClearPathButton, handleClearWallsButton, handleClearGridButton, isRunningAlgo, isAlgoStart, isAlgoEnd }) => {
   const algorithms = [`Breadth-First Search`, `Depth-First Search`, `Greedy Best-First Search`, `A* Algorithm`];
+  const patterns = [`Random Maze`, `Box`];
 
   return (
     <div className={styles.gridPanel}>
@@ -22,7 +23,13 @@ const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction,
         <button onClick = {()=>setCurrentAction('toggleWall')} className={styles.button} disabled={isAlgoStart}>
           Toggle Wall
         </button>
-        <Dropdown options={algorithms} defaultText={DEFAULT_ALGO_DROPDOWN_TEXT} setSelectedAlgorithm={setSelectedAlgorithm} isAlgoStart={isAlgoStart} isAlgoEnd={isAlgoEnd}>
+        <Dropdown options={patterns} defaultText={`Select A Wall Pattern`} setSelectedWallPattern={setSelectedWallPattern} type={0}>
+          
+        </Dropdown>
+        <button onClick = {()=>handleGenerateWallButton()} className={styles.button} disabled={isAlgoStart}>
+          Generate Wall Pattern
+        </button>
+        <Dropdown options={algorithms} defaultText={DEFAULT_ALGO_DROPDOWN_TEXT} setSelectedAlgorithm={setSelectedAlgorithm} isAlgoStart={isAlgoStart} isAlgoEnd={isAlgoEnd} type={1}>
 
         </Dropdown>
         <button onClick = {()=>handleRunButton()} className={styles.button} disabled={!(DEFAULT_ALGO_DROPDOWN_TEXT.localeCompare(selectedAlgorithm) && hasStart && hasEnd && !isAlgoEnd)}>

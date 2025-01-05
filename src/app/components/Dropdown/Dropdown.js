@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import styles from './Dropdown.module.css';
 
-const Dropdown = ({ options, defaultText, setSelectedAlgorithm, isAlgoStart, isAlgoEnd }) => {
+const Dropdown = ({ options, defaultText, setSelectedAlgorithm, setSelectedWallPattern, isAlgoStart, isAlgoEnd, type }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(defaultText);
   const dropdownRef = useRef(null);
@@ -9,9 +9,16 @@ const Dropdown = ({ options, defaultText, setSelectedAlgorithm, isAlgoStart, isA
   const toggleDropdown = () => setIsOpen((prev) => !prev);
 
   const handleOptionClick = (option) => {
-    setSelectedOption(option);
-    setIsOpen(false);
-    setSelectedAlgorithm(option);
+    if(type === 0) {
+      setSelectedOption(option);
+      setIsOpen(false);
+      setSelectedWallPattern(option);
+    }
+    else if(type === 1) {
+      setSelectedOption(option);
+      setIsOpen(false);
+      setSelectedAlgorithm(option);
+    }
   };
 
   const handleClickOutside = (event) => {
