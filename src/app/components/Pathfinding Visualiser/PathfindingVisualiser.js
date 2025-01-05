@@ -801,13 +801,8 @@ export default function PathfindingVisualizer() {
 
       for(let col = layer; col < GRID_COLS - layer; col++) {
         if(flag === counter) {
-          rand = Math.floor(Math.random() * 2);
-          if(rand === 0) {
-            grid[layer][col].isWall = false;
-          }
-          else {
-            grid[GRID_ROWS - 1 - layer][col].isWall = false;
-          }
+          grid[layer][col].isWall = Math.floor(Math.random() * 2) === 0? false : true;
+          grid[GRID_ROWS - 1 - layer][col].isWall = grid[layer][col].isWall? false : true;
           break;
         }
         else {
@@ -824,16 +819,11 @@ export default function PathfindingVisualizer() {
       }
 
       flag = Math.floor(Math.random() * counter); // randomly pick a wall in this box to be an empty node
-      
+
       for(let row = layer; row < GRID_ROWS - layer; row++) {
         if(flag === counter) {
-          rand = Math.floor(Math.random() * 2);
-          if(rand === 0) {
-            grid[row][layer].isWall = false;
-          }
-          else {
-            grid[row][GRID_COLS - 1 - layer].isWall = false;
-          }
+          grid[row][layer].isWall = Math.floor(Math.random() * 2) === 0? false : true;
+          grid[row][GRID_COLS - 1 - layer].isWall = grid[row][layer].isWall? false : true;
           break;
         }
         else {
