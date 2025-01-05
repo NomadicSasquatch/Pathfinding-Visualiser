@@ -788,8 +788,8 @@ export default function PathfindingVisualizer() {
     if(startCol >= GRID_COLS) startCol = GRID_COLS - 2; 
   
     carvePassage(startRow, startCol);
-    grid[hasStart[0]][hasStart[1]].isWall = false;
-    grid[hasEnd[0]][hasEnd[1]].isWall = false;
+    if(hasStart) grid[hasStart[0]][hasStart[1]].isWall = false;
+    if(hasEnd) grid[hasEnd[0]][hasEnd[1]].isWall = false;
   };
 
   const generateBoxPattern = () => {
