@@ -28,10 +28,7 @@
 
 .isInFinalPath {
   background-color: greenyellow !important;
-}
-
-.waveColour {
-  background-color: hsl(271, 25%, 42%);;
+  transition: background-color 0.3s;
 }
 
 @keyframes wavePulse {
