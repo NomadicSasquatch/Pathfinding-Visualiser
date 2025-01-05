@@ -793,6 +793,13 @@ export default function PathfindingVisualizer() {
   };
 
   const generateBoxPattern = () => {
+    for (let r = 0; r < GRID_ROWS; r++) {
+      for (let c = 0; c < GRID_COLS; c++) {
+        if(!checkStartOrEnd(r, c)) {
+          grid[r][c].isWall = false;
+        }
+      }
+    }
     const maxLayers = Math.min(Math.floor(GRID_ROWS / 2), Math.floor(GRID_COLS / 2));
     let flag = 0, counter = 0, rand = 0;
 
