@@ -15,11 +15,11 @@
 }
 
 .nodeStart  {
-  background-color: green;
+  background-color: green !important;
 }
 
 .nodeEnd {
-  background-color: red;
+  background-color: red !important;
 }
 
 .nodeVisited {

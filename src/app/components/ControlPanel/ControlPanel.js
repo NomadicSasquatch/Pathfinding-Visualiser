@@ -9,7 +9,7 @@ import { DEFAULT_ALGO_DROPDOWN_TEXT  } from '../../config/config';
 
 const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction, selectedAlgorithm, setSelectedAlgorithm, setSelectedWallPattern, hasStart, hasEnd, handleRunButton, handleGenerateWallButton, handleClearPathButton, handleClearWallsButton, handleClearGridButton, isRunningAlgo, isAlgoStart, isAlgoEnd }) => {
   const algorithms = [`Breadth-First Search`, `Depth-First Search`, `Greedy Best-First Search`, `A* Algorithm`];
-  const patterns = [`Random Maze`, `Box`];
+  const patterns = [`Random Maze Pattern`, `Box Pattern`];
 
   return (
     <div className={styles.gridPanel}>
