@@ -723,12 +723,10 @@ export default function PathfindingVisualizer() {
   const handleGenerateWallButton = () => {
     switch(selectedWallPattern) {
       case `Random Maze`:
-        console.log(`inside random maze`);
         generateRandomMaze();
-        setGrid([...grid]);
         break;
       case `Box`:
-        //generate box pattern
+        generateBoxPattern();
         break;
       case `Select A Wall Pattern`:
         console.log(`No Wall Patterns Selected Yet`);
@@ -737,6 +735,7 @@ export default function PathfindingVisualizer() {
         console.log(`Unexpected selectedWallPattern behaviour`);
         return;
     }
+    setGrid([...grid]);
   };
   
   function generateRandomMaze() {
@@ -786,7 +785,63 @@ export default function PathfindingVisualizer() {
   
     carvePassage(startRow, startCol);
   };
-  
+
+  const generateBoxPattern = () => {
+    const maxLayers = Math.min(Math.floor(GRID_ROWS / 2), Math.floor(GRID_COLS / 2));
+    let flag = 0, counter = 0, rand = 0;
+
+    for(let layer = 0; layer < maxLayers; layer += 2) {
+      for(let col = layer; col < GRID_COLS - layer; col++) {
+        counter++;
+        grid[layer][col].isWall = true;
+        grid[GRID_ROWS - 1 - layer][col].isWall = true;
+      }
+
+      flag = Math.floor(Math.random() * counter); // randomly pick a wall in this box to be an empty node
+
+      for(let col = layer; col < GRID_COLS - layer; col++) {
+        if(flag === counter) {
+          rand = Math.floor(Math.random() * 2);
+          if(rand === 0) {
+            grid[layer][col].isWall = false;
+          }
+          else {
+            grid[GRID_ROWS - 1 - layer][col].isWall = false;
+          }
+          break;
+        }
+        else {
+          counter--;
+        }
+      }
+
+      counter = 0;
+
+      for(let row = layer; row < GRID_ROWS - layer; row++) {
+        counter++;
+        grid[row][layer].isWall = true;
+        grid[row][GRID_COLS - 1 - layer].isWall = true;
+      }
+
+      flag = Math.floor(Math.random() * counter); // randomly pick a wall in this box to be an empty node
+      
+      for(let row = layer; row < GRID_ROWS - layer; row++) {
+        if(flag === counter) {
+          rand = Math.floor(Math.random() * 2);
+          if(rand === 0) {
+            grid[row][layer].isWall = false;
+          }
+          else {
+            grid[row][GRID_COLS - 1 - layer].isWall = false;
+          }
+          break;
+        }
+        else {
+          counter--;
+        }
+      }
+    }
+  };
   
   return (
     <div className={styles.visualizerContainer}>
