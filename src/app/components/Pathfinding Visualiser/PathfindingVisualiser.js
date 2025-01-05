@@ -745,9 +745,7 @@ export default function PathfindingVisualizer() {
   function generateRandomMaze() {
     for (let r = 0; r < GRID_ROWS; r++) {
       for (let c = 0; c < GRID_COLS; c++) {
-        if(!checkStartOrEnd(r, c)) {
-          grid[r][c].isWall = true;
-        }
+        grid[r][c].isWall = true;
       }
     }
   
@@ -790,6 +788,8 @@ export default function PathfindingVisualizer() {
     if(startCol >= GRID_COLS) startCol = GRID_COLS - 2; 
   
     carvePassage(startRow, startCol);
+    grid[hasStart[0]][hasStart[1]].isWall = false;
+    grid[hasEnd[0]][hasEnd[1]].isWall = false;
   };
 
   const generateBoxPattern = () => {
@@ -800,6 +800,7 @@ export default function PathfindingVisualizer() {
         }
       }
     }
+    
     const maxLayers = Math.min(Math.floor(GRID_ROWS / 2), Math.floor(GRID_COLS / 2));
     let flag = 0, counter = 0, rand = 0;
 
@@ -847,8 +848,10 @@ export default function PathfindingVisualizer() {
   };
   
   return (
-    <div className={styles.visualizerContainer}>
-      <h1 className={styles.h1}>Pathfinding Visualizer</h1>
+    <div className={styles.visualizerContainer}>  
+      <h1 className={styles.h1}>
+        Pathfinding Visualiser
+      </h1>
       <ControlPanel handleSetStartButton={handleSetStartButton} handleSetEndButton={handleSetEndButton} setCurrentAction={setCurrentAction} selectedAlgorithm={selectedAlgorithm} setSelectedAlgorithm={setSelectedAlgorithm} selectedWallPattern={selectedWallPattern} setSelectedWallPattern={setSelectedWallPattern} hasStart={hasStart} hasEnd={hasEnd} handleRunButton={handleRunButton} handleGenerateWallButton={handleGenerateWallButton} handleClearPathButton={handleClearPathButton} handleClearWallsButton={handleClearWallsButton} handleClearGridButton={handleClearGridButton} isRunningAlgo={isRunningAlgo} isAlgoStart={isAlgoStart} isAlgoEnd={isAlgoEnd}>
 
       </ControlPanel>

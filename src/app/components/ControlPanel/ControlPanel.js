@@ -7,9 +7,10 @@ import styles from './ControlPanel.module.css';
 import dropStyle from '../Dropdown/Dropdown.module.css'
 import { DEFAULT_ALGO_DROPDOWN_TEXT  } from '../../config/config';
 
-const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction, selectedAlgorithm, setSelectedAlgorithm, setSelectedWallPattern, hasStart, hasEnd, handleRunButton, handleGenerateWallButton, handleClearPathButton, handleClearWallsButton, handleClearGridButton, isRunningAlgo, isAlgoStart, isAlgoEnd }) => {
+const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction, selectedAlgorithm, setSelectedAlgorithm, selectedWallPattern, setSelectedWallPattern, hasStart, hasEnd, handleRunButton, handleGenerateWallButton, handleClearPathButton, handleClearWallsButton, handleClearGridButton, isRunningAlgo, isAlgoStart, isAlgoEnd }) => {
   const algorithms = [`Breadth-First Search`, `Depth-First Search`, `Greedy Best-First Search`, `A* Algorithm`];
   const patterns = [`Random Maze Pattern`, `Box Pattern`];
+  const defaultWallPatternText = `Select A Wall Pattern`;
 
   return (
     <div className={styles.gridPanel}>
@@ -26,7 +27,7 @@ const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction,
         <Dropdown options={patterns} defaultText={`Select A Wall Pattern`} setSelectedWallPattern={setSelectedWallPattern} type={0}>
           
         </Dropdown>
-        <button onClick = {()=>handleGenerateWallButton()} className={styles.button} disabled={isAlgoStart}>
+        <button onClick = {()=>handleGenerateWallButton()} className={styles.button} disabled={!(defaultWallPatternText.localeCompare(selectedWallPattern)) || isAlgoStart}>
           Generate Wall Pattern
         </button>
         <Dropdown options={algorithms} defaultText={DEFAULT_ALGO_DROPDOWN_TEXT} setSelectedAlgorithm={setSelectedAlgorithm} isAlgoStart={isAlgoStart} isAlgoEnd={isAlgoEnd} type={1}>
