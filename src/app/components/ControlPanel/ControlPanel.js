@@ -9,7 +9,7 @@ import { DEFAULT_ALGO_DROPDOWN_TEXT  } from '../../config/config';
 
 const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction, selectedAlgorithm, setSelectedAlgorithm, selectedWallPattern, setSelectedWallPattern, hasStart, hasEnd, handleRunButton, handleGenerateWallButton, handleClearPathButton, handleClearWallsButton, handleClearGridButton, isRunningAlgo, isAlgoStart, isAlgoEnd }) => {
   const algorithms = [`Breadth-First Search`, `Depth-First Search`, `Greedy Best-First Search`, `A* Algorithm`];
-  const patterns = [`Random Maze Pattern`, `Box Pattern`];
+  const patterns = [`Random Maze Pattern`, `Box Pattern`, `Rectangle Fractal Pattern`];
   const defaultWallPatternText = `Select A Wall Pattern`;
 
   return (
