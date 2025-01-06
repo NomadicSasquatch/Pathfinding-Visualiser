@@ -12,7 +12,6 @@ import Grid from '../Grid/Grid';
 import styles from './PathfindingVisualiser.module.css';
 import ControlPanel from '../ControlPanel/ControlPanel';
 import { GRID_ROWS, GRID_COLS, DEFAULT_ALGO_DROPDOWN_TEXT } from '../../config/config';
-import { getRedirectError } from 'next/dist/client/components/redirect';
 
 export default function PathfindingVisualizer() {
   const [grid, setGrid] = useState(() => {
@@ -733,7 +732,7 @@ export default function PathfindingVisualizer() {
         break;
       case `Rectangle Fractal Pattern`:
         generateRectFract(0, 0, GRID_COLS, GRID_ROWS, 3);
-        //clearDoubleWall();
+        connectFractals();
         break;
       case `Select A Wall Pattern`:
         console.log(`No Wall Patterns Selected Yet`);
@@ -798,11 +797,6 @@ export default function PathfindingVisualizer() {
     if(hasStart) grid[hasStart[0]][hasStart[1]].isWall = false;
     if(hasEnd) grid[hasEnd[0]][hasEnd[1]].isWall = false;
   };
-
-  const isCorner = (row, col) => {
-    return ((grid[row-1][col].isWall || grid[row+1][col].isWall) && (grid[row][col-1].isWall || grid[row][col+1].isWall));
-  };
-  
 
   const clearAWall = (row, col, tar) => {
     let idx = 0, x = row, y = col;
@@ -885,6 +879,49 @@ export default function PathfindingVisualizer() {
     generateRectFract(srow + splitH, scol + splitW, width - splitW, height - splitH, depth - 1
     );
   };
+
+  // check for vertical beams(double layer wall) partitioning fractals
+  const isVerticalBeam = (row, col) => {
+    return (!grid[row][col].isWall && grid[row][col+1].isWall && grid[row][col+2].isWall && !grid[row][col+3].isWall);
+  }
+
+  const isHorizontalBeam = (row, col) => {
+    return (!grid[row][col].isWall && grid[row+1][col].isWall && grid[row+2][col].isWall && !grid[row+3][col].isWall);
+  }
+
+  const connectFractals = () => {
+    for(let i = 0; i < GRID_ROWS; i++) {
+      for(let j = 0; j < GRID_COLS - 3; j++) {
+        if(isVerticalBeam(i, j)) {
+          // check if vertical beam has been visited before
+          if(isVerticalBeam(i - 1, j) || (!grid[i-1][j+1].isWall && !grid[i-1][j+2].isWall)) continue;
+          let start = i;
+          let end = i;
+          // impossible to exceed GRID_ROWS, no need to check
+          while(isVerticalBeam(end + 1, j)) {
+            end++;
+          }
+          let randRow = Math.floor(Math.random() * (end - start));
+          grid[randRow + start][j+1].isWall = grid[randRow + start][j+2].isWall = false;
+        }
+      }
+    }
+    // if every horizontal beam has a gap, search becomes too easy/fast, for column, there can only be one beam with a gap
+    for(let i = 0; i < GRID_ROWS - 3; i++) {
+      for(let j = 0; j < GRID_COLS; j++) {
+        if(isHorizontalBeam(i, j)) {
+          let start = j;
+          let end = j;
+          while(isHorizontalBeam(i, end + 1)) {
+            end++;
+          }
+          let randCol = Math.floor(Math.random() * (end - start));
+          grid[i+1][randCol + start].isWall = grid[i+2][randCol + start].isWall = false;
+          break;
+        }
+      }
+    }
+  }
 
   return (
     <div className={styles.visualizerContainer}>  
