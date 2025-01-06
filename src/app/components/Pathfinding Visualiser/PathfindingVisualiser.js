@@ -58,7 +58,7 @@ export default function PathfindingVisualizer() {
   // }, [isRunning]);
 
 
-  const dir = [[-1, 0], [0, 1], [1, 0], [0, -1]];
+  const dir = [[0, 1], [1, 0], [0, -1], [-1, 0]];
 
   // DATA STRUCTURES FOR BFS //
   const bfsQueueRef = useRef([]);
@@ -798,6 +798,40 @@ export default function PathfindingVisualizer() {
     if(hasEnd) grid[hasEnd[0]][hasEnd[1]].isWall = false;
   };
 
+  const isCorner = (row, col) => {
+    if(grid[row-1][col].isWall && (grid[row][col+1].isWall || grid[row][col-1].isWall)) return 1;
+    if(grid[row+1][col].isWall && (grid[row][col+1].isWall || grid[row][col-1].isWall)) return 1;
+    else return 0;
+  }
+
+  const clearAWall = (row, col, tar) => {
+    let idx = 0, x = row, y = col;
+    let curDir = dir[idx];
+    while(tar) {
+      x += curDir[0];
+      y += curDir[1];
+      if(x < 0 || x >= GRID_ROWS || y < 0 || y >= GRID_COLS || !grid[x][y].isWall) {
+        x -= curDir[0];
+        y -= curDir[1];
+        idx++;
+        curDir = dir[idx];
+        x += curDir[0];
+        y += curDir[1];
+      }
+      tar--;
+    }
+    if(isCorner(x, y)) {
+      for(let i = 0; i < 4; i++) {
+        if(grid[x+dir[i][0]][y+dir[i][1]].isWall) {
+          grid[x+dir[i][0]][y+dir[i][1]].isWall = false;
+          break;
+        }
+      }
+    }
+    grid[x][y].isWall = false;
+    return;
+  };
+
   const generateBoxPattern = (srow, scol, width, height) => {
     const rlim = Math.min(GRID_ROWS, srow + height);
     const clim = Math.min(GRID_COLS, scol + width);
@@ -809,8 +843,7 @@ export default function PathfindingVisualizer() {
       const bottom = rlim - 1 - layer;
       const left = scol + layer;
       const right = clim - 1 - layer;
-      let counter = 0, flag = 0;
-      let hasWalls = 0;
+      let counter = 0;
   
       if(top >= bottom || left >= right) break;
   
@@ -821,47 +854,17 @@ export default function PathfindingVisualizer() {
         if(!checkStartOrEnd(top, col)) grid[top][col].isWall = isWallLayer;
         if(!checkStartOrEnd(bottom, col)) grid[bottom][col].isWall = isWallLayer;
       }
-      // && layer so that the outermost layer does not have a single random open block, breakthrough logic passed to clear walls
-      // function
-      if(isWallLayer && layer) {
-        flag = Math.floor(Math.random() * counter);
-        for(let col = left; col <= right; col++) {
-          if(flag === counter) {
-            grid[top][col].isWall = (Math.floor(Math.random() * 2) === 0)? false : true;
-            grid[bottom][col].isWall = grid[top][col].isWall? ((Math.floor(Math.random() * 2) === 0)? false : true) : true;
-            if(grid[top][col].isWall && grid[bottom][col].isWall) hasWalls = 1;
-            else hasWalls = 0;
-            break;
-          }
-          else {
-            counter--;
-          }
-        }
-      }
-
-      counter = 0;
   
       for(let row = top + 1; row <= bottom - 1; row++) {
         counter++;
         if (!checkStartOrEnd(row, left)) grid[row][left].isWall = isWallLayer;
         if (!checkStartOrEnd(row, right)) grid[row][right].isWall = isWallLayer;
       }
-      // && layer so that the outermost layer does not have a single random open block, breakthrough logic passed to clear walls
-      // function
-      // check if the first node is a wall in the first place to check if the ring is a solid ring of walls
-      // to empty a wall in that ring
-      if(grid[top+1][left] && layer && hasWalls) {
-        flag = Math.floor(Math.random() * counter);
-        for(let row = top + 1; row <= bottom - 1; row++) {
-          if(flag === counter) {
-            grid[row][left].isWall = (Math.floor(Math.random() * 2) === 0)? false : true;
-            grid[row][right].isWall = (grid[row][left].isWall)? false : true;
-            break;
-          }
-          else {
-            counter--;
-          }
-        }
+      // last two conditions to ensure that the thick rings (rings with no empty nodes in them) do not have empty walls
+      if(isWallLayer && layer && top + 1 != bottom && left + 1 != right) {
+        let tar = Math.floor(Math.random() * counter * 2);
+        console.log(tar);
+        clearAWall(top, left, tar);
       }
     }
   };
@@ -886,6 +889,8 @@ export default function PathfindingVisualizer() {
     generateRectFract(srow + splitH, scol + splitW, width - splitW, height - splitH, depth - 1
     );
   };
+
+
   
   return (
     <div className={styles.visualizerContainer}>  
