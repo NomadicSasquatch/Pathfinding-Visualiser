@@ -733,6 +733,7 @@ export default function PathfindingVisualizer() {
         break;
       case `Rectangle Fractal Pattern`:
         generateRectFract(0, 0, GRID_COLS, GRID_ROWS, 3);
+        //clearDoubleWall();
         break;
       case `Select A Wall Pattern`:
         console.log(`No Wall Patterns Selected Yet`);
@@ -799,35 +800,31 @@ export default function PathfindingVisualizer() {
   };
 
   const isCorner = (row, col) => {
-    if(grid[row-1][col].isWall && (grid[row][col+1].isWall || grid[row][col-1].isWall)) return 1;
-    if(grid[row+1][col].isWall && (grid[row][col+1].isWall || grid[row][col-1].isWall)) return 1;
-    else return 0;
-  }
+    return ((grid[row-1][col].isWall || grid[row+1][col].isWall) && (grid[row][col-1].isWall || grid[row][col+1].isWall));
+  };
+  
 
   const clearAWall = (row, col, tar) => {
     let idx = 0, x = row, y = col;
-    let curDir = dir[idx];
-    while(tar) {
-      x += curDir[0];
-      y += curDir[1];
-      if(x < 0 || x >= GRID_ROWS || y < 0 || y >= GRID_COLS || !grid[x][y].isWall) {
-        x -= curDir[0];
-        y -= curDir[1];
-        idx++;
-        curDir = dir[idx];
-        x += curDir[0];
-        y += curDir[1];
+    while(tar > 0) {
+      x += dir[idx][0];
+      y += dir[idx][1];
+      while(x < 0 || x >= GRID_ROWS || y < 0 || y >= GRID_COLS || !grid[x][y].isWall) {
+        x -= dir[idx][0];
+        y -= dir[idx][1];
+        idx = (idx + 1) % 4;
+        x += dir[idx][0];
+        y += dir[idx][1];
       }
       tar--;
     }
-    if(isCorner(x, y)) {
-      for(let i = 0; i < 4; i++) {
-        if(grid[x+dir[i][0]][y+dir[i][1]].isWall) {
-          grid[x+dir[i][0]][y+dir[i][1]].isWall = false;
-          break;
-        }
+    for(let i = 0; i < 4; i++) {
+      if(grid[x+dir[i][0]][y+dir[i][1]].isWall) {
+        grid[x+dir[i][0]][y+dir[i][1]].isWall = false;
+        break;
       }
     }
+
     grid[x][y].isWall = false;
     return;
   };
@@ -861,9 +858,8 @@ export default function PathfindingVisualizer() {
         if (!checkStartOrEnd(row, right)) grid[row][right].isWall = isWallLayer;
       }
       // last two conditions to ensure that the thick rings (rings with no empty nodes in them) do not have empty walls
-      if(isWallLayer && layer && top + 1 != bottom && left + 1 != right) {
+      if(grid[top][left].isWall && layer && top + 1 != bottom && left + 1 != right) {
         let tar = Math.floor(Math.random() * counter * 2);
-        console.log(tar);
         clearAWall(top, left, tar);
       }
     }
@@ -890,8 +886,6 @@ export default function PathfindingVisualizer() {
     );
   };
 
-
-  
   return (
     <div className={styles.visualizerContainer}>  
       <h1 className={styles.h1}>
