@@ -906,7 +906,7 @@ export default function PathfindingVisualizer() {
         }
       }
     }
-    // if every horizontal beam has a gap, search becomes too easy/fast, for column, there can only be one beam with a gap
+    // if every horizontal beam has a gap, search becomes too easy/fast, for every column, there can only be one beam with a gap
     for(let i = 0; i < GRID_ROWS - 3; i++) {
       for(let j = 0; j < GRID_COLS; j++) {
         if(isHorizontalBeam(i, j)) {
