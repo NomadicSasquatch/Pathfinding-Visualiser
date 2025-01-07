@@ -12,6 +12,7 @@ import Grid from '../Grid/Grid';
 import styles from './PathfindingVisualiser.module.css';
 import ControlPanel from '../ControlPanel/ControlPanel';
 import { GRID_ROWS, GRID_COLS, DEFAULT_ALGO_DROPDOWN_TEXT } from '../../config/config';
+import Heap from 'heap';
 
 export default function PathfindingVisualizer() {
   const [grid, setGrid] = useState(() => {
@@ -358,8 +359,8 @@ export default function PathfindingVisualizer() {
           animatePath();
           break;
         case `A* Algorithm`:
-          if(aStarOpenSetRef.current.length === 0) initAStar();
-          runAStar();
+          if(frontierTimeline.current.length === 0) runAStar();
+          animatePath();
           break;
         default:
           //NOP
@@ -370,35 +371,6 @@ export default function PathfindingVisualizer() {
       setIsRunningAlgo(false);
     }
   }
-
-  const runBFS = () => {
-    const newGrid = grid.map((row) => row.map((node) => ({ ...node })));
-    let front = 0;
-    let rear = 0;
-    let queue = [];
-    queue[rear++] = [hasStart[0], hasStart[1]];
-
-    while(front < rear) {
-      let tmp = rear;
-      frontierTimeline.current.push([...queue]);
-      while(front  < tmp) {
-        newGrid[queue[front][0]][queue[front][1]].isVisited = true;
-        for(let i = 0; i < 4; i++) {
-          let x = queue[front][0] + dir[i][0];
-          let y = queue[front][1] + dir[i][1];
-          if(x >= 0 && x < GRID_ROWS && y >= 0 && y < GRID_COLS && !newGrid[x][y].isVisited && !newGrid[x][y].isWall) {
-            queue[rear++] = [x, y];
-            // parent marked in grid itself so the reconstruction can happen easily
-            grid[x][y].parent = grid[queue[front][0]][queue[front][1]];
-            if(x === hasEnd[0] && y === hasEnd[1]) {
-              return;
-            }
-          }
-        }
-        front++;
-      }
-    }
-  };
 
   const animatePath = async () => {
     if(frontierTimeline.current.length === 0) {
@@ -455,6 +427,35 @@ export default function PathfindingVisualizer() {
     }
   };
 
+  const runBFS = () => {
+    const newGrid = grid.map((row) => row.map((node) => ({ ...node })));
+    let front = 0;
+    let rear = 0;
+    let queue = [];
+    queue[rear++] = [hasStart[0], hasStart[1]];
+
+    while(front < rear) {
+      let tmp = rear;
+      frontierTimeline.current.push([...queue]);
+      while(front  < tmp) {
+        for(let i = 0; i < 4; i++) {
+          let x = queue[front][0] + dir[i][0];
+          let y = queue[front][1] + dir[i][1];
+          if(x >= 0 && x < GRID_ROWS && y >= 0 && y < GRID_COLS && !newGrid[x][y].isVisited && !newGrid[x][y].isWall) {
+            queue[rear++] = [x, y];
+            newGrid[x][y].isVisited = true;
+            // parent marked in grid itself so the reconstruction can happen easily
+            grid[x][y].parent = grid[queue[front][0]][queue[front][1]];
+            if(x === hasEnd[0] && y === hasEnd[1]) {
+              return;
+            }
+          }
+        }
+        front++;
+      }
+    }
+  };
+
   const runDFS = () => {
     const newGrid = grid.map((row) => row.map((node) => ({ ...node })));
     const stack = [[hasStart[0], hasStart[1]]];
@@ -475,6 +476,59 @@ export default function PathfindingVisualizer() {
         if(x >= 0 && x < GRID_ROWS && y >= 0 && y < GRID_COLS && !newGrid[x][y].isWall && !newGrid[x][y].isVisited) {
           stack.push([x, y]);
           grid[x][y].parent = grid[currentRow][currentCol];
+        }
+      }
+    }
+  };
+  
+
+  const runAStar = () => {
+    const newGrid = grid.map((row) => row.map((node) => ({ ...node })));
+    const openSet = new Heap((a, b) => a.fCost - b.fCost);
+
+    openSet.push({
+      row: hasStart[0],
+      col: hasStart[1],
+      gCost: 0,
+      hCost: manhattanDist(hasStart[0], hasStart[1], hasEnd[0], hasEnd[1]),
+      fCost: manhattanDist(hasStart[0], hasStart[1], hasEnd[0], hasEnd[1]),
+    });
+
+    newGrid[hasStart[0]][hasStart[1]].gCost = 0;
+    newGrid[hasStart[0]][hasStart[1]].hCost = manhattanDist(hasStart[0], hasStart[1], hasEnd[0], hasEnd[1]);
+    newGrid[hasStart[0]][hasStart[1]].fCost = newGrid[hasStart[0]][hasStart[1]].gCost + newGrid[hasStart[0]][hasStart[1]].hCost;
+
+    while(!openSet.empty()) {
+      frontierTimeline.current.push(openSet.toArray().map((node) => [node.row, node.col]));
+      const { row: currentRow, col: currentCol } = openSet.pop();
+
+      newGrid[currentRow][currentCol].isVisited = true;
+  
+      if (currentRow === hasEnd[0] && currentCol === hasEnd[1]) {
+        console.log("Path found!");
+        return;
+      }
+
+      for(let i = 0; i < 4; i++) {
+        const newRow = currentRow + dir[i][0];
+        const newCol = currentCol + dir[i][1];
+
+        if(newRow >= 0 && newRow < GRID_ROWS && newCol >= 0 && newCol < GRID_COLS &&
+            !newGrid[newRow][newCol].isWall && !newGrid[newRow][newCol].isVisited) {
+          const tentativeG = newGrid[currentRow][currentCol].gCost + 1;
+
+          if(tentativeG < newGrid[newRow][newCol].gCost) {
+            newGrid[newRow][newCol].gCost = tentativeG;
+            newGrid[newRow][newCol].fCost = tentativeG + manhattanDist(newRow, newCol, hasEnd[0], hasEnd[1]);
+            grid[newRow][newCol].parent = grid[currentRow][currentCol];
+
+            openSet.push({
+              row: newRow,
+              col: newCol,
+              fCost: newGrid[newRow][newCol].fCost,
+              gCost: tentativeG,
+            });
+          }
         }
       }
     }
