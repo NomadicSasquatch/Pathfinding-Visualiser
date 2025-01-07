@@ -9,12 +9,13 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Grid from '../Grid/Grid';
-import styles from './PathfindingVisualiser.module.css';
+import { useGlobalDelay } from '../GlobalDelayContext/GlobalDelayContext'; 
 import ControlPanel from '../ControlPanel/ControlPanel';
-import { GRID_ROWS, GRID_COLS, DEFAULT_ALGO_DROPDOWN_TEXT } from '../../config/config';
+import Slider from '../Slider/Slider';
 import Heap from 'heap';
+import styles from './PathfindingVisualiser.module.css';
 
-let delayTime = 30;
+import { GRID_ROWS, GRID_COLS, DEFAULT_ALGO_DROPDOWN_TEXT } from '../../config/config';
 
 export default function PathfindingVisualizer() {
   const [grid, setGrid] = useState(() => {
@@ -50,6 +51,8 @@ export default function PathfindingVisualizer() {
   const [sliderValue, setSlidervalue] = useState()
   const isRunningRef = useRef(false);
   const isRunningAlgoRef = useRef(false);
+
+  const { delay } = useGlobalDelay();
 
   //testing mouse dragging queue:
   const mouseOpQueue = useRef([]);
@@ -388,7 +391,6 @@ export default function PathfindingVisualizer() {
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     
     const CHUNK_SIZE = 10;
-    const delay = 5;
   
     let i = animationIndexRef.current;
     while(i < frontierTimeline.current.length && isRunningRef.current) {
@@ -406,8 +408,8 @@ export default function PathfindingVisualizer() {
       }
   
       setGrid([...grid]);
-      for(let msGone = 0; msGone < delay && isRunningRef.current; msGone += 5) {
-        await sleep(5); 
+      for (let msGone = 0; msGone < delay && isRunningRef.current; msGone += 5) {
+        await sleep(5);
       }
   
       i += CHUNK_SIZE;

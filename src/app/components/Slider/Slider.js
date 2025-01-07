@@ -1,3 +1,4 @@
+'use client';
 import React, { useState } from 'react';
 import { useGlobalDelay } from '../GlobalDelayContext/GlobalDelayContext';
 
@@ -10,6 +11,7 @@ export default function Slider() {
 
     return (
         <div style={{ margin: '10px 0' }}>
+            Animation Speed
           <input 
             type="range" 
             min="10"
