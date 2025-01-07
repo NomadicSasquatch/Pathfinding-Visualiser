@@ -892,6 +892,7 @@ export default function PathfindingVisualizer() {
   const connectFractals = () => {
     for(let i = 0; i < GRID_ROWS; i++) {
       for(let j = 0; j < GRID_COLS - 3; j++) {
+        // last two conditionals to omit the thick inner rings, only accept beams
         if(isVerticalBeam(i, j)) {
           // check if vertical beam has been visited before
           if(isVerticalBeam(i - 1, j) || (!grid[i-1][j+1].isWall && !grid[i-1][j+2].isWall)) continue;
@@ -901,20 +902,32 @@ export default function PathfindingVisualizer() {
           while(isVerticalBeam(end + 1, j)) {
             end++;
           }
+          // to omit the thick inner rings, only accept beams
+          if(!grid[end+1][j+1].isWall && !grid[end+1][j+2].isWall) continue;
           let randRow = Math.floor(Math.random() * (end - start));
           grid[randRow + start][j+1].isWall = grid[randRow + start][j+2].isWall = false;
         }
       }
     }
+    // random side to choose from, only affects beams that stretch throughout the entire col space. Without random the hole will
+    // always be placed in the first partition
+    let randFlag = Math.floor(Math.random() * 2);
+    let randStart = 0, randDir = 1;
+    if(randFlag === 1) {
+      randStart = GRID_COLS - 1;
+      randDir = -1;
+    }
     // if every horizontal beam has a gap, search becomes too easy/fast, for every column, there can only be one beam with a gap
     for(let i = 0; i < GRID_ROWS - 3; i++) {
-      for(let j = 0; j < GRID_COLS; j++) {
+      for(let j = randStart; j < GRID_COLS && j >= 0; j += randDir) {
         if(isHorizontalBeam(i, j)) {
           let start = j;
           let end = j;
-          while(isHorizontalBeam(i, end + 1)) {
-            end++;
+          while(isHorizontalBeam(i, end + randDir)) {
+            end += randDir;
           }
+          // to omit the thick inner rings, only accept beams
+          if(!grid[i+1][end+randDir].isWall && !grid[i+2][end+randDir].isWall) continue;
           let randCol = Math.floor(Math.random() * (end - start));
           grid[i+1][randCol + start].isWall = grid[i+2][randCol + start].isWall = false;
           break;
