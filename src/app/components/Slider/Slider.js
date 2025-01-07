@@ -9,6 +9,7 @@ export default function Slider() {
     const handleChange = (e) => {
         const reversedValue = 60 - Number(e.target.value);
         setDelay(reversedValue);
+        //setChunkSize((-0.225 * delay) + 12.25);
     };
 
     return (

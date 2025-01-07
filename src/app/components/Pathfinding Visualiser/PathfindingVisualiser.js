@@ -11,7 +11,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import Grid from '../Grid/Grid';
 import { useGlobalDelay } from '../GlobalDelayContext/GlobalDelayContext'; 
 import ControlPanel from '../ControlPanel/ControlPanel';
-import Slider from '../Slider/Slider';
 import Heap from 'heap';
 import styles from './PathfindingVisualiser.module.css';
 
@@ -52,7 +51,7 @@ export default function PathfindingVisualizer() {
   const isRunningRef = useRef(false);
   const isRunningAlgoRef = useRef(false);
 
-  const { delay } = useGlobalDelay();
+  const { delay, chunkSize } = useGlobalDelay();
 
   //testing mouse dragging queue:
   const mouseOpQueue = useRef([]);
@@ -390,11 +389,10 @@ export default function PathfindingVisualizer() {
     const [endRow, endCol] = hasEnd;
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     
-    const CHUNK_SIZE = (-0.225 * (delay)) + 12.25;
 
     let i = animationIndexRef.current;
     while(i < frontierTimeline.current.length && isRunningRef.current) {
-      const chunk = frontierTimeline.current.slice(i, i + CHUNK_SIZE);
+      const chunk = frontierTimeline.current.slice(i, i + chunkSize);
       for(let j = 0; j < i; j++) {
         const arr = frontierTimeline.current[j];
         grid[arr[0][0]][arr[0][1]].waveIndex = -1;
@@ -412,7 +410,7 @@ export default function PathfindingVisualizer() {
         await sleep(5);
       }
   
-      i += CHUNK_SIZE;
+      i += chunkSize;
     }
   
     animationIndexRef.current = i;
