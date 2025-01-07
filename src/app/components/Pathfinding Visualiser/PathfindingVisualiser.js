@@ -390,8 +390,8 @@ export default function PathfindingVisualizer() {
     const [endRow, endCol] = hasEnd;
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     
-    const CHUNK_SIZE = 10;
-  
+    const CHUNK_SIZE = (-0.225 * (delay)) + 12.25;
+
     let i = animationIndexRef.current;
     while(i < frontierTimeline.current.length && isRunningRef.current) {
       const chunk = frontierTimeline.current.slice(i, i + CHUNK_SIZE);
