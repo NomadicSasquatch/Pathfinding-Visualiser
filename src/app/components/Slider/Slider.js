@@ -7,9 +7,8 @@ export default function Slider() {
     const { delay, setDelay } = useGlobalDelay();
 
     const handleChange = (e) => {
-        const reversedValue = 60 - Number(e.target.value);
+        const reversedValue = 160 - Number(e.target.value);
         setDelay(reversedValue);
-        //setChunkSize((-0.225 * delay) + 12.25);
     };
 
     return (
@@ -18,8 +17,8 @@ export default function Slider() {
           <input 
             type="range" 
             min="10"
-            max="50"
-            value={60 - delay} 
+            max="155"
+            value={160 - delay} 
             onChange={handleChange} 
           />
         </div>

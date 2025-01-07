@@ -51,7 +51,7 @@ export default function PathfindingVisualizer() {
   const isRunningRef = useRef(false);
   const isRunningAlgoRef = useRef(false);
 
-  const { delay, chunkSize } = useGlobalDelay();
+  const { delayRef, chunkSizeRef } = useGlobalDelay();
 
   //testing mouse dragging queue:
   const mouseOpQueue = useRef([]);
@@ -392,7 +392,7 @@ export default function PathfindingVisualizer() {
 
     let i = animationIndexRef.current;
     while(i < frontierTimeline.current.length && isRunningRef.current) {
-      const chunk = frontierTimeline.current.slice(i, i + chunkSize);
+      const chunk = frontierTimeline.current.slice(i, i + chunkSizeRef.current);
       for(let j = 0; j < i; j++) {
         const arr = frontierTimeline.current[j];
         grid[arr[0][0]][arr[0][1]].waveIndex = -1;
@@ -406,11 +406,11 @@ export default function PathfindingVisualizer() {
       }
   
       setGrid([...grid]);
-      for (let msGone = 0; msGone < delay && isRunningRef.current; msGone += 5) {
+      for (let msGone = 0; msGone < delayRef.current && isRunningRef.current; msGone += 5) {
         await sleep(5);
       }
   
-      i += chunkSize;
+      i += chunkSizeRef.current;
     }
   
     animationIndexRef.current = i;
