@@ -349,8 +349,8 @@ export default function PathfindingVisualizer() {
       setIsRunningAlgo(true);
       switch(selectedAlgorithm) {
         case `Breadth-First Search`:
-          if(bfsQueueRef.current.length === 0) initBFS();
-          runBFS();
+          if(frontierTimeline.length === 0) tmpBFS();
+          tempAnimateBFS();
           break;
         case `Depth-First Search`:
           if(dfsStackRef.current.length === 0) initDFS();
@@ -384,6 +384,99 @@ export default function PathfindingVisualizer() {
       bfsQueueRef.current = [[hasStart[0], hasStart[1]]];
     }
   };
+
+  const tmpBFS = () => {
+    const newGrid = grid.map((row) => row.map((node) => ({ ...node })));
+    let front = 0;
+    let rear = 0;
+    let queue = [];
+    queue[rear++] = [hasStart[0], hasStart[1]];
+
+    while(front < rear) {
+      let tmp = rear;
+      frontierTimeline.push([...queue]);
+      while(front  < tmp) {
+        for(let i = 0; i < 4; i++) {
+          let x = queue[front][0] + dir[i][0];
+          let y = queue[front][1] + dir[i][1];
+          if(x >= 0 && x < GRID_ROWS && y >= 0 && y < GRID_COLS && !newGrid[x][y].isVisited && !newGrid[x][y].isWall) {
+            queue[rear++] = [x, y];
+            newGrid[x][y].isVisited = true;
+            // parent marked in grid itself so the reconstruction can happen easily
+            grid[x][y].parent = grid[queue[front][0]][queue[front][1]];
+            if(x === hasEnd[0] && y === hasEnd[1]) {
+              return;
+            }
+          }
+        }
+        front++;
+      }
+    }
+  };
+
+  const tempAnimateBFS = async () => {
+    if(frontierTimeline.length === 0) {
+      console.log(`BFS cannot run`);
+      return;
+    }
+    if(!isRunningRef.current) { 
+      console.log(`BFS is paused`);
+      return;
+    }
+    const [endRow, endCol] = hasEnd;
+    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+    
+    const CHUNK_SIZE = 10;
+    const delay = 5;
+  
+    let i = animationIndexRef.current;
+    let revealed = revealedVisitedCountRef.current;
+  
+    while(i < frontierTimeline.length && isRunningRef.current) {
+      const chunk = frontierTimeline.slice(i, i + CHUNK_SIZE);
+      for(let j = 0; j < i; j++) {
+        const arr = frontierTimeline[j];
+        grid[arr[0][0]][arr[0][1]].waveIndex = -1;
+      }
+  
+      for(const frontierSnap of chunk) {
+        frontierSnap.forEach(([fx, fy]) => {
+            grid[fx][fy].waveIndex = 1;
+            grid[fx][fy].isVisited = true;
+        });
+      }
+  
+      setGrid([...grid]);
+      for (let msGone = 0; msGone < delay && isRunningRef.current; msGone += 5) {
+        await sleep(5); 
+      }
+  
+      i += CHUNK_SIZE;
+    }
+  
+    animationIndexRef.current = i;
+    revealedVisitedCountRef.current = revealed;
+  
+    if(i >= frontierTimeline.length && isRunningRef.current) {
+      visitedOrder.forEach(([vx, vy]) => {
+        grid[vx][vy].isVisited = true;
+      });
+      setGrid([...grid]);
+  
+      if(grid[endRow][endCol].parent) {
+        constructFinalPath(endRow, endCol);
+        setGrid([...grid]);
+      }
+  
+      animationIndexRef.current = 0;
+      console.log("BFS animation complete");
+      isRunningRef.current = false;
+      isRunningAlgoRef.current = false;
+      setIsRunningAlgo(false);
+      setIsAlgoEnd(true);
+    }
+
+  }
 
   const runBFS = async () => {
     if(!bfsVisitedRef.current || bfsQueueRef.current.length === 0) {
@@ -671,7 +764,7 @@ export default function PathfindingVisualizer() {
     const [endRow, endCol] = hasEnd;
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     
-    const CHUNK_SIZE = (frontierTimeline[animationIndexRef.current].length)*5;
+    const CHUNK_SIZE = 10;
     const delay = 5;
   
     let i = animationIndexRef.current;
