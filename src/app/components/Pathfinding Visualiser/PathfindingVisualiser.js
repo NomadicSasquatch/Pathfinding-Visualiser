@@ -14,6 +14,8 @@ import ControlPanel from '../ControlPanel/ControlPanel';
 import { GRID_ROWS, GRID_COLS, DEFAULT_ALGO_DROPDOWN_TEXT } from '../../config/config';
 import Heap from 'heap';
 
+let delayTime = 30;
+
 export default function PathfindingVisualizer() {
   const [grid, setGrid] = useState(() => {
     const rows = GRID_ROWS;
@@ -45,6 +47,7 @@ export default function PathfindingVisualizer() {
   const [isRunningAlgo, setIsRunningAlgo] = useState(false);
   const [isAlgoStart, setIsAlgoStart] = useState(false);
   const [isAlgoEnd, setIsAlgoEnd] = useState(false);
+  const [sliderValue, setSlidervalue] = useState()
   const isRunningRef = useRef(false);
   const isRunningAlgoRef = useRef(false);
 
