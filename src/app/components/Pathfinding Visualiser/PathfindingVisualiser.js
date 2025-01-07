@@ -82,7 +82,7 @@ export default function PathfindingVisualizer() {
   // DATA STRUCTURES FOR GREEDY BEST-FIRST SEARCH //
 
   // general replay data struct
-  let frontierTimeline = [];
+  const frontierTimeline = useRef([]);
   let visitedOrder = [];
 
   const visitedDuringDragRef = useRef(new Set());
@@ -262,7 +262,7 @@ export default function PathfindingVisualizer() {
     aStarOpenSetRef.current = [];
     aStarVisitedRef.current = null;
 
-    frontierTimeline = [];
+    frontierTimeline.current = [];
     visitedOrder = [];
     animationIndexRef.current = 0;
     revealedVisitedCountRef.current = 0;
@@ -349,7 +349,7 @@ export default function PathfindingVisualizer() {
       setIsRunningAlgo(true);
       switch(selectedAlgorithm) {
         case `Breadth-First Search`:
-          if(frontierTimeline.length === 0) tmpBFS();
+          if(frontierTimeline.current.length === 0) tmpBFS();
           tempAnimateBFS();
           break;
         case `Depth-First Search`:
@@ -394,7 +394,7 @@ export default function PathfindingVisualizer() {
 
     while(front < rear) {
       let tmp = rear;
-      frontierTimeline.push([...queue]);
+      frontierTimeline.current.push([...queue]);
       while(front  < tmp) {
         for(let i = 0; i < 4; i++) {
           let x = queue[front][0] + dir[i][0];
@@ -415,7 +415,7 @@ export default function PathfindingVisualizer() {
   };
 
   const tempAnimateBFS = async () => {
-    if(frontierTimeline.length === 0) {
+    if(frontierTimeline.current.length === 0) {
       console.log(`BFS cannot run`);
       return;
     }
@@ -430,12 +430,13 @@ export default function PathfindingVisualizer() {
     const delay = 5;
   
     let i = animationIndexRef.current;
+    console.log(`i and animation index`, i, animationIndexRef.current);
     let revealed = revealedVisitedCountRef.current;
-  
-    while(i < frontierTimeline.length && isRunningRef.current) {
-      const chunk = frontierTimeline.slice(i, i + CHUNK_SIZE);
+    while(i < frontierTimeline.current.length && isRunningRef.current) {
+      console.log(`the current value of i is`, i, frontierTimeline.current.length);
+      const chunk = frontierTimeline.current.slice(i, i + CHUNK_SIZE);
       for(let j = 0; j < i; j++) {
-        const arr = frontierTimeline[j];
+        const arr = frontierTimeline.current[j];
         grid[arr[0][0]][arr[0][1]].waveIndex = -1;
       }
   
@@ -447,7 +448,7 @@ export default function PathfindingVisualizer() {
       }
   
       setGrid([...grid]);
-      for (let msGone = 0; msGone < delay && isRunningRef.current; msGone += 5) {
+      for(let msGone = 0; msGone < delay && isRunningRef.current; msGone += 5) {
         await sleep(5); 
       }
   
@@ -456,13 +457,10 @@ export default function PathfindingVisualizer() {
   
     animationIndexRef.current = i;
     revealedVisitedCountRef.current = revealed;
+    console.log(`animationindexref`, animationIndexRef.current);
   
-    if(i >= frontierTimeline.length && isRunningRef.current) {
-      visitedOrder.forEach(([vx, vy]) => {
-        grid[vx][vy].isVisited = true;
-      });
-      setGrid([...grid]);
-  
+    if(i >= frontierTimeline.current.length && isRunningRef.current) {
+      console.log(`in the final condition`, i, animationIndexRef.current, frontierTimeline.current.length);
       if(grid[endRow][endCol].parent) {
         constructFinalPath(endRow, endCol);
         setGrid([...grid]);
@@ -475,8 +473,7 @@ export default function PathfindingVisualizer() {
       setIsRunningAlgo(false);
       setIsAlgoEnd(true);
     }
-
-  }
+  };
 
   const runBFS = async () => {
     if(!bfsVisitedRef.current || bfsQueueRef.current.length === 0) {
@@ -707,14 +704,13 @@ export default function PathfindingVisualizer() {
 
   const runGreedyBfs = () => {
     const newGrid =  grid.map((row) => row.map((node) => ({ ...node })));
-    console.log(newGrid);
     let openSet = [];
     openSet.push([hasStart[0], hasStart[1]]);
 
     newGrid[hasStart[0]][hasStart[1]].hCost = manhattanDist(hasStart[0], hasStart[1], hasEnd[0], hasEnd[1]);
 
     while(openSet.length > 0) {
-      frontierTimeline.push([...openSet]);
+      frontierTimeline.current.push([...openSet]);
 
       openSet.sort((a, b) => {
         const nodeA = newGrid[a[0]][a[1]];
@@ -733,11 +729,6 @@ export default function PathfindingVisualizer() {
       curNode.isVisited = true;
       visitedOrder.push([curX, curY]);
 
-      if(curX === hasEnd[0] && curY === hasEnd[1]) {
-        newGrid[curX][curY].waveIndex = -1;
-        return { frontierTimeline, visitedOrder };
-      }
-
       for(let i = 0; i < 4; i++) {
         const x = curX + dir[i][0];
         const y = curY + dir[i][1];
@@ -750,10 +741,11 @@ export default function PathfindingVisualizer() {
         grid[x][y].parent = curNode;
 
         openSet.push([x, y]);
+        if(x === hasEnd[0] && y === hasEnd[1]) {
+          return;
+        }
       }
     }
-
-    return { frontierTimeline, visitedOrder };
   };
 
   const animateGreedyBFS = async () => {
@@ -770,10 +762,10 @@ export default function PathfindingVisualizer() {
     let i = animationIndexRef.current;
     let revealed = revealedVisitedCountRef.current;
   
-    while(i < frontierTimeline.length && isRunningRef.current) {
-      const chunk = frontierTimeline.slice(i, i + CHUNK_SIZE);
+    while(i < frontierTimeline.current.length && isRunningRef.current) {
+      const chunk = frontierTimeline.current.slice(i, i + CHUNK_SIZE);
       for(let j = 0; j < i; j++) {
-        const arr = frontierTimeline[j];
+        const arr = frontierTimeline.current[j];
         grid[arr[0][0]][arr[0][1]].waveIndex = -1;
       }
   
@@ -795,7 +787,7 @@ export default function PathfindingVisualizer() {
     animationIndexRef.current = i;
     revealedVisitedCountRef.current = revealed;
   
-    if(i >= frontierTimeline.length && isRunningRef.current) {
+    if(i >= frontierTimeline.current.length && isRunningRef.current) {
       visitedOrder.forEach(([vx, vy]) => {
         grid[vx][vy].isVisited = true;
       });
