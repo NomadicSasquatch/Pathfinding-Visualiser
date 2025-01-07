@@ -46,7 +46,6 @@ export default function PathfindingVisualizer() {
   const [isAlgoEnd, setIsAlgoEnd] = useState(false);
   const isRunningRef = useRef(false);
   const isRunningAlgoRef = useRef(false);
-  let chunkSize = 10;
 
   //testing mouse dragging queue:
   const mouseOpQueue = useRef([]);
@@ -78,7 +77,6 @@ export default function PathfindingVisualizer() {
   // const greedyBfsSetRef = useRef([]);
   // const greedyBfsVisitedRef = useRef(null);
   // const greedyBfsVisitOrder = useRef([]); // probably in js you can push arrays into a 1D array to make 2D (tbc)
-  const revealedVisitedCountRef = useRef(0);
   // DATA STRUCTURES FOR GREEDY BEST-FIRST SEARCH //
 
   // general replay data struct
@@ -265,7 +263,6 @@ export default function PathfindingVisualizer() {
     frontierTimeline.current = [];
     visitedOrder = [];
     animationIndexRef.current = 0;
-    revealedVisitedCountRef.current = 0;
 
     isRunningRef.current = false;
   }
@@ -349,16 +346,16 @@ export default function PathfindingVisualizer() {
       setIsRunningAlgo(true);
       switch(selectedAlgorithm) {
         case `Breadth-First Search`:
-          if(frontierTimeline.current.length === 0) tmpBFS();
-          tempAnimateBFS();
+          if(frontierTimeline.current.length === 0) runBFS();
+          animatePath();
           break;
         case `Depth-First Search`:
-          if(dfsStackRef.current.length === 0) initDFS();
-          runDFS();
+          if(frontierTimeline.current.length === 0) runDFS();
+          animatePath();
           break;
         case `Greedy Best-First Search`:
-          if(visitedOrder.length === 0) runGreedyBfs();
-          animateGreedyBFS();
+          if(frontierTimeline.current.length === 0) runGreedyBfs();
+          animatePath();
           break;
         case `A* Algorithm`:
           if(aStarOpenSetRef.current.length === 0) initAStar();
@@ -374,18 +371,7 @@ export default function PathfindingVisualizer() {
     }
   }
 
-  const initBFS = () => {
-    if(hasStart && hasEnd) {
-      const updatedGrid = [...grid];
-      updatedGrid[hasStart[0]][hasStart[1]].isVisited = true;
-      setGrid(updatedGrid);
-
-      bfsVisitedRef.current = updatedGrid; 
-      bfsQueueRef.current = [[hasStart[0], hasStart[1]]];
-    }
-  };
-
-  const tmpBFS = () => {
+  const runBFS = () => {
     const newGrid = grid.map((row) => row.map((node) => ({ ...node })));
     let front = 0;
     let rear = 0;
@@ -396,12 +382,12 @@ export default function PathfindingVisualizer() {
       let tmp = rear;
       frontierTimeline.current.push([...queue]);
       while(front  < tmp) {
+        newGrid[queue[front][0]][queue[front][1]].isVisited = true;
         for(let i = 0; i < 4; i++) {
           let x = queue[front][0] + dir[i][0];
           let y = queue[front][1] + dir[i][1];
           if(x >= 0 && x < GRID_ROWS && y >= 0 && y < GRID_COLS && !newGrid[x][y].isVisited && !newGrid[x][y].isWall) {
             queue[rear++] = [x, y];
-            newGrid[x][y].isVisited = true;
             // parent marked in grid itself so the reconstruction can happen easily
             grid[x][y].parent = grid[queue[front][0]][queue[front][1]];
             if(x === hasEnd[0] && y === hasEnd[1]) {
@@ -414,13 +400,13 @@ export default function PathfindingVisualizer() {
     }
   };
 
-  const tempAnimateBFS = async () => {
+  const animatePath = async () => {
     if(frontierTimeline.current.length === 0) {
-      console.log(`BFS cannot run`);
+      console.log(`${selectedAlgorithm} cannot run`);
       return;
     }
     if(!isRunningRef.current) { 
-      console.log(`BFS is paused`);
+      console.log(`${selectedAlgorithm} is paused`);
       return;
     }
     const [endRow, endCol] = hasEnd;
@@ -430,10 +416,7 @@ export default function PathfindingVisualizer() {
     const delay = 5;
   
     let i = animationIndexRef.current;
-    console.log(`i and animation index`, i, animationIndexRef.current);
-    let revealed = revealedVisitedCountRef.current;
     while(i < frontierTimeline.current.length && isRunningRef.current) {
-      console.log(`the current value of i is`, i, frontierTimeline.current.length);
       const chunk = frontierTimeline.current.slice(i, i + CHUNK_SIZE);
       for(let j = 0; j < i; j++) {
         const arr = frontierTimeline.current[j];
@@ -456,18 +439,15 @@ export default function PathfindingVisualizer() {
     }
   
     animationIndexRef.current = i;
-    revealedVisitedCountRef.current = revealed;
-    console.log(`animationindexref`, animationIndexRef.current);
   
     if(i >= frontierTimeline.current.length && isRunningRef.current) {
-      console.log(`in the final condition`, i, animationIndexRef.current, frontierTimeline.current.length);
       if(grid[endRow][endCol].parent) {
         constructFinalPath(endRow, endCol);
         setGrid([...grid]);
       }
   
       animationIndexRef.current = 0;
-      console.log("BFS animation complete");
+      console.log("${selectedAlgorithm} animation complete");
       isRunningRef.current = false;
       isRunningAlgoRef.current = false;
       setIsRunningAlgo(false);
@@ -475,232 +455,34 @@ export default function PathfindingVisualizer() {
     }
   };
 
-  const runBFS = async () => {
-    if(!bfsVisitedRef.current || bfsQueueRef.current.length === 0) {
-      console.log("BFS cannot run; either paused or completed.");
-      return;
-    }
-  
-    const delay = 0;
-    const animate = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  
-    const BreadthFirstSearchStep = async () => {
-      if(!isRunningRef.current) {
-        console.log("BFS paused.");
-        return;
-      }
-  
-      if(bfsQueueRef.current.length > 0) {
-        const [curX, curY] = bfsQueueRef.current.shift();
-        bfsVisitedRef.current[curX][curY].waveIndex = -1;
-  
-        for(let i = 0; i < 4; i++) {
-          const x = curX + dir[i][0];
-          const y = curY + dir[i][1];
-          if(x >= 0 && x < GRID_ROWS && y >= 0 && y < GRID_COLS && !bfsVisitedRef.current[x][y].isWall && !bfsVisitedRef.current[x][y].isVisited) {
-            bfsVisitedRef.current[x][y].parent = bfsVisitedRef.current[curX][curY];
-            bfsVisitedRef.current[x][y].waveIndex = 1;
-            if(x === hasEnd[0] && y === hasEnd[1]) {
-              bfsVisitedRef.current[x][y].isVisited = true;
-              setGrid([...bfsVisitedRef.current]);
-              console.log("Path found!");
-              isRunningRef.current = false;
-              isRunningAlgoRef.current = false;
-              setIsRunningAlgo(false);
-              constructFinalPath(x, y);
-              setIsAlgoEnd(true);
-              return;
-            }
-  
-            bfsVisitedRef.current[x][y].isVisited = true;
-            bfsQueueRef.current.push([x, y]);
-          }
-          chunkSize++;
-        }
-  
-        if(chunkSize >= 10) {
-          setGrid([...bfsVisitedRef.current]);
-          chunkSize = 0;
-        }
-      } 
-      else {
-        isRunningRef.current = false;
-        return;
-      }
-  
-      await animate(delay);
-      setTimeout(BreadthFirstSearchStep, 0);
-    };
-
-    BreadthFirstSearchStep();
-  };
-
-  const initDFS = () => {
-    if(hasStart && hasEnd) {
-      const updatedGrid = [...grid];
-      setGrid(updatedGrid);
-
-      dfsVisitedRef.current = updatedGrid;
-      dfsStackRef.current = [[hasStart[0], hasStart[1]]];
-    }
-  };
-
   const runDFS = () => {
-    if(!dfsVisitedRef.current || dfsStackRef.current.length === 0) {
-      console.log(`DFS has not been initialised\n`);
-      return;
-    }
-    const delay = 0.05;
-    const animate = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-    const depthFirstSearch = async () => {
-      if(!isRunningRef.current) {
-        console.log(`DFS is paused`);
-        return;
-      }
-      if(dfsStackRef.current.length === 0) {
-        console.log(`DFS complete (no path or stack exhausted).`, dfsStackRef.current);
-        isRunningRef.current = false;
-        return;
-      }
+    const newGrid = grid.map((row) => row.map((node) => ({ ...node })));
+    const stack = [[hasStart[0], hasStart[1]]];
+  
+    while(stack.length > 0) {
+      frontierTimeline.current.push([...stack]);
+      const [currentRow, currentCol] = stack.pop();
 
-      const [row, col] = dfsStackRef.current.pop();
-      
-      if(row === hasEnd[0] && col === hasEnd[1]) {
-        isRunningRef.current = false;
-        isRunningAlgoRef.current = false;
-        setIsRunningAlgo(false);
-        constructFinalPath(row, col);
-        setIsAlgoEnd(true);
+      newGrid[currentRow][currentCol].isVisited = true;
+      if(currentRow == hasEnd[0] && currentCol == hasEnd[1]) {
         return;
       }
-      dfsVisitedRef.current[row][col].isVisited = true;
-      dfsVisitedRef.current[row][col].waveIndex = -1;
-      setGrid([...dfsVisitedRef.current]);
-
+  
       for(let i = 0; i < 4; i++) {
-        const x = row + dir[i][0];
-        const y = col + dir[i][1];
-        if(x >= 0 && x < GRID_ROWS && y >= 0 && y < GRID_COLS && !dfsVisitedRef.current[x][y].isWall && !dfsVisitedRef.current[x][y].isVisited) {
-          dfsStackRef.current.push([x,y]);
-          dfsVisitedRef.current[x][y].waveIndex = 1;
-          dfsVisitedRef.current[x][y].parent = dfsVisitedRef.current[row][col];
+        const x = currentRow + dir[i][0];
+        const y = currentCol + dir[i][1];
+
+        if(x >= 0 && x < GRID_ROWS && y >= 0 && y < GRID_COLS && !newGrid[x][y].isWall && !newGrid[x][y].isVisited) {
+          stack.push([x, y]);
+          grid[x][y].parent = grid[currentRow][currentCol];
         }
       }
-      await animate(delay);
-      depthFirstSearch();
     }
-    depthFirstSearch();
-  };
-
-  const initAStar = () => {
-    if(hasStart && hasEnd) {
-      const newGrid = grid.map((row) => row.map((node) => ({ ...node })));
-
-      const [sr, sc] = hasStart;
-      const [er, ec] = hasEnd;
-
-      newGrid[sr][sc].gCost = 0;
-      newGrid[sr][sc].hCost = manhattanDist(sr, sc, er, ec);
-      newGrid[sr][sc].fCost = newGrid[sr][sc].gCost + newGrid[sr][sc].hCost;
-
-      setGrid(newGrid);
-
-      aStarVisitedRef.current = newGrid;
-      aStarOpenSetRef.current = [[sr, sc]];
-    }
-  };
-
-  const runAStar = () => {
-    if(!aStarVisitedRef.current || aStarOpenSetRef.current.length === 0) {
-      console.log('A* cannot run; not initialized or openSet empty.');
-      return;
-    }
-
-    const delay = 0;
-    const animate = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-    const AStarStep = async () => {
-      if(!isRunningRef.current) {
-        console.log('A* paused.');
-        return;
-      }
-
-      if(aStarOpenSetRef.current.length === 0) {
-        console.log('A* complete: no path found.');
-        isRunningRef.current = false;
-        return;
-      }
-
-      aStarOpenSetRef.current.sort((a, b) => {
-        const nodeA = aStarVisitedRef.current[a[0]][a[1]];
-        const nodeB = aStarVisitedRef.current[b[0]][b[1]];
-        return nodeA.fCost - nodeB.fCost;
-      });
-
-      const [row, col] = aStarOpenSetRef.current.shift();
-      const currentNode = aStarVisitedRef.current[row][col];
-      currentNode.isVisited = true;
-      currentNode.waveIndex = -1;
-
-      if(row === hasEnd[0] && col === hasEnd[1]) {
-        isRunningRef.current = false;
-        setGrid([...aStarVisitedRef.current]);
-        isRunningAlgoRef.current = false;
-        setIsRunningAlgo(false);
-        constructFinalPathAStar(row, col);
-        setGrid([...aStarVisitedRef.current]);
-        setIsAlgoEnd(true);
-        return;
-      }
-
-      for(let i = 0; i < 4; i++) {
-        const x = row + dir[i][0];
-        const y = col + dir[i][1];
-        if(x < 0 || x >= GRID_ROWS || y < 0 || y >= GRID_COLS || aStarVisitedRef.current[x][y].isWall || aStarVisitedRef.current[x][y].isVisited) {
-          continue;
-        }
-
-        const tentativeG = currentNode.gCost + 1;
-        const neighborNode = aStarVisitedRef.current[x][y];
-        if(tentativeG < neighborNode.gCost) {
-          neighborNode.gCost = tentativeG;
-          neighborNode.hCost = manhattanDist(x, y, hasEnd[0], hasEnd[1]);
-          neighborNode.fCost = neighborNode.gCost + neighborNode.hCost;
-          neighborNode.parent = currentNode;
-          aStarVisitedRef.current[x][y].waveIndex = 1
-          aStarOpenSetRef.current.push([x, y]);
-        }
-      }
-
-      setGrid([...aStarVisitedRef.current]);
-      //console.log(aStarVisitedRef.current[row][col].waveIndex);
-
-      await animate(delay);
-      AStarStep();
-    };
-
-    AStarStep();
   };
 
   const manhattanDist = (r1, c1, r2, c2) => {
     return Math.abs(r1 - r2) + Math.abs(c1 - c2);
   };
-
-  // const initGreedyBfs = () => {
-  //   if(hasStart && hasEnd) {
-  //     const newGrid = grid.map((row) => row.map((node) => ({ ...node })));
-
-  //     const [sr, sc] = hasStart;
-  //     const [er, ec] = hasEnd;
-
-  //     newGrid[sr][sc].hCost = manhattanDist(sr, sc, er, ec);
-  //     greedyBfsVisitedRef.current = newGrid;
-  //     greedyBfsSetRef.current = [[sr, sc]];
-  //     greedyBfsVisitOrder.current = [];
-
-  //     setGrid(newGrid);
-  //   }
-  // };
 
   const runGreedyBfs = () => {
     const newGrid =  grid.map((row) => row.map((node) => ({ ...node })));
@@ -745,65 +527,6 @@ export default function PathfindingVisualizer() {
           return;
         }
       }
-    }
-  };
-
-  const animateGreedyBFS = async () => {
-    if(!isRunningRef.current) {
-      console.log(`Greedy Best-First Search is paused.`);
-      return;
-    }
-    const [endRow, endCol] = hasEnd;
-    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-    
-    const CHUNK_SIZE = 10;
-    const delay = 5;
-  
-    let i = animationIndexRef.current;
-    let revealed = revealedVisitedCountRef.current;
-  
-    while(i < frontierTimeline.current.length && isRunningRef.current) {
-      const chunk = frontierTimeline.current.slice(i, i + CHUNK_SIZE);
-      for(let j = 0; j < i; j++) {
-        const arr = frontierTimeline.current[j];
-        grid[arr[0][0]][arr[0][1]].waveIndex = -1;
-      }
-  
-      for(const frontierSnap of chunk) {
-        frontierSnap.forEach(([fx, fy]) => {
-            grid[fx][fy].waveIndex = 1;
-            grid[fx][fy].isVisited = true;
-        });
-      }
-  
-      setGrid([...grid]);
-      for (let msGone = 0; msGone < delay && isRunningRef.current; msGone += 5) {
-        await sleep(5); 
-      }
-  
-      i += CHUNK_SIZE;
-    }
-  
-    animationIndexRef.current = i;
-    revealedVisitedCountRef.current = revealed;
-  
-    if(i >= frontierTimeline.current.length && isRunningRef.current) {
-      visitedOrder.forEach(([vx, vy]) => {
-        grid[vx][vy].isVisited = true;
-      });
-      setGrid([...grid]);
-  
-      if(grid[endRow][endCol].parent) {
-        constructFinalPath(endRow, endCol);
-        setGrid([...grid]);
-      }
-  
-      animationIndexRef.current = 0;
-      console.log("Greedy BFS animation complete");
-      isRunningRef.current = false;
-      isRunningAlgoRef.current = false;
-      setIsRunningAlgo(false);
-      setIsAlgoEnd(true);
     }
   };
 
