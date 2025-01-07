@@ -1,25 +1,26 @@
 'use client';
 import React, { useState } from 'react';
 import { useGlobalDelay } from '../GlobalDelayContext/GlobalDelayContext';
+import styles from './Slider.module.css';
 
 export default function Slider() {
     const { delay, setDelay } = useGlobalDelay();
 
     const handleChange = (e) => {
-        setDelay(Number(e.target.value));
+        const reversedValue = 60 - Number(e.target.value);
+        setDelay(reversedValue);
     };
 
     return (
-        <div style={{ margin: '10px 0' }}>
-            Animation Speed
+        <div className={styles.slider}>
+            <lable className={styles.text}>Animation Speed</lable>
           <input 
             type="range" 
             min="10"
-            max="200"
-            value={delay} 
+            max="50"
+            value={60 - delay} 
             onChange={handleChange} 
           />
-          <span style={{ marginLeft: '8px' }}>{delay} ms</span>
         </div>
       );
 };
