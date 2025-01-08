@@ -12,15 +12,22 @@ export default function Slider() {
     };
 
     return (
-        <div className={styles.slider}>
+        <div className={styles.container}>
             <lable className={styles.text}>Animation Speed</lable>
-          <input 
-            type="range" 
-            min="50"
-            max="100"
-            value={110 - delay} 
-            onChange={handleChange} 
-          />
+            <div>
+                <input 
+                type="range" 
+                min="50"
+                max="100"
+                value={110 - delay} 
+                onChange={handleChange} 
+                className={styles.slider}
+            />
+                <div className={styles.sliderText}>
+                    <span>Slow</span>
+                    <span>Fast</span>
+                </div>
+            </div>
         </div>
       );
 };

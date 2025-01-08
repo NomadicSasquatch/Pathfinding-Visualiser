@@ -1,6 +1,7 @@
 .gridPanel {
     display: flex;
     gap: 50px;
+    cursor: pointer;
 }
   
 .controls {

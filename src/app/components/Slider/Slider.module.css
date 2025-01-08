@@ -1,15 +1,35 @@
+.container {
+    display: flex;
+    padding-left: 52px;
+    align-items: center;
+    overflow: visible;
+    gap: 10px;
+}
+
 .slider {
-    padding-left: 20px;
+    overflow: visible;
+    position: relative;
+    display: block;
     color: white;
+    top: 10px;
+    width: 250px;
+    margin-bottom: 10px;
 }
 
 .text {
     display: inline-block;
     margin: 2px;
-    background-color: #007bff;
+    background-color: #0056b3;
+    border-radius: 15px;
     color: white;
     cursor: pointer;
-    font-size: 24px;
-    padding-right: 10px;
+    font-size: 26px;
     padding: 5px 5px;
+}
+
+.sliderText {
+    display: flex;
+    font-size: 20px;
+    justify-content: space-between;
+    gap: 55px;
 }
