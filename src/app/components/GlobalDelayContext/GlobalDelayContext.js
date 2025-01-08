@@ -15,7 +15,7 @@ export function GlobalDelayProvider({ children }) {
     delayRef.current = delay;
 }, [delay]);
   useEffect(() => {
-    setChunkSize((-0.0621 * delayRef.current) + 10.31);
+    setChunkSize(1000/Math.pow(delayRef.current, 2));
  }, [delayRef.current]);
  useEffect(() => {
     chunkSizeRef.current = chunkSize;
