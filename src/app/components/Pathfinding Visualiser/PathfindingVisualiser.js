@@ -295,7 +295,7 @@ export default function PathfindingVisualizer() {
     setIsRunningAlgo(false);
     setIsAlgoStart(false);
     setIsAlgoEnd(false);
-  }
+  };
 
   const handleClearGridButton = () => {
     const newGrid = grid.map((row) =>
@@ -323,24 +323,6 @@ export default function PathfindingVisualizer() {
     }
 
     constructFinalPath(parentNode.row, parentNode.col);
-  }
-
-  const constructFinalPathAStar = (row, col) => {
-    function backtrack(r, c) {
-      if(r === hasStart[0] && c === hasStart[1]) {
-        aStarVisitedRef.current[r][c].isInFinalPath = true;
-        return;
-      }
-  
-      aStarVisitedRef.current[r][c].isInFinalPath = true;
-      const parentNode = aStarVisitedRef.current[r][c].parent;
-      if(parentNode) {
-        backtrack(parentNode.row, parentNode.col);
-      }
-    }
-  
-    backtrack(row, col);
-    setGrid([...aStarVisitedRef.current]);
   };
   
   const handleRunButton = async () => {
@@ -484,7 +466,6 @@ export default function PathfindingVisualizer() {
     }
   };
   
-
   const runAStar = () => {
     const newGrid = grid.map((row) => row.map((node) => ({ ...node })));
     const openSet = new Heap((a, b) => a.fCost - b.fCost);
