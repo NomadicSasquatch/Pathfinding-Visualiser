@@ -23,7 +23,7 @@ const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction,
         <button onClick = {()=>setCurrentAction('toggleWall')} className={styles.button} disabled={isAlgoStart}>
           Toggle Wall
         </button>
-        <Dropdown options={patterns} defaultText={`Select A Wall Pattern`} setSelectedWallPattern={setSelectedWallPattern} type={0}>
+        <Dropdown options={patterns} defaultText={`Select A Wall Pattern`} setSelectedWallPattern={setSelectedWallPattern} isAlgoStart={isAlgoStart} isAlgoEnd={isAlgoEnd} type={0}>
           
         </Dropdown>
         <button onClick = {()=>handleGenerateWallButton()} className={styles.button} disabled={!(defaultWallPatternText.localeCompare(selectedWallPattern)) || isAlgoStart}>
@@ -37,13 +37,13 @@ const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction,
         </button>
       </div>
       <div className={styles.rightGroup}>
-        <button onClick = {()=>handleClearPathButton()} className={styles.button}>
+        <button onClick = {()=>handleClearPathButton()} disabled={isRunningAlgo} className={styles.button}>
           Clear Paths
         </button>
-        <button onClick = {()=>handleClearWallsButton()} disabled={isAlgoStart} className={styles.button}>
+        <button onClick = {()=>handleClearWallsButton()} disabled={isRunningAlgo} className={styles.button}>
           Clear Walls
         </button>
-        <button onClick = {()=>handleClearGridButton()} className={styles.button}>
+        <button onClick = {()=>handleClearGridButton()} disabled={isRunningAlgo} className={styles.button}>
           Clear Grid
         </button>
         <Slider>

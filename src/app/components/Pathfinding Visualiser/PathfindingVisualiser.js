@@ -278,7 +278,7 @@ export default function PathfindingVisualizer() {
       row.map((node) => ({ ...node, isVisited: false, waveIndex: -1, isInFinalPath: false, gCost: Infinity, hCost: Infinity, fCost: Infinity, parent: null}))
     );
     setGrid(newGrid);
-    resetDataStructs()
+    resetDataStructs();
     isRunningAlgoRef.current = false;
     setIsRunningAlgo(false);
     setIsAlgoStart(false);
