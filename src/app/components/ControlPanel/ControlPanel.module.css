@@ -1,7 +1,6 @@
 .gridPanel {
     display: flex;
     gap: 50px;
-    cursor: pointer;
 }
   
 .controls {
@@ -29,6 +28,7 @@
 
 .button:disabled {
   background-color: grey;
+  cursor: default;
 }
 
 .leftGroup {
