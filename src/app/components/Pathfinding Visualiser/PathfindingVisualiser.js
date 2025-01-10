@@ -388,7 +388,7 @@ export default function PathfindingVisualizer() {
       }
   
       setGrid([...grid]);
-      for (let msGone = 0; msGone < delayRef.current && isRunningRef.current; msGone += 5) {
+      for(let msGone = 0; msGone < delayRef.current && isRunningRef.current; msGone += 5) {
         await sleep(5);
       }
   

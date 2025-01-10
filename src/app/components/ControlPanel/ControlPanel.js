@@ -40,7 +40,7 @@ const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction,
         <button onClick = {()=>handleClearPathButton()} disabled={isRunningAlgo} className={styles.button}>
           Clear Paths
         </button>
-        <button onClick = {()=>handleClearWallsButton()} disabled={isRunningAlgo} className={styles.button}>
+        <button onClick = {()=>handleClearWallsButton()} disabled={isAlgoStart || isAlgoEnd} className={styles.button}>
           Clear Walls
         </button>
         <button onClick = {()=>handleClearGridButton()} disabled={isRunningAlgo} className={styles.button}>
