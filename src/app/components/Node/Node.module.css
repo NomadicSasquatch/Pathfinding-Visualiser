@@ -3,7 +3,7 @@
   height: var(--node-size);
   border: 2px solid black;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.35s;
 }
 .default {
   background-color: white;
