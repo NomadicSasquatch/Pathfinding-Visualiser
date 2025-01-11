@@ -1,6 +1,5 @@
 const User = require('../models/user.model');
 
-// Save a new pattern
 exports.savePattern = async (req, res) => {
   try {
     const user = await User.findById(req.user.userId);
@@ -21,7 +20,6 @@ exports.savePattern = async (req, res) => {
   }
 };
 
-// Get all patterns
 exports.getPatterns = async (req, res) => {
   try {
     const user = await User.findById(req.user.userId);
