@@ -11,7 +11,7 @@
 
 .nodeWall {
   background-color: black;
-  transition: background-color 0.35s;
+  transition: background-color 0.2s;
 }
 
 .nodeStart  {
