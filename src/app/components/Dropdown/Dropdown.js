@@ -1,14 +1,14 @@
 import React, { useRef, useState, useEffect } from 'react';
 import styles from './Dropdown.module.css';
 
-const Dropdown = ({ options, defaultText, setSelectedAlgorithm, setSelectedWallPattern, isAlgoStart, isAlgoEnd, type }) => {
+const Dropdown = ({ options, defaultText, setSelectedAlgorithm, setSelectedWallPattern, isAlgoStart, isAlgoEnd, type, setSelectedUserPatternSlot }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(defaultText);
   const dropdownRef = useRef(null);
 
   const toggleDropdown = () => setIsOpen((prev) => !prev);
 
-  const handleOptionClick = (option) => {
+  const handleOptionClick = (option, index) => {
     if(type === 0) {
       setSelectedOption(option);
       setIsOpen(false);
@@ -18,6 +18,11 @@ const Dropdown = ({ options, defaultText, setSelectedAlgorithm, setSelectedWallP
       setSelectedOption(option);
       setIsOpen(false);
       setSelectedAlgorithm(option);
+    }
+    else if(type === 2) {
+      setSelectedOption(option);
+      setIsOpen(false);
+      setSelectedUserPatternSlot(option);
     }
   };
 
@@ -45,7 +50,7 @@ const Dropdown = ({ options, defaultText, setSelectedAlgorithm, setSelectedWallP
           {options.map((option, index) => (
             <li
               key={index}
-              onClick={() => handleOptionClick(option)}
+              onClick={() => handleOptionClick(option, index)}
               className={styles.dropdownItem}
             >
               {option}
