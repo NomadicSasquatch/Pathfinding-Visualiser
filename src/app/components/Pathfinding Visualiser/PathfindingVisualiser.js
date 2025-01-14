@@ -47,7 +47,7 @@ export default function PathfindingVisualizer() {
   const [isRunningAlgo, setIsRunningAlgo] = useState(false);
   const [isAlgoStart, setIsAlgoStart] = useState(false);
   const [isAlgoEnd, setIsAlgoEnd] = useState(false);
-  const [sliderValue, setSlidervalue] = useState()
+  const [selectedUserPatternSlot, setSelectedUserPatternSlot] = useState(null);
   const isRunningRef = useRef(false);
   const isRunningAlgoRef = useRef(false);
 
@@ -488,7 +488,7 @@ export default function PathfindingVisualizer() {
 
       newGrid[currentRow][currentCol].isVisited = true;
   
-      if (currentRow === hasEnd[0] && currentCol === hasEnd[1]) {
+      if(currentRow === hasEnd[0] && currentCol === hasEnd[1]) {
         console.log("Path found!");
         return;
       }
@@ -595,8 +595,8 @@ export default function PathfindingVisualizer() {
   }
   
   function generateRandomMaze() {
-    for (let r = 0; r < GRID_ROWS; r++) {
-      for (let c = 0; c < GRID_COLS; c++) {
+    for(let r = 0; r < GRID_ROWS; r++) {
+      for(let c = 0; c < GRID_COLS; c++) {
         grid[r][c].isWall = true;
       }
     }
@@ -694,8 +694,8 @@ export default function PathfindingVisualizer() {
   
       for(let row = top + 1; row <= bottom - 1; row++) {
         counter++;
-        if (!checkStartOrEnd(row, left)) grid[row][left].isWall = isWallLayer;
-        if (!checkStartOrEnd(row, right)) grid[row][right].isWall = isWallLayer;
+        if(!checkStartOrEnd(row, left)) grid[row][left].isWall = isWallLayer;
+        if(!checkStartOrEnd(row, right)) grid[row][right].isWall = isWallLayer;
       }
       // last two conditions to ensure that the thick rings (rings with no empty nodes in them) do not have empty walls
       if(grid[top][left].isWall && layer && top + 1 != bottom && left + 1 != right) {
@@ -782,12 +782,65 @@ export default function PathfindingVisualizer() {
     }
   }
 
+  const handleLoadButton = async (selectedUserPatternSlot) => {
+    try {
+      const response = await fetch(`http://localhost:4000/api/user/patterns/${selectedUserPatternSlot}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      if(!response.ok) {
+        const err = await response.json();
+        console.error('Load pattern error:', err);
+        return;
+      }
+      const data = await response.json(); 
+  
+      if(data.pattern && Array.isArray(data.pattern.patternData)) {
+        setGrid(data.pattern.patternData);
+        console.log(`Loaded pattern slot ${selectedUserPatternSlot}`);
+      } else {
+        console.error('Invalid pattern data from server');
+      }
+    } catch (error) {
+      console.error('Network error while loading pattern:', error);
+    }
+  };
+
+  const handleSaveButton = async (selectedUserPatternSlot) => {
+    try {
+      const body = {
+        name: `Pattern ${selectedUserPatternSlot}`,
+        patternData: grid
+      };
+      const response = await fetch(`http://localhost:4000/api/user/patterns/${selectedUserPatternSlot}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(body)
+      });
+      if(!response.ok) {
+        const err = await response.json();
+        console.error('Save pattern error:', err);
+        return;
+      }
+      const data = await response.json();
+      console.log(`Saved pattern slot ${selectedUserPatternSlot}`, data);
+    } catch (error) {
+      console.error('Network error while saving pattern:', error);
+    }
+  };
+
   return (
     <div className={styles.visualizerContainer}>  
       <h1 className={styles.h1}>
         Pathfinding Visualiser
       </h1>
-      <ControlPanel handleSetStartButton={handleSetStartButton} handleSetEndButton={handleSetEndButton} setCurrentAction={setCurrentAction} selectedAlgorithm={selectedAlgorithm} setSelectedAlgorithm={setSelectedAlgorithm} selectedWallPattern={selectedWallPattern} setSelectedWallPattern={setSelectedWallPattern} hasStart={hasStart} hasEnd={hasEnd} handleRunButton={handleRunButton} handleGenerateWallButton={handleGenerateWallButton} handleClearPathButton={handleClearPathButton} handleClearWallsButton={handleClearWallsButton} handleClearGridButton={handleClearGridButton} isRunningAlgo={isRunningAlgo} isAlgoStart={isAlgoStart} isAlgoEnd={isAlgoEnd}>
+      <ControlPanel handleSetStartButton={handleSetStartButton} handleSetEndButton={handleSetEndButton} setCurrentAction={setCurrentAction} selectedAlgorithm={selectedAlgorithm} setSelectedAlgorithm={setSelectedAlgorithm} selectedWallPattern={selectedWallPattern} setSelectedWallPattern={setSelectedWallPattern} hasStart={hasStart} hasEnd={hasEnd} handleRunButton={handleRunButton} handleGenerateWallButton={handleGenerateWallButton} handleClearPathButton={handleClearPathButton} handleClearWallsButton={handleClearWallsButton} handleClearGridButton={handleClearGridButton} isRunningAlgo={isRunningAlgo} isAlgoStart={isAlgoStart} isAlgoEnd={isAlgoEnd} handleLoadButton={handleLoadButton} handleSaveButton={handleSaveButton} setSelectedUserPatternSlot={setSelectedUserPatternSlot}>
 
       </ControlPanel>
       <Grid grid={grid} setGrid={setGrid} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseEnter={handleMouseEnter} actionState={currentAction}/>
