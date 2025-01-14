@@ -1,0 +1,9 @@
+.authPanel {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.authButton {
+    color: grey;
+    background-color: black;
+}

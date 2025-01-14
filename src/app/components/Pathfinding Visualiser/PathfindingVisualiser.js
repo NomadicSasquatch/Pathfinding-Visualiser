@@ -15,6 +15,7 @@ import Heap from 'heap';
 import styles from './PathfindingVisualiser.module.css';
 
 import { GRID_ROWS, GRID_COLS, DEFAULT_ALGO_DROPDOWN_TEXT } from '../../config/config';
+import AuthenticationPanel from '../AuthenticationPanel/AuthenticationPanel';
 
 export default function PathfindingVisualizer() {
   const initialiseGrid = () => {
@@ -892,10 +893,15 @@ export default function PathfindingVisualizer() {
   }
 
   return (
-    <div className={styles.visualizerContainer}>  
-      <h1 className={styles.h1}>
-        Pathfinding Visualiser
-      </h1>
+    <div className={styles.visualizerContainer}>
+      <div className={styles.headerRow}>
+        <h1 className={styles.h1}>
+          Pathfinding Visualiser
+        </h1>
+        <AuthenticationPanel>
+
+        </AuthenticationPanel>
+      </div>
       <ControlPanel handleSetStartButton={handleSetStartButton} handleSetEndButton={handleSetEndButton} setCurrentAction={setCurrentAction} selectedAlgorithm={selectedAlgorithm} setSelectedAlgorithm={setSelectedAlgorithm} selectedWallPattern={selectedWallPattern} setSelectedWallPattern={setSelectedWallPattern} hasStart={hasStart} hasEnd={hasEnd} handleRunButton={handleRunButton} handleGenerateWallButton={handleGenerateWallButton} handleClearPathButton={handleClearPathButton} handleClearWallsButton={handleClearWallsButton} handleClearGridButton={handleClearGridButton} isRunningAlgo={isRunningAlgo} isAlgoStart={isAlgoStart} isAlgoEnd={isAlgoEnd} handleLoadButton={handleLoadButton} handleSaveButton={handleSaveButton} selectedUserPatternSlot={selectedUserPatternSlot} setSelectedUserPatternSlot={setSelectedUserPatternSlot}>
 
       </ControlPanel>
