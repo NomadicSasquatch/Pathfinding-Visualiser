@@ -786,57 +786,67 @@ export default function PathfindingVisualizer() {
   }
 
   const handleLoadButton = async (selectedUserPatternSlot) => {
-    console.log(`handleloadbutton is pressed`);
-    try {
-      const response = await fetch(`http://localhost:4000/api/user/patterns/${selectedUserPatternSlot}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+    if(isLoggedIn) {
+      try {
+        const response = await fetch(`http://localhost:4000/api/user/patterns/${selectedUserPatternSlot}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        if(!response.ok) {
+          const err = await response.json();
+          console.error('Load pattern error:', err);
+          return;
         }
-      });
-      if(!response.ok) {
-        const err = await response.json();
-        console.error('Load pattern error:', err);
-        return;
+        const data = await response.json(); 
+    
+        if(data.pattern && Array.isArray(data.pattern.patternData)) {
+          setGrid(data.pattern.patternData);
+          console.log(`Loaded pattern slot ${selectedUserPatternSlot}`);
+        } else {
+          console.error('Invalid pattern data from server');
+        }
+      } catch (error) {
+        console.error('Network error while loading pattern:', error);
       }
-      const data = await response.json(); 
-  
-      if(data.pattern && Array.isArray(data.pattern.patternData)) {
-        setGrid(data.pattern.patternData);
-        console.log(`Loaded pattern slot ${selectedUserPatternSlot}`);
-      } else {
-        console.error('Invalid pattern data from server');
-      }
-    } catch (error) {
-      console.error('Network error while loading pattern:', error);
+    }
+    else {
+      setGrid(guestPatterns[selectedUserPatternSlot]);
     }
   };
 
   const handleSaveButton = async (selectedUserPatternSlot) => {
-    console.log(`handlesavebutton is pressed`);
-    try {
-      const body = {
-        name: `Pattern ${selectedUserPatternSlot}`,
-        patternData: grid
-      };
-      const response = await fetch(`http://localhost:4000/api/user/patterns/${selectedUserPatternSlot}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify(body)
-      });
-      if(!response.ok) {
-        const err = await response.json();
-        console.error('Save pattern error:', err);
-        return;
+    if(isLoggedIn) {
+      try {
+        const body = {
+          name: `Pattern ${selectedUserPatternSlot}`,
+          patternData: grid
+        };
+        const response = await fetch(`http://localhost:4000/api/user/patterns/${selectedUserPatternSlot}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify(body)
+        });
+        if(!response.ok) {
+          const err = await response.json();
+          console.error('Save pattern error:', err);
+          return;
+        }
+        const data = await response.json();
+        console.log(`Saved pattern slot ${selectedUserPatternSlot}`, data);
+      } catch (error) {
+        console.error('Network error while saving pattern:', error);
       }
-      const data = await response.json();
-      console.log(`Saved pattern slot ${selectedUserPatternSlot}`, data);
-    } catch (error) {
-      console.error('Network error while saving pattern:', error);
+    }
+    else {
+      const updatedPatterns = [...guestPatterns];
+      updatedPatterns[selectedUserPatternSlot] = grid.map(row => row.map(node => ({ ...node })));
+      setGuestPatterns(updatedPatterns);
     }
   };
 
