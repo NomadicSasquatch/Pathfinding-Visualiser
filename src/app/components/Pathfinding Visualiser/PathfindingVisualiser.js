@@ -49,6 +49,7 @@ export default function PathfindingVisualizer() {
   const [isAlgoEnd, setIsAlgoEnd] = useState(false);
   const [selectedUserPatternSlot, setSelectedUserPatternSlot] = useState(-1);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [guestPatterns, setGuestPatterns] = useState([[grid],[grid],[grid]]);
 
   const isRunningRef = useRef(false);
   const isRunningAlgoRef = useRef(false);
