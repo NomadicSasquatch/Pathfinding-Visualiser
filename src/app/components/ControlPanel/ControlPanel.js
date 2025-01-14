@@ -6,7 +6,7 @@ import Slider from '../Slider/Slider';
 import styles from './ControlPanel.module.css';
 import { DEFAULT_ALGO_DROPDOWN_TEXT  } from '../../config/config';
 
-const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction, selectedAlgorithm, setSelectedAlgorithm, selectedWallPattern, setSelectedWallPattern, hasStart, hasEnd, handleRunButton, handleGenerateWallButton, handleClearPathButton, handleClearWallsButton, handleClearGridButton, isRunningAlgo, isAlgoStart, isAlgoEnd }) => {
+const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction, selectedAlgorithm, setSelectedAlgorithm, selectedWallPattern, setSelectedWallPattern, hasStart, hasEnd, handleRunButton, handleGenerateWallButton, handleClearPathButton, handleClearWallsButton, handleClearGridButton, isRunningAlgo, isAlgoStart, isAlgoEnd, handleLoadButton, handleSaveButton, setSelectedUserPatternSlot }) => {
   const algorithms = [`Breadth-First Search`, `Depth-First Search`, `Greedy Best-First Search`, `A* Algorithm`];
   const patterns = [`Random Maze Pattern`, `Box Pattern`, `Rectangle Fractal Pattern`];
   const defaultWallPatternText = `Select A Wall Pattern`;
@@ -35,13 +35,13 @@ const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction,
           </button>
         </div>
         <div className={styles.thirdGroup}>
-          <Dropdown options={userPatterns} defaultText={`Save/Load Pattern`}>
+          <Dropdown options={userPatterns} defaultText={`Save/Load Pattern`} setSelectedUserPatternSlot={setSelectedUserPatternSlot} isAlgoStart={isAlgoStart} isAlgoEnd={isAlgoEnd} type={2}>
 
           </Dropdown>
-          <button className={styles.button}>
+          <button className={styles.button} onclick = {()=>handleLoadButton} disabled={isAlgoStart}>
             Load Saved Pattern
           </button>
-          <button className={styles.button}>
+          <button className={styles.button} onclick = {()=>handleSaveButton} disabled={isAlgoStart}>
             Save Current Pattern
           </button>
         </div>
