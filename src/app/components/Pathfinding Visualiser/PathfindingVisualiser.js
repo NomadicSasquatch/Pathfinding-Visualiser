@@ -17,11 +17,9 @@ import styles from './PathfindingVisualiser.module.css';
 import { GRID_ROWS, GRID_COLS, DEFAULT_ALGO_DROPDOWN_TEXT } from '../../config/config';
 
 export default function PathfindingVisualizer() {
-  const [grid, setGrid] = useState(() => {
-    const rows = GRID_ROWS;
-    const cols = GRID_COLS;
-    return Array.from({ length: rows }, (_, rowIndex) =>
-      Array.from({ length: cols }, (_, colIndex) => ({
+  const initialiseGrid = () => {
+    return Array.from({ length: GRID_ROWS }, (_, rowIndex) =>
+      Array.from({ length: GRID_COLS }, (_, colIndex) => ({
         row: rowIndex,
         col: colIndex,
         isStart: false,
@@ -37,6 +35,10 @@ export default function PathfindingVisualizer() {
         parent: null,
       }))
     );
+  }
+  
+  const [grid, setGrid] = useState(() => {
+    return initialiseGrid();
   });
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [currentAction, setCurrentAction] = useState('idle');
@@ -49,7 +51,7 @@ export default function PathfindingVisualizer() {
   const [isAlgoEnd, setIsAlgoEnd] = useState(false);
   const [selectedUserPatternSlot, setSelectedUserPatternSlot] = useState(-1);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [guestPatterns, setGuestPatterns] = useState([[grid],[grid],[grid]]);
+  const [guestPatterns, setGuestPatterns] = useState([initialiseGrid(), initialiseGrid(), initialiseGrid()]);
 
   const isRunningRef = useRef(false);
   const isRunningAlgoRef = useRef(false);
@@ -785,7 +787,7 @@ export default function PathfindingVisualizer() {
     }
   }
 
-  const handleLoadButton = async (selectedUserPatternSlot) => {
+  const handleLoadButton = async () => {
     if(isLoggedIn) {
       try {
         const response = await fetch(`http://localhost:4000/api/user/patterns/${selectedUserPatternSlot}`, {
@@ -817,7 +819,7 @@ export default function PathfindingVisualizer() {
     }
   };
 
-  const handleSaveButton = async (selectedUserPatternSlot) => {
+  const handleSaveButton = async () => {
     if(isLoggedIn) {
       try {
         const body = {

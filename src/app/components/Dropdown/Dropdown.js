@@ -22,7 +22,8 @@ const Dropdown = ({ options, defaultText, setSelectedAlgorithm, setSelectedWallP
     else if(type === 2) {
       setSelectedOption(option);
       setIsOpen(false);
-      setSelectedUserPatternSlot(option);
+      setSelectedUserPatternSlot(index);
+      console.log(`selecting as index`, index);
     }
   };
 
