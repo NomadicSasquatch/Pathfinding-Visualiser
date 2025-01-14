@@ -10,7 +10,7 @@ const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction,
   const algorithms = [`Breadth-First Search`, `Depth-First Search`, `Greedy Best-First Search`, `A* Algorithm`];
   const patterns = [`Random Maze Pattern`, `Box Pattern`, `Rectangle Fractal Pattern`];
   const defaultWallPatternText = `Select A Wall Pattern`;
-  const userPatterns = ['Pattern 1', 'Pattern 2', 'Pattern 3'];
+  const userPatterns = [`Pattern 1`, `Pattern 2`, `Pattern 3`];
 
   return (
     <div className={styles.gridPanel}>

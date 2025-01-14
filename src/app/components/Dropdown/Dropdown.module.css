@@ -8,7 +8,7 @@
     cursor: pointer;
     font-size: 24px;
     border-radius: 5px;
-    width: 300px;
+    width: 320px;
     height: 45px;
     align-items: center;
     justify-content: center;
@@ -24,21 +24,25 @@
 }
 
 .dropdownMenu {
+    display: block;
     position: absolute;
     top: 100%;
     left: 0;
-    background-color: white;
+    background-color: black;
     border: 1px solid #ddd;
     border-radius: 4px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     list-style: none;
     padding: 0;
     z-index: 1000;
-    width: 300px;
+    width: 320px;
     align-items: center;
+    justify-content: center;
+    justify-items: center;
 }
 
 .dropdownItem {
+    width: max-content;
+    display: block;
     padding: 10px 20px;
     cursor: pointer;
     font-size: 24px;
@@ -47,5 +51,6 @@
 }
 
 .dropdownItem:hover {
+    display: block;
     background-color: gray;
 }
