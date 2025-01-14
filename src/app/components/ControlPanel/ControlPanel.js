@@ -10,46 +10,62 @@ const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction,
   const algorithms = [`Breadth-First Search`, `Depth-First Search`, `Greedy Best-First Search`, `A* Algorithm`];
   const patterns = [`Random Maze Pattern`, `Box Pattern`, `Rectangle Fractal Pattern`];
   const defaultWallPatternText = `Select A Wall Pattern`;
+  const userPatterns = ['Pattern 1', 'Pattern 2', 'Pattern 3'];
 
   return (
     <div className={styles.gridPanel}>
-      <div className={styles.leftGroup}>
-        <button onClick = {()=>handleSetStartButton()} className={styles.button} disabled={isAlgoStart}>
-          Set Start Node
-        </button>
-        <button onClick = {()=>handleSetEndButton()} className={styles.button} disabled={isAlgoStart}>
-          Set End Node
-        </button>
-        <button onClick = {()=>setCurrentAction('toggleWall')} className={styles.button} disabled={isAlgoStart}>
-          Toggle Wall
-        </button>
-        <Dropdown options={patterns} defaultText={`Select A Wall Pattern`} setSelectedWallPattern={setSelectedWallPattern} isAlgoStart={isAlgoStart} isAlgoEnd={isAlgoEnd} type={0}>
-          
-        </Dropdown>
-        <button onClick = {()=>handleGenerateWallButton()} className={styles.button} disabled={!(defaultWallPatternText.localeCompare(selectedWallPattern)) || isAlgoStart}>
-          Generate Wall Pattern
-        </button>
-        <Dropdown options={algorithms} defaultText={DEFAULT_ALGO_DROPDOWN_TEXT} setSelectedAlgorithm={setSelectedAlgorithm} isAlgoStart={isAlgoStart} isAlgoEnd={isAlgoEnd} type={1}>
+      <div className={styles.topGroup}>
+        <div className={styles.firstGroup}>
+          <button onClick = {()=>handleSetStartButton()} className={styles.button} disabled={isAlgoStart}>
+            Set Start Node
+          </button>
+          <button onClick = {()=>handleSetEndButton()} className={styles.button} disabled={isAlgoStart}>
+            Set End Node
+          </button>
+        </div>
+        <div className={styles.secondGroup}>
+          <button onClick = {()=>setCurrentAction('toggleWall')} className={styles.button} disabled={isAlgoStart}>
+            Toggle Wall
+          </button>
+          <Dropdown options={patterns} defaultText={`Select A Wall Pattern`} setSelectedWallPattern={setSelectedWallPattern} isAlgoStart={isAlgoStart} isAlgoEnd={isAlgoEnd} type={0}>
+            
+          </Dropdown>
+          <button onClick = {()=>handleGenerateWallButton()} className={styles.button} disabled={!(defaultWallPatternText.localeCompare(selectedWallPattern)) || isAlgoStart}>
+            Generate Wall Pattern
+          </button>
+          <Dropdown>
 
-        </Dropdown>
-        <button onClick = {()=>handleRunButton()} className={styles.button} style={{ width: '200px' }} disabled={!(DEFAULT_ALGO_DROPDOWN_TEXT.localeCompare(selectedAlgorithm) && hasStart && hasEnd && !isAlgoEnd)}>
-          {isRunningAlgo ? "Pause Algorithm" : "Run Algorithm"}
-        </button>
-      </div>
-      <div className={styles.rightGroup}>
-        <button onClick = {()=>handleClearPathButton()} disabled={isRunningAlgo} className={styles.button}>
-          Clear Paths
-        </button>
-        <button onClick = {()=>handleClearWallsButton()} disabled={isAlgoStart || isAlgoEnd} className={styles.button}>
-          Clear Walls
-        </button>
-        <button onClick = {()=>handleClearGridButton()} disabled={isRunningAlgo} className={styles.button}>
-          Clear Grid
-        </button>
-        <Slider>
+          </Dropdown>
+          <button>
+            Load Saved Pattern
+          </button>
+          <button>
+            Save Current Pattern
+          </button>
+        </div>
+        <div className={styles.thirdGroup}>
+          <Dropdown options={algorithms} defaultText={DEFAULT_ALGO_DROPDOWN_TEXT} setSelectedAlgorithm={setSelectedAlgorithm} isAlgoStart={isAlgoStart} isAlgoEnd={isAlgoEnd} type={1}>
 
-        </Slider>
+          </Dropdown>
+          <button onClick = {()=>handleRunButton()} className={styles.button} style={{ width: '200px' }} disabled={!(DEFAULT_ALGO_DROPDOWN_TEXT.localeCompare(selectedAlgorithm) && hasStart && hasEnd && !isAlgoEnd)}>
+            {isRunningAlgo ? "Pause Algorithm" : "Run Algorithm"}
+          </button>
+        </div>
+        <div className={styles.fourthGroup}>
+          <button onClick = {()=>handleClearPathButton()} disabled={isRunningAlgo} className={styles.button}>
+            Clear Paths
+          </button>
+          <button onClick = {()=>handleClearWallsButton()} disabled={isAlgoStart || isAlgoEnd} className={styles.button}>
+            Clear Walls
+          </button>
+          <button onClick = {()=>handleClearGridButton()} disabled={isRunningAlgo} className={styles.button}>
+            Clear Grid
+          </button>
+        </div>
       </div>
+      <Slider>
+
+      </Slider>
     </div>
   );
 };

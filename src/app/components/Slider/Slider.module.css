@@ -1,9 +1,8 @@
 .container {
     display: flex;
-    padding-left: 52px;
     align-items: center;
     overflow: visible;
-    gap: 10px;
+    margin-left: 2500px;
 }
 
 .slider {
@@ -11,9 +10,7 @@
     position: relative;
     display: block;
     color: white;
-    top: 10px;
     width: 250px;
-    margin-bottom: 10px;
     cursor: pointer;
 }
 

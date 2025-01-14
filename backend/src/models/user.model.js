@@ -61,7 +61,7 @@ const defaultPatterns = () =>
   Array(3)
     .fill()
     .map((_, index) => ({
-      name: `Default Pattern ${index + 1}`,
+      name: `Pattern ${index + 1}`,
       patternData: generateDefaultGrid(),
     }));
 

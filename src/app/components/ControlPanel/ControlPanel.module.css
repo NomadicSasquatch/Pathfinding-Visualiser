@@ -1,5 +1,6 @@
 .gridPanel {
     display: flex;
+    flex-direction: column;
     gap: 50px;
 }
   
@@ -31,12 +32,27 @@
   cursor: default;
 }
 
-.leftGroup {
+.topGroup {
+  display: flex;
+  width: 2500px;
+}
+
+.firstGroup {
   display: flex;
   justify-content: flex-start;
 }
 
-.rightGroup {
+.secondGroup {
+  display: flex;
+  margin: auto;
+}
+
+.thirdGroup {
+  display: flex;
+  margin: auto;
+}
+
+.fourthGroup {
   display: flex;
   justify-content: flex-end;
 }
