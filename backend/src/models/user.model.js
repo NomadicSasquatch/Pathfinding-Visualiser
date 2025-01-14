@@ -37,6 +37,7 @@ const userSchema = new Schema({
     },
     default: () => defaultPatterns(),
   },
+  index: { type: Number, default: 0},
 });
 
 const generateDefaultGrid = () => {
