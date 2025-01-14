@@ -34,7 +34,7 @@
 
 .topGroup {
   display: flex;
-  width: 2500px;
+  width: 2900px;
 }
 
 .firstGroup {
@@ -53,6 +53,11 @@
 }
 
 .fourthGroup {
+  display: flex;
+  margin: auto;
+}
+
+.fifthGroup {
   display: flex;
   justify-content: flex-end;
 }

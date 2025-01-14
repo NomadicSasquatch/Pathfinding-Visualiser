@@ -33,17 +33,19 @@ const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction,
           <button onClick = {()=>handleGenerateWallButton()} className={styles.button} disabled={!(defaultWallPatternText.localeCompare(selectedWallPattern)) || isAlgoStart}>
             Generate Wall Pattern
           </button>
-          <Dropdown>
+        </div>
+        <div className={styles.thirdGroup}>
+          <Dropdown options={userPatterns} defaultText={`Save/Load Pattern`}>
 
           </Dropdown>
-          <button>
+          <button className={styles.button}>
             Load Saved Pattern
           </button>
-          <button>
+          <button className={styles.button}>
             Save Current Pattern
           </button>
         </div>
-        <div className={styles.thirdGroup}>
+        <div className={styles.fourthGroup}>
           <Dropdown options={algorithms} defaultText={DEFAULT_ALGO_DROPDOWN_TEXT} setSelectedAlgorithm={setSelectedAlgorithm} isAlgoStart={isAlgoStart} isAlgoEnd={isAlgoEnd} type={1}>
 
           </Dropdown>
@@ -51,7 +53,7 @@ const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction,
             {isRunningAlgo ? "Pause Algorithm" : "Run Algorithm"}
           </button>
         </div>
-        <div className={styles.fourthGroup}>
+        <div className={styles.fifthGroup}>
           <button onClick = {()=>handleClearPathButton()} disabled={isRunningAlgo} className={styles.button}>
             Clear Paths
           </button>
