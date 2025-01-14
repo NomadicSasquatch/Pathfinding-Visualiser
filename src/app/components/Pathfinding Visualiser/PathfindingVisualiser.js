@@ -47,7 +47,7 @@ export default function PathfindingVisualizer() {
   const [isRunningAlgo, setIsRunningAlgo] = useState(false);
   const [isAlgoStart, setIsAlgoStart] = useState(false);
   const [isAlgoEnd, setIsAlgoEnd] = useState(false);
-  const [selectedUserPatternSlot, setSelectedUserPatternSlot] = useState(null);
+  const [selectedUserPatternSlot, setSelectedUserPatternSlot] = useState(-1);
   const isRunningRef = useRef(false);
   const isRunningAlgoRef = useRef(false);
 
@@ -783,6 +783,7 @@ export default function PathfindingVisualizer() {
   }
 
   const handleLoadButton = async (selectedUserPatternSlot) => {
+    console.log(`handleloadbutton is pressed`);
     try {
       const response = await fetch(`http://localhost:4000/api/user/patterns/${selectedUserPatternSlot}`, {
         method: 'GET',
@@ -810,6 +811,7 @@ export default function PathfindingVisualizer() {
   };
 
   const handleSaveButton = async (selectedUserPatternSlot) => {
+    console.log(`handlesavebutton is pressed`);
     try {
       const body = {
         name: `Pattern ${selectedUserPatternSlot}`,
@@ -840,7 +842,7 @@ export default function PathfindingVisualizer() {
       <h1 className={styles.h1}>
         Pathfinding Visualiser
       </h1>
-      <ControlPanel handleSetStartButton={handleSetStartButton} handleSetEndButton={handleSetEndButton} setCurrentAction={setCurrentAction} selectedAlgorithm={selectedAlgorithm} setSelectedAlgorithm={setSelectedAlgorithm} selectedWallPattern={selectedWallPattern} setSelectedWallPattern={setSelectedWallPattern} hasStart={hasStart} hasEnd={hasEnd} handleRunButton={handleRunButton} handleGenerateWallButton={handleGenerateWallButton} handleClearPathButton={handleClearPathButton} handleClearWallsButton={handleClearWallsButton} handleClearGridButton={handleClearGridButton} isRunningAlgo={isRunningAlgo} isAlgoStart={isAlgoStart} isAlgoEnd={isAlgoEnd} handleLoadButton={handleLoadButton} handleSaveButton={handleSaveButton} setSelectedUserPatternSlot={setSelectedUserPatternSlot}>
+      <ControlPanel handleSetStartButton={handleSetStartButton} handleSetEndButton={handleSetEndButton} setCurrentAction={setCurrentAction} selectedAlgorithm={selectedAlgorithm} setSelectedAlgorithm={setSelectedAlgorithm} selectedWallPattern={selectedWallPattern} setSelectedWallPattern={setSelectedWallPattern} hasStart={hasStart} hasEnd={hasEnd} handleRunButton={handleRunButton} handleGenerateWallButton={handleGenerateWallButton} handleClearPathButton={handleClearPathButton} handleClearWallsButton={handleClearWallsButton} handleClearGridButton={handleClearGridButton} isRunningAlgo={isRunningAlgo} isAlgoStart={isAlgoStart} isAlgoEnd={isAlgoEnd} handleLoadButton={handleLoadButton} handleSaveButton={handleSaveButton} selectedUserPatternSlot={selectedUserPatternSlot} setSelectedUserPatternSlot={setSelectedUserPatternSlot}>
 
       </ControlPanel>
       <Grid grid={grid} setGrid={setGrid} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseEnter={handleMouseEnter} actionState={currentAction}/>
