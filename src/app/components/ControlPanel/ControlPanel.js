@@ -6,7 +6,7 @@ import Slider from '../Slider/Slider';
 import styles from './ControlPanel.module.css';
 import { DEFAULT_ALGO_DROPDOWN_TEXT  } from '../../config/config';
 
-const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction, selectedAlgorithm, setSelectedAlgorithm, selectedWallPattern, setSelectedWallPattern, hasStart, hasEnd, handleRunButton, handleGenerateWallButton, handleClearPathButton, handleClearWallsButton, handleClearGridButton, isRunningAlgo, isAlgoStart, isAlgoEnd, handleLoadButton, handleSaveButton, selectedUserPatternSlot, setSelectedUserPatternSlot }) => {
+const ControlPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction, selectedAlgorithm, setSelectedAlgorithm, selectedWallPattern, setSelectedWallPattern, hasStart, hasEnd, handleRunButton, handleGenerateWallButton, handleClearPathButton, handleClearWallsButton, handleClearGridButton, isRunningAlgo, isAlgoStart, isAlgoEnd, handleLoadButton, handleSaveButton, selectedUserPatternSlot, setSelectedUserPatternSlot }) => {
   const algorithms = [`Breadth-First Search`, `Depth-First Search`, `Greedy Best-First Search`, `A* Algorithm`];
   const patterns = [`Random Maze Pattern`, `Box Pattern`, `Rectangle Fractal Pattern`];
   const defaultWallPatternText = `Select A Wall Pattern`;
@@ -72,4 +72,4 @@ const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction,
   );
 };
 
-export default GridPanel;
+export default ControlPanel;
