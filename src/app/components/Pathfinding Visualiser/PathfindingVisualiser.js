@@ -48,6 +48,8 @@ export default function PathfindingVisualizer() {
   const [isAlgoStart, setIsAlgoStart] = useState(false);
   const [isAlgoEnd, setIsAlgoEnd] = useState(false);
   const [selectedUserPatternSlot, setSelectedUserPatternSlot] = useState(-1);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const isRunningRef = useRef(false);
   const isRunningAlgoRef = useRef(false);
 
