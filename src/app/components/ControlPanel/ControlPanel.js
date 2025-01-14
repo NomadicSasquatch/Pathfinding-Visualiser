@@ -38,10 +38,10 @@ const GridPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction,
           <Dropdown options={userPatterns} defaultText={`Save/Load Pattern`} setSelectedUserPatternSlot={setSelectedUserPatternSlot} isAlgoStart={isAlgoStart} isAlgoEnd={isAlgoEnd} type={2}>
 
           </Dropdown>
-          <button className={styles.button} onclick = {()=>handleLoadButton} disabled={isAlgoStart}>
+          <button className={styles.button} onClick = {()=>handleLoadButton} disabled={isAlgoStart}>
             Load Saved Pattern
           </button>
-          <button className={styles.button} onclick = {()=>handleSaveButton} disabled={isAlgoStart}>
+          <button className={styles.button} onClick = {()=>handleSaveButton} disabled={isAlgoStart}>
             Save Current Pattern
           </button>
         </div>
