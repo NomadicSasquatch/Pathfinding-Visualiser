@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-// Node Schema (sub-document for grid nodes)
 const nodeSchema = new Schema({
   row: { type: Number, required: true },
   col: { type: Number, required: true },
