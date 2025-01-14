@@ -36,7 +36,7 @@ export default function PathfindingVisualizer() {
       }))
     );
   }
-  
+
   const [grid, setGrid] = useState(() => {
     return initialiseGrid();
   });
@@ -851,6 +851,45 @@ export default function PathfindingVisualizer() {
       setGuestPatterns(updatedPatterns);
     }
   };
+
+  const handleLogin = async () => {
+    try {
+      const res = await fetch('http://localhost:4000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+      if(!res.ok) {
+        const errorData = await res.json();
+        setUserMsg(`Login failed: ${errorData.error || 'Unknown error'}`);
+        return;
+      }
+      const data = await res.json();
+      setToken(data.token);
+      setUserMsg('Login successful!');
+    } catch (err) {
+      setUserMsg(`Network error: ${err.message}`);
+    }
+  }
+
+  const handleSignUp = async () => {
+    try {
+      const res = await fetch('http://localhost:4000/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+      if(!res.ok) {
+        const errorData = await res.json();
+        setUserMsg(`Sign up failed: ${errorData.error || 'Unknown error'}`);
+        return;
+      }
+      const data = await res.json();
+      setUserMsg(data.msg || 'Sign up successful!');
+    } catch (err) {
+      setUserMsg(`Network error: ${err.message}`);
+    }
+  }
 
   return (
     <div className={styles.visualizerContainer}>  
