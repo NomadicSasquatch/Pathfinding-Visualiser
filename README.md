@@ -9,27 +9,22 @@ An engaging, web-based visualiser for pathfinding algorithms, featuring user aut
 3. Prerequisites
 ## 
 ### 1. Key Features
-
 #### Token-Based Authentication
 - Users log in/register with secure JWT tokens.
 - Each user maintains three persistent wall-pattern slots in MongoDB.
 - Guest users can draw and run pathfinding but do not have persistent storage.
 
-
 #### Manual Wall Drawing
 - Grid cells toggle as walls or free space.
 - Bresenham’s Line Algorithm refines the drawing process, making manual wall creation smoother.
-
 
 #### Maze Generation
 - Random Maze, Fractal Maze, and Box Patterns.
 - Fisher-Yates Shuffle for uniform randomization.
 
-
 #### Multiple Algorithms
 - Depth-First Search, Breadth-First Search, Greedy Best-First Search, A Algorithm*.
 - Animations highlight visited nodes, allowing users to observe search behavior in real time.
-
 
 #### Asynchronous Visualization Control
 - Pause, resume, or change animation speed mid-search.
@@ -37,7 +32,6 @@ An engaging, web-based visualiser for pathfinding algorithms, featuring user aut
 
 
 ### 2. Technology Used
-
 #### Frontend
 - React (with Next.js scaffolding)
 - CSS Modules for styling
