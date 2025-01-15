@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Full-Stack Interactive Pathfinding Visualiser
 
-## Getting Started
 
-First, run the development server:
+An engaging, web-based visualiser for pathfinding algorithms, featuring user authentication, customizable wall patterns, and real-time maze generation. Users can register or log in to save up to three unique pattern “slots,” ensuring a personalized experience. Guest users can still explore the visualiser with temporary patterns, which remain until the application is refreshed or closed.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Table of Contents
+1. Key Features
+2. Technology Used
+## 
+### 1. Key Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+#### Token-Based Authentication
+-Users log in/register with secure JWT tokens.
+-Each user maintains three persistent wall-pattern slots in MongoDB.
+-Guest users can draw and run pathfinding but do not have persistent storage.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+#### Manual Wall Drawing
+-Grid cells toggle as walls or free space.
+-Bresenham’s Line Algorithm refines the drawing process, making manual wall creation smoother.
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+#### Maze Generation
+-Random Maze, Fractal Maze, and Box Patterns.
+-Fisher-Yates Shuffle for uniform randomization.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+#### Multiple Algorithms
+-Depth-First Search, Breadth-First Search, Greedy Best-First Search, A Algorithm*.
+-Animations highlight visited nodes, allowing users to observe search behavior in real time.
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+#### Asynchronous Visualization Control
+-Pause, resume, or change animation speed mid-search.
+-Ideal for in-depth analysis or quick overviews of each algorithm.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 2. Technology Used
+
+#### Frontend
+-React (with Next.js scaffolding)
+-CSS Modules for styling
+-JavaScript (ES6+)
+-Heap package for A* open set priority queue
+
+#### Backend
+-Node.js / Express.js
+-MongoDB / Mongoose for data persistence
+-JSON Web Tokens (JWT) for authentication
+
+#### Other
+Cors, dotenv, and other utility libraries
