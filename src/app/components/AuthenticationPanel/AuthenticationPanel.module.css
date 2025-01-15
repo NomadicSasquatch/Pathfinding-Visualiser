@@ -4,6 +4,13 @@
 }
 
 .authButton {
-    color: grey;
+    display: inline-block;
+    color: rgb(163, 162, 162);
     background-color: black;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 5px 5px;
+    margin: 2px;
+    border-radius: 5px;
+    height: 50px;
 }
