@@ -16,6 +16,7 @@ import styles from './PathfindingVisualiser.module.css';
 
 import { GRID_ROWS, GRID_COLS, DEFAULT_ALGO_DROPDOWN_TEXT } from '../../config/config';
 import AuthenticationPanel from '../AuthenticationPanel/AuthenticationPanel';
+import AuthenticationLogic from '../AuthenticationPanel/AuthenticationLogic';
 
 export default function PathfindingVisualizer() {
   const initialiseGrid = () => {
@@ -53,6 +54,9 @@ export default function PathfindingVisualizer() {
   const [selectedUserPatternSlot, setSelectedUserPatternSlot] = useState(-1);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [guestPatterns, setGuestPatterns] = useState([initialiseGrid(), initialiseGrid(), initialiseGrid()]);
+
+  const [authType, setAuthType] = useState('');
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
 
   const isRunningRef = useRef(false);
   const isRunningAlgoRef = useRef(false);
@@ -848,49 +852,10 @@ export default function PathfindingVisualizer() {
     }
     else {
       const updatedPatterns = [...guestPatterns];
-      updatedPatterns[selectedUserPatternSlot] = grid.map(row => row.map(node => ({ ...node })));
+      updatedPatterns[selectedUserPatternSlot] = grid.map(row => row.map(node => ({ ...node }))); //should take the walls only
       setGuestPatterns(updatedPatterns);
     }
   };
-
-  const handleLogin = async () => {
-    try {
-      const res = await fetch('http://localhost:4000/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
-      });
-      if(!res.ok) {
-        const errorData = await res.json();
-        setUserMsg(`Login failed: ${errorData.error || 'Unknown error'}`);
-        return;
-      }
-      const data = await res.json();
-      setToken(data.token);
-      setUserMsg('Login successful!');
-    } catch (err) {
-      setUserMsg(`Network error: ${err.message}`);
-    }
-  }
-
-  const handleSignUp = async () => {
-    try {
-      const res = await fetch('http://localhost:4000/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
-      });
-      if(!res.ok) {
-        const errorData = await res.json();
-        setUserMsg(`Sign up failed: ${errorData.error || 'Unknown error'}`);
-        return;
-      }
-      const data = await res.json();
-      setUserMsg(data.msg || 'Sign up successful!');
-    } catch (err) {
-      setUserMsg(`Network error: ${err.message}`);
-    }
-  }
 
   return (
     <div className={styles.visualizerContainer}>
@@ -898,9 +863,12 @@ export default function PathfindingVisualizer() {
         <h1 className={styles.h1}>
           Pathfinding Visualiser
         </h1>
-        <AuthenticationPanel>
+        <AuthenticationPanel setAuthType={setAuthType} setIsAuthOpen={setIsAuthOpen}>
 
         </AuthenticationPanel>
+        <AuthenticationLogic authType={authType} setAuthType={setAuthType} isAuthOpen={isAuthOpen} setIsAuthOpen={setIsAuthOpen}>
+
+        </AuthenticationLogic>
       </div>
       <ControlPanel handleSetStartButton={handleSetStartButton} handleSetEndButton={handleSetEndButton} setCurrentAction={setCurrentAction} selectedAlgorithm={selectedAlgorithm} setSelectedAlgorithm={setSelectedAlgorithm} selectedWallPattern={selectedWallPattern} setSelectedWallPattern={setSelectedWallPattern} hasStart={hasStart} hasEnd={hasEnd} handleRunButton={handleRunButton} handleGenerateWallButton={handleGenerateWallButton} handleClearPathButton={handleClearPathButton} handleClearWallsButton={handleClearWallsButton} handleClearGridButton={handleClearGridButton} isRunningAlgo={isRunningAlgo} isAlgoStart={isAlgoStart} isAlgoEnd={isAlgoEnd} handleLoadButton={handleLoadButton} handleSaveButton={handleSaveButton} selectedUserPatternSlot={selectedUserPatternSlot} setSelectedUserPatternSlot={setSelectedUserPatternSlot}>
 
