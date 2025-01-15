@@ -1,7 +1,7 @@
-# Full-Stack Interactive Pathfinding Visualizer
+# Full-Stack Interactive Pathfinding Visualiser
 
 
-An engaging, web-based visualizer for pathfinding algorithms, featuring user authentication, customizable wall patterns, and real-time maze generation. Users can register or log in to save up to three unique pattern “slots,” ensuring a personalized experience. Guest users can still explore the visualizer with temporary patterns, which remain until the application is refreshed or closed.
+An engaging, web-based visualiser for pathfinding algorithms, featuring user authentication, customizable wall patterns, and real-time maze generation. Users can register or log in to save up to three unique pattern “slots,” ensuring a personalized experience. Guest users can still explore the visualiser with temporary patterns, which remain until the application is refreshed or closed.
 
 ## Table of Contents
 1. Key Features
