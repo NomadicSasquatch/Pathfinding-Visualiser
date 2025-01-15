@@ -28,7 +28,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-jsconfig.js
+jsconfig.json
 next.config.mjs
-package-lock.js
+package-lock.json
 package.json
