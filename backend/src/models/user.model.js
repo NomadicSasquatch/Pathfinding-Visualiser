@@ -57,12 +57,13 @@ const generateDefaultGrid = () => {
   );
 }
 
-const defaultPatterns = () =>
-  Array(3)
+const defaultPatterns = () => {
+  return Array(3)
     .fill()
     .map((_, index) => ({
       name: `Pattern ${index + 1}`,
       patternData: generateDefaultGrid(),
     }));
+  }
 
 module.exports = mongoose.model('User', userSchema);

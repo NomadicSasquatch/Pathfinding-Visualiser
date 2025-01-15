@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import styles from './AuthenticationLogic.module.css';
 
-const AuthenticationLogic = ({ authType, setAuthType, isAuthOpen, setIsAuthOpen }) => {
+const AuthenticationLogic = ({ authType, setAuthType, isAuthOpen, setIsAuthOpen, setIsLoggedIn }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
@@ -36,7 +36,8 @@ const AuthenticationLogic = ({ authType, setAuthType, isAuthOpen, setIsAuthOpen 
         } else {
           if (authType === 'login') {
             setMessage('Login successful!');
-            setToken(data.token);
+            setIsLoggedIn(true);
+            localStorage.setItem('token', data.token);
           } else {
             setMessage(data.msg || 'Registration successful!');
           }
@@ -78,6 +79,9 @@ const AuthenticationLogic = ({ authType, setAuthType, isAuthOpen, setIsAuthOpen 
           </form>
     
           {message && <p className={styles.message}>{message}</p>}
+        </div>
+        <div>
+            {username}
         </div>
       </div>
     );

@@ -791,7 +791,7 @@ export default function PathfindingVisualizer() {
       }
     }
   }
-
+  //there should be a current user display
   const handleLoadButton = async () => {
     if(isLoggedIn) {
       try {
@@ -802,17 +802,20 @@ export default function PathfindingVisualizer() {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         });
+        console.log('Status:', response.status);
+        console.log(`Response: `, response);
         if(!response.ok) {
           const err = await response.json();
           console.error('Load pattern error:', err);
           return;
         }
         const data = await response.json(); 
-    
-        if(data.pattern && Array.isArray(data.pattern.patternData)) {
-          setGrid(data.pattern.patternData);
+
+        if(data.pattern && Array.isArray(data.pattern.grid)) {
+          setGrid(data.pattern.grid);
           console.log(`Loaded pattern slot ${selectedUserPatternSlot}`);
         } else {
+          console.log(`the pattern is`, data.pattern);
           console.error('Invalid pattern data from server');
         }
       } catch (error) {
@@ -826,10 +829,11 @@ export default function PathfindingVisualizer() {
 
   const handleSaveButton = async () => {
     if(isLoggedIn) {
+      console.log(selectedUserPatternSlot);
       try {
         const body = {
           name: `Pattern ${selectedUserPatternSlot}`,
-          patternData: grid
+          grid: grid
         };
         const response = await fetch(`http://localhost:4000/api/user/patterns/${selectedUserPatternSlot}`, {
           method: 'PUT',
@@ -866,7 +870,7 @@ export default function PathfindingVisualizer() {
         <AuthenticationPanel setAuthType={setAuthType} setIsAuthOpen={setIsAuthOpen}>
 
         </AuthenticationPanel>
-        <AuthenticationLogic authType={authType} setAuthType={setAuthType} isAuthOpen={isAuthOpen} setIsAuthOpen={setIsAuthOpen}>
+        <AuthenticationLogic authType={authType} setAuthType={setAuthType} isAuthOpen={isAuthOpen} setIsAuthOpen={setIsAuthOpen} setIsLoggedIn={setIsLoggedIn}>
 
         </AuthenticationLogic>
       </div>

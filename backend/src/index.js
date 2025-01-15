@@ -13,7 +13,8 @@ mongoose.connect(process.env.MONGO_URI).then(() => console.log('Database connect
 
 // Middleware
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '5mb' }));
+
 
 // Routes
 app.use('/api/auth', authRoutes);
