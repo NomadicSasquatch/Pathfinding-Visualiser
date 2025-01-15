@@ -3,7 +3,7 @@ const User = require('../models/user.model');
 exports.getAllPatterns = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('patterns');
-    if (!user) {
+    if(!user) {
       return res.status(404).json({ error: 'User not found' });
     }
     res.json({ patterns: user.patterns });
@@ -12,23 +12,21 @@ exports.getAllPatterns = async (req, res) => {
   }
 };
 
-// Loads one pattern from the specified slot [0,2] using  GET /api/user/patterns/:slot
 exports.getPatternBySlot = async (req, res) => {
   try {
     const slot = parseInt(req.params.slot, 10);
-    if (slot < 0 || slot > 2) {
+    if(slot < 0 || slot > 2) {
       return res.status(400).json({ error: 'Slot must be 0, 1, or 2' });
     }
 
-    // Now fetch from DB
     const { userId } = req.user;
     const userDoc = await User.findById(userId);
-    if (!userDoc) {
+    if(!userDoc) {
       return res.status(404).json({ error: 'User not found' });
     }
 
     const pattern = userDoc.patterns[slot];
-    if (!pattern) {
+    if(!pattern) {
       return res.status(404).json({ error: `No pattern at slot ${slot}` });
     }
     res.json({ pattern });
@@ -40,23 +38,22 @@ exports.getPatternBySlot = async (req, res) => {
 exports.savePatternBySlot = async (req, res) => {
   try {
     const slot = parseInt(req.params.slot, 10);
-    if (slot < 0 || slot > 2) {
+    if(slot < 0 || slot > 2) {
       return res.status(400).json({ error: 'Slot must be 0, 1, or 2' });
     }
 
     const { name, grid } = req.body;
-    console.log(`debugger`, name);
-    if (!name || !Array.isArray(grid)) {
+    if(!name || !Array.isArray(grid)) {
       return res.status(400).json({ error: 'Invalid pattern data' });
     }
 
     const { userId } = req.user; 
-    if (!userId) {
+    if(!userId) {
       return res.status(400).json({ error: 'No user ID in token payload' });
     }
 
     const userDoc = await User.findById(userId);
-    if (!userDoc) {
+    if(!userDoc) {
       return res.status(404).json({ error: 'User not found' });
     }
     

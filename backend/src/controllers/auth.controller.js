@@ -7,7 +7,7 @@ exports.register = async (req, res) => {
     const { username, password } = req.body;
 
     const existingUser = await User.findOne({ username });
-    if (existingUser) {
+    if(existingUser) {
       return res.status(400).json({ error: 'User already exists.' });
     }
 
@@ -26,12 +26,12 @@ exports.login = async (req, res) => {
   try {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
-    if (!user) {
+    if(!user) {
       return res.status(400).json({ error: 'Invalid credentials.' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
+    if(!isMatch) {
       return res.status(400).json({ error: 'Invalid credentials.' });
     }
 
