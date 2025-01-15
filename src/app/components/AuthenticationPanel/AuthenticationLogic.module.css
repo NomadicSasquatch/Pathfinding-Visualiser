@@ -1,0 +1,35 @@
+.authWindow {
+    position: fixed;
+    top: 20%;
+    left: 40%;
+    width: 500px;
+    height: 300px;
+    background-color: black;
+    justify-content: center;
+    align-items: center;
+}
+
+.topRow {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 80px;
+}
+
+.closeButton {
+    justify-content: flex-end;
+}
+
+.displayHeader {
+    justify-content: flex-start;
+}
+
+.authContent {
+    justify-content: center;
+    font-size: 24px;
+}
+
+.formGroup {
+    justify-content: space-between;
+    gap: 1000px;
+    font-size: 24px;
+}

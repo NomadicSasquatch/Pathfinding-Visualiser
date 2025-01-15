@@ -48,12 +48,12 @@ const AuthenticationLogic = ({ authType, setAuthType, isAuthOpen, setIsAuthOpen 
     
     return ( 
         isAuthOpen &&
-      <div className={styles.modalOverlay}>
-        <div className={styles.modalContent}>
-          <button onClick={()=>handleClose()} className={styles.closeButton}>X</button>
-    
-          <h2>{authType === 'login' ? 'Login' : 'Register'}</h2>
-    
+      <div className={styles.authWindow}>
+        <div>
+            <div className={styles.topRow}>
+            <h2 className={styles.displayHeader}>{authType === 'login' ? 'Login' : 'Register'}</h2>
+            <button onClick={()=>handleClose()} className={styles.closeButton}>X</button>
+          </div>
           <form onSubmit={handleSubmit}>
             <div className={styles.formGroup}>
               <label>Username:</label>
@@ -72,7 +72,7 @@ const AuthenticationLogic = ({ authType, setAuthType, isAuthOpen, setIsAuthOpen 
                 className={styles.input}
               />
             </div>
-            <button type="submit" className={styles.submitButton}>
+            <button type="submit" style={{marginLeft: 250}}>
               {authType === 'login' ? 'Login' : 'Sign Up'}
             </button>
           </form>
