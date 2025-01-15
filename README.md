@@ -6,7 +6,7 @@ An engaging, web-based visualizer for pathfinding algorithms, featuring user aut
 ## Table of Contents
 1. Key Features
 2. Technology Used
-
+## 
 ### 1. Key Features
 
 #### Token-Based Authentication
