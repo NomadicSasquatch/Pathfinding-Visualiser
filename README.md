@@ -43,7 +43,7 @@ An engaging, web-based visualiser for pathfinding algorithms, featuring user aut
 - Heap package for A* open set priority queue
 
 #### Backend
- -Node.js / Express.js
+- Node.js / Express.js
 - MongoDB / Mongoose for data persistence
 - JSON Web Tokens (JWT) for authentication
 
