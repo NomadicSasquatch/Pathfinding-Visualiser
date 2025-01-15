@@ -6,6 +6,7 @@ An engaging, web-based visualiser for pathfinding algorithms, featuring user aut
 ## Table of Contents
 1. Key Features
 2. Technology Used
+3. Prerequisites
 ## 
 ### 1. Key Features
 
@@ -34,6 +35,7 @@ An engaging, web-based visualiser for pathfinding algorithms, featuring user aut
 - Pause, resume, or change animation speed mid-search.
 - Ideal for in-depth analysis or quick overviews of each algorithm.
 
+
 ### 2. Technology Used
 
 #### Frontend
@@ -49,3 +51,12 @@ An engaging, web-based visualiser for pathfinding algorithms, featuring user aut
 
 #### Other
 - Cors, dotenv, and other utility libraries
+
+
+### 3. Prerequisites
+- Node.js (v14 or later) installed globally
+- npm (comes with Node.js) or yarn package manager
+- MongoDB:
+Local installation, or
+Access to a cloud-hosted MongoDB cluster (e.g., MongoDB Atlas)
+
