@@ -3,7 +3,6 @@
 - gradient
 - collapsible path comparison
 - fixed sets of wall patterns to choose from
-- scaling issue
 - tutorial/walkthrough that can runs on first render and when user clicks on the tutorial button
 */
 
