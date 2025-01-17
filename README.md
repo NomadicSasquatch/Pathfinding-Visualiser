@@ -18,25 +18,27 @@ An engaging, web-based visualiser for pathfinding algorithms, featuring user aut
 #### Manual Wall Drawing
 - Grid cells toggle as walls or free space.
 - Bresenham’s Line Algorithm refines the drawing process, making manual wall creation smoother.
+![2025-01-1715-21-26-ezgif com-speed](https://github.com/user-attachments/assets/0b32d949-a9be-481e-b0bd-89fcaefced91)
+
 
 #### Maze Generation
 - Fractal Maze, derived from Box Patterns(which is a maze pattern on itself).
-![image](https://github.com/user-attachments/assets/553b7f6f-4d4a-4421-b996-85b27a5b6674)
+![2025-01-1715-19-12-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/93b87516-013a-4f0d-a6d3-c46b5715836c)
 - Fisher-Yates Shuffle for uniform randomization of random maze pattern.
-![image](https://github.com/user-attachments/assets/28b2cd80-74f9-45fb-9a45-0d1b2f5b4128)
+![2025-01-1715-14-19-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/6d265583-8a30-48b6-bab0-d5bf0453bc23)
+
 
 
 
 #### Multiple Algorithms
 - Depth-First Search, Breadth-First Search, Greedy Best-First Search, A Algorithm*.
 - Animations highlight visited nodes, allowing users to observe search behavior in real time.
-![image](https://github.com/user-attachments/assets/2f9ce7cf-91e1-4316-97ff-77dcfecb9365)
-
 
 #### Asynchronous Visualization Control
 - Pause, resume, or change animation speed mid-search.
 - Ideal for in-depth analysis or quick overviews of each algorithm.
 
+![2025-01-1715-27-12-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/8c88afa5-874f-4553-a436-ba54171e8dbe)
 
 ### 2. Technology Used
 #### Frontend
