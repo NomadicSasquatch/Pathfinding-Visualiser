@@ -7,6 +7,7 @@ An engaging, web-based visualiser for pathfinding algorithms, featuring user aut
 1. Key Features
 2. Technology Used
 3. Prerequisites
+4. Installation and Running
 ## 
 ### 1. Key Features
 #### Token-Based Authentication
@@ -19,12 +20,18 @@ An engaging, web-based visualiser for pathfinding algorithms, featuring user aut
 - Bresenham’s Line Algorithm refines the drawing process, making manual wall creation smoother.
 
 #### Maze Generation
-- Random Maze, Fractal Maze, and Box Patterns.
-- Fisher-Yates Shuffle for uniform randomization.
+- Fractal Maze, derived from Box Patterns(which is a maze pattern on itself).
+![image](https://github.com/user-attachments/assets/553b7f6f-4d4a-4421-b996-85b27a5b6674)
+- Fisher-Yates Shuffle for uniform randomization of random maze pattern.
+![image](https://github.com/user-attachments/assets/28b2cd80-74f9-45fb-9a45-0d1b2f5b4128)
+
+
 
 #### Multiple Algorithms
 - Depth-First Search, Breadth-First Search, Greedy Best-First Search, A Algorithm*.
 - Animations highlight visited nodes, allowing users to observe search behavior in real time.
+![image](https://github.com/user-attachments/assets/2f9ce7cf-91e1-4316-97ff-77dcfecb9365)
+
 
 #### Asynchronous Visualization Control
 - Pause, resume, or change animation speed mid-search.
@@ -54,3 +61,33 @@ An engaging, web-based visualiser for pathfinding algorithms, featuring user aut
 Local installation, or
 Access to a cloud-hosted MongoDB cluster (e.g., MongoDB Atlas)
 
+
+### 4. Installation and Running
+1. Clone the repository
+```
+git clone https://github.com/NomadicSasquatch/pathfinder.git
+cd pathfinder
+```
+2. Install Dependencies
+   - Frontend
+     ```
+     npm install
+     ```
+   - Backend
+     ```
+     cd backend
+     npm install
+     ```
+3. Configure Environment
+   - In /backend create an .env file that contains the MONGOURI, a key and a port number
+4. Start the Backend
+   ```
+   cd backend
+   npm run dev
+   ```
+5. Start the Frontend
+   ```
+   cd ../src
+   npm run dev
+   ```
+   
