@@ -65,9 +65,6 @@ const ControlPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentActi
           </button>
         </div>
       </div>
-      <Slider>
-
-      </Slider>
     </div>
   );
 };

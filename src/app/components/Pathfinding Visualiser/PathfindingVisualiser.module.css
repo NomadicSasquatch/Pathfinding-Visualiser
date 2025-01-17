@@ -13,4 +13,9 @@
   width: 3000px;
   display: flex;
   justify-content: space-between;
+  margin-bottom: 25px;
+}
+
+.sliderGroup {
+  margin-right: 300px;
 }

@@ -16,6 +16,7 @@ import styles from './PathfindingVisualiser.module.css';
 import { GRID_ROWS, GRID_COLS, DEFAULT_ALGO_DROPDOWN_TEXT } from '../../config/config';
 import AuthenticationPanel from '../AuthenticationPanel/AuthenticationPanel';
 import AuthenticationLogic from '../AuthenticationPanel/AuthenticationLogic';
+import Slider from '../Slider/Slider';
 
 export default function PathfindingVisualizer() {
   const initialiseGrid = () => {
@@ -866,6 +867,11 @@ export default function PathfindingVisualizer() {
         <h1 className={styles.h1}>
           Pathfinding Visualiser
         </h1>
+        <div className={styles.sliderGroup}>
+          <Slider>
+
+          </Slider>
+          </div>
         <AuthenticationPanel setAuthType={setAuthType} setIsAuthOpen={setIsAuthOpen}>
 
         </AuthenticationPanel>
