@@ -6,11 +6,22 @@ import Slider from '../Slider/Slider';
 import styles from './ControlPanel.module.css';
 import { DEFAULT_ALGO_DROPDOWN_TEXT  } from '../../config/config';
 
-const ControlPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction, selectedAlgorithm, setSelectedAlgorithm, selectedWallPattern, setSelectedWallPattern, hasStart, hasEnd, handleRunButton, handleGenerateWallButton, handleClearPathButton, handleClearWallsButton, handleClearGridButton, isRunningAlgo, isAlgoStart, isAlgoEnd, handleLoadButton, handleSaveButton, selectedUserPatternSlot, setSelectedUserPatternSlot }) => {
+const ControlPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentAction, wallToggleFlag, setWallToggleFlag, selectedAlgorithm, setSelectedAlgorithm, selectedWallPattern, setSelectedWallPattern, hasStart, hasEnd, handleRunButton, handleGenerateWallButton, handleClearPathButton, handleClearWallsButton, handleClearGridButton, isRunningAlgo, isAlgoStart, isAlgoEnd, handleLoadButton, handleSaveButton, selectedUserPatternSlot, setSelectedUserPatternSlot }) => {
   const algorithms = [`Breadth-First Search`, `Depth-First Search`, `Greedy Best-First Search`, `A* Algorithm`];
+  const wallToggleModes = [`Toggle Wall`, `Toggle Node`];
   const patterns = [`Random Maze Pattern`, `Box Pattern`, `Rectangle Fractal Pattern`];
   const defaultWallPatternText = `Select A Wall Pattern`;
   const userPatterns = [`Pattern 1`, `Pattern 2`, `Pattern 3`];
+
+  const handleWallToggle = () => {
+    if(wallToggleFlag === 0) {
+      setWallToggleFlag(1);
+    }
+    else {
+      setWallToggleFlag(0);
+    }
+    setCurrentAction('toggleWall');
+  }
 
   return (
     <div className={styles.gridPanel}>
@@ -24,8 +35,8 @@ const ControlPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentActi
           </button>
         </div>
         <div className={styles.secondGroup}>
-          <button onClick = {()=>setCurrentAction('toggleWall')} className={styles.button} disabled={isAlgoStart}>
-            Toggle Wall
+          <button onClick = {()=>handleWallToggle() } className={styles.button} disabled={isAlgoStart}>
+            {wallToggleModes[wallToggleFlag]}
           </button>
           <Dropdown options={patterns} defaultText={`Select A Wall Pattern`} setSelectedWallPattern={setSelectedWallPattern} isAlgoStart={isAlgoStart} isAlgoEnd={isAlgoEnd} type={0}>
             

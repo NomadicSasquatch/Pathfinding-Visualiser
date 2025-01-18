@@ -44,6 +44,7 @@ export default function PathfindingVisualizer() {
   });
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [currentAction, setCurrentAction] = useState('idle');
+  const [wallToggleFlag, setWallToggleFlag] = useState(0);
   const [selectedAlgorithm, setSelectedAlgorithm] = useState(DEFAULT_ALGO_DROPDOWN_TEXT);
   const [selectedWallPattern, setSelectedWallPattern] = useState(`Select A Wall Pattern`);
   const [hasStart, setHasStart] = useState(null);
@@ -114,6 +115,8 @@ export default function PathfindingVisualizer() {
         const flag = handleNodeState(row, col, 'isWall');
         visitedDuringDragRef.current.add(`${row},${col}`);
         if(flag === 1) {
+          grid[row][col].isWall = (wallToggleFlag === 1)? true : false;
+          setGrid([...grid]);
           mouseOpQueue.current.push([row, col]);
         }
         break;
@@ -156,12 +159,13 @@ export default function PathfindingVisualizer() {
             setGrid([...grid]);
             break;
           }
+          grid[row][col].isWall = (wallToggleFlag === 1)? true : false;
           if(mouseOpQueue.current.length !== 0) {
             const [curX, curY] = mouseOpQueue.current.shift();
-            patchWalls(grid[curX][curY], grid[row][col]);
+            patchWalls(grid[curX][curY], grid[row][col], wallToggleFlag);
           }
           else {
-            patchWalls(grid[row][col], grid[row][col]);
+            patchWalls(grid[row][col], grid[row][col], wallToggleFlag);
           }
           mouseOpQueue.current.push([row,col]);
           setGrid([...grid]);
@@ -196,11 +200,11 @@ export default function PathfindingVisualizer() {
     const y2 = node2.col;
   
     if(x1 === x2 && y1 === y2) {
-      grid[x1][y1].isWall = true;
+      grid[x1][y1].isWall = (wallToggleFlag === 1)? true : false;
       return;
     }
     if(Math.abs(x2 - x1) <= 1 && Math.abs(y2 - y1) <= 1) {
-      grid[x2][y2].isWall = true;
+      grid[x2][y2].isWall = (wallToggleFlag === 1)? true : false;
       return;
     }
   
@@ -212,7 +216,7 @@ export default function PathfindingVisualizer() {
     let err = dx + dy;
   
     while(true) {
-      grid[x1][y1].isWall = true;
+      grid[x1][y1].isWall = (wallToggleFlag === 1)? true : false;
   
       if(x1 === x2 && y1 === y2) {
         break;
@@ -879,7 +883,7 @@ export default function PathfindingVisualizer() {
 
         </AuthenticationLogic>
       </div>
-      <ControlPanel handleSetStartButton={handleSetStartButton} handleSetEndButton={handleSetEndButton} setCurrentAction={setCurrentAction} selectedAlgorithm={selectedAlgorithm} setSelectedAlgorithm={setSelectedAlgorithm} selectedWallPattern={selectedWallPattern} setSelectedWallPattern={setSelectedWallPattern} hasStart={hasStart} hasEnd={hasEnd} handleRunButton={handleRunButton} handleGenerateWallButton={handleGenerateWallButton} handleClearPathButton={handleClearPathButton} handleClearWallsButton={handleClearWallsButton} handleClearGridButton={handleClearGridButton} isRunningAlgo={isRunningAlgo} isAlgoStart={isAlgoStart} isAlgoEnd={isAlgoEnd} handleLoadButton={handleLoadButton} handleSaveButton={handleSaveButton} selectedUserPatternSlot={selectedUserPatternSlot} setSelectedUserPatternSlot={setSelectedUserPatternSlot}>
+      <ControlPanel handleSetStartButton={handleSetStartButton} handleSetEndButton={handleSetEndButton} setCurrentAction={setCurrentAction} wallToggleFlag={wallToggleFlag} setWallToggleFlag={setWallToggleFlag} selectedAlgorithm={selectedAlgorithm} setSelectedAlgorithm={setSelectedAlgorithm} selectedWallPattern={selectedWallPattern} setSelectedWallPattern={setSelectedWallPattern} hasStart={hasStart} hasEnd={hasEnd} handleRunButton={handleRunButton} handleGenerateWallButton={handleGenerateWallButton} handleClearPathButton={handleClearPathButton} handleClearWallsButton={handleClearWallsButton} handleClearGridButton={handleClearGridButton} isRunningAlgo={isRunningAlgo} isAlgoStart={isAlgoStart} isAlgoEnd={isAlgoEnd} handleLoadButton={handleLoadButton} handleSaveButton={handleSaveButton} selectedUserPatternSlot={selectedUserPatternSlot} setSelectedUserPatternSlot={setSelectedUserPatternSlot}>
 
       </ControlPanel>
       <Grid grid={grid} setGrid={setGrid} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseEnter={handleMouseEnter} actionState={currentAction}/>
