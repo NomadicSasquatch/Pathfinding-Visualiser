@@ -827,7 +827,11 @@ export default function PathfindingVisualizer() {
       }
     }
     else {
-      setGrid(guestPatterns[selectedUserPatternSlot]);
+      // make a deep copy of desired grid within guest users, don't shallow copy the entire array
+      const tmpPatterns = guestPatterns[selectedUserPatternSlot].map(row =>
+        row.map(node => ({ ...node }))
+      );
+      setGrid(tmpPatterns);
     }
   };
 
