@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import Node from "../Node/Node";
 import styles from "./Grid.module.css";
 

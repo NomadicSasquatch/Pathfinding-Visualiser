@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Dropdown from '../Dropdown/Dropdown';
-import Slider from '../Slider/Slider';
 import styles from './ControlPanel.module.css';
 import { DEFAULT_ALGO_DROPDOWN_TEXT  } from '../../config/config';
 
