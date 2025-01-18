@@ -74,7 +74,7 @@ const AuthenticationLogic = ({ authType, setAuthType, isAuthOpen, setIsAuthOpen,
               />
             </div>
             <button type="submit" style={{marginLeft: 250}}>
-              {authType === 'login' ? 'Login' : 'Sign Up'}
+              {authType === 'login' ? 'Login' : 'Sign In'}
             </button>
           </form>
     

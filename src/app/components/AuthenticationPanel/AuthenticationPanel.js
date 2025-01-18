@@ -20,7 +20,7 @@ const AuthenticationPanel = ({ setAuthType, setIsAuthOpen}) => {
                 Log In
             </button>
             <button onClick={()=>handleSignIn()} className={styles.authButton}>
-                Sign Up
+                Sign In
             </button>
         </div>
     );
