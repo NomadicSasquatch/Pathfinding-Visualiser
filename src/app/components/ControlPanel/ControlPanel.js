@@ -35,7 +35,7 @@ const ControlPanel = ({ handleSetStartButton, handleSetEndButton, setCurrentActi
           </button>
         </div>
         <div className={styles.secondGroup}>
-          <button onClick = {()=>handleWallToggle() } className={styles.button} disabled={isAlgoStart}>
+          <button onClick = {()=>handleWallToggle() } className={styles.button} style={{width: 150}} disabled={isAlgoStart}>
             {wallToggleModes[wallToggleFlag]}
           </button>
           <Dropdown options={patterns} defaultText={`Select A Wall Pattern`} setSelectedWallPattern={setSelectedWallPattern} isAlgoStart={isAlgoStart} isAlgoEnd={isAlgoEnd} type={0}>
