@@ -33,7 +33,7 @@ const AuthenticationLogic = ({ authType, setAuthType, isAuthOpen, setIsAuthOpen,
       e.preventDefault();
     
       let endpoint;
-      if (authType === 'login') {
+      if(authType === 'login') {
         endpoint = 'http://localhost:4000/api/auth/login';
       } else {
         endpoint = 'http://localhost:4000/api/auth/register';
@@ -47,16 +47,19 @@ const AuthenticationLogic = ({ authType, setAuthType, isAuthOpen, setIsAuthOpen,
         });
         const data = await res.json();
     
-        if (!res.ok) {
+        if(!res.ok) {
           setMessage(data.error || 'Something went wrong');
         } else {
-          if (authType === 'login') {
+          if(authType === 'login') {
             setMessage('Login successful!');
             setIsLoggedIn(true);
             localStorage.setItem('token', data.token);
           } else {
             setMessage(data.msg || 'Registration successful!');
           }
+          setTimeout(()=> {
+            handleClose();
+          }, 3000);
         }
       } catch (error) {
         setMessage(`Network error: ${error.message}`);
