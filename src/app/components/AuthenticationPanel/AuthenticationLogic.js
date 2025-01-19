@@ -16,20 +16,6 @@ const AuthenticationLogic = ({ authType, setAuthType, isAuthOpen, setIsAuthOpen,
         setPassword('');
     }
     
-    // only window can be interacted with
-    useEffect(() => {
-      if (isAuthOpen) {
-        setTimeout(() => {
-          const focusableElements = document.querySelectorAll(
-            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-          );
-          if (focusableElements.length) {
-            focusableElements[0].focus();
-          }
-        }, 1000); // or 50ms if needed
-      }
-    }, [isAuthOpen]);
-    
     // so window can be closed using esc 
     useEffect(() => {
       const handleKeyDown = (e) => {
@@ -79,39 +65,41 @@ const AuthenticationLogic = ({ authType, setAuthType, isAuthOpen, setIsAuthOpen,
     
     return ( 
         isAuthOpen &&
-      <div className={styles.authWindow}>
-        <div>
-            <div className={styles.topRow}>
-            <h2 className={styles.displayHeader}>{authType === 'login' ? 'Login' : 'Register'}</h2>
-            <button onClick={()=>handleClose()} className={styles.closeButton}>X</button>
+      <div className={styles.modalBackdrop}>
+        <div className={styles.authWindow}>
+          <div>
+              <div className={styles.topRow}>
+              <h2 className={styles.displayHeader}>{authType === 'login' ? 'Login' : 'Register'}</h2>
+              <button onClick={()=>handleClose()} className={styles.closeButton}>X</button>
+            </div>
+            <form onSubmit={handleSubmit}>
+              <div className={styles.formGroup}>
+                <label>Username:</label>
+                <input
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className={styles.input}
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label>Password:</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={styles.input}
+                />
+              </div>
+              <button type="submit" style={{marginLeft: 250}}>
+                {authType === 'login' ? 'Login' : 'Sign In'}
+              </button>
+            </form>
+      
+            {message && <p className={styles.message}>{message}</p>}
           </div>
-          <form onSubmit={handleSubmit}>
-            <div className={styles.formGroup}>
-              <label>Username:</label>
-              <input
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className={styles.input}
-              />
-            </div>
-            <div className={styles.formGroup}>
-              <label>Password:</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className={styles.input}
-              />
-            </div>
-            <button type="submit" style={{marginLeft: 250}}>
-              {authType === 'login' ? 'Login' : 'Sign In'}
-            </button>
-          </form>
-    
-          {message && <p className={styles.message}>{message}</p>}
-        </div>
-        <div>
-            {username}
+          <div>
+              {username}
+          </div>
         </div>
       </div>
     );
