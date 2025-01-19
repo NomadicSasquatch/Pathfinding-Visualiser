@@ -3,15 +3,17 @@
 import React from 'react';
 import styles from './AuthenticationPanel.module.css';
 
-const AuthenticationPanel = ({ setAuthType, setIsAuthOpen}) => {
+const AuthenticationPanel = ({ handleRunButton, setAuthType, setIsAuthOpen}) => {
     const handleLogin = () => {
         setAuthType(`login`);
         setIsAuthOpen(true);
+        handleRunButton();
     }
 
     const handleSignIn = () => {
         setAuthType(`signin`);
         setIsAuthOpen(true);
+        handleRunButton();
     }
 
     return (

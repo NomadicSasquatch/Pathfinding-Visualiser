@@ -427,6 +427,7 @@ export default function PathfindingVisualizer() {
   };
 
   const runBFS = () => {
+    console.log(`debug`, isRunningRef.current);
     const newGrid = grid.map((row) => row.map((node) => ({ ...node })));
     let front = 0;
     let rear = 0;
@@ -864,7 +865,7 @@ export default function PathfindingVisualizer() {
     }
     else {
       const updatedPatterns = [...guestPatterns];
-      updatedPatterns[selectedUserPatternSlot] = grid.map(row => row.map(node => ({ ...node }))); //should take the walls only
+      updatedPatterns[selectedUserPatternSlot] = grid.map(row => row.map(node => ({ ...node })));
       setGuestPatterns(updatedPatterns);
     }
   };
@@ -880,10 +881,10 @@ export default function PathfindingVisualizer() {
 
           </Slider>
           </div>
-        <AuthenticationPanel setAuthType={setAuthType} setIsAuthOpen={setIsAuthOpen}>
+        <AuthenticationPanel handleRunButton={handleRunButton} setAuthType={setAuthType} setIsAuthOpen={setIsAuthOpen}>
 
         </AuthenticationPanel>
-        <AuthenticationLogic authType={authType} setAuthType={setAuthType} isAuthOpen={isAuthOpen} setIsAuthOpen={setIsAuthOpen} setIsLoggedIn={setIsLoggedIn}>
+        <AuthenticationLogic handleRunButton={handleRunButton} authType={authType} setAuthType={setAuthType} isAuthOpen={isAuthOpen} setIsAuthOpen={setIsAuthOpen} setIsLoggedIn={setIsLoggedIn}>
 
         </AuthenticationLogic>
       </div>
