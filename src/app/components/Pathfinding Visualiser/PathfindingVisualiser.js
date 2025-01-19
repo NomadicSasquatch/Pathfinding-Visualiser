@@ -870,6 +870,10 @@ export default function PathfindingVisualizer() {
     }
   };
 
+  const handleRunByChild = (val) => {
+    isRunningRef.current = val;
+  }
+
   return (
     <div className={styles.visualizerContainer}>
       <div className={styles.headerRow}>
@@ -881,7 +885,7 @@ export default function PathfindingVisualizer() {
 
           </Slider>
           </div>
-        <AuthenticationPanel handleRunButton={handleRunButton} setAuthType={setAuthType} setIsAuthOpen={setIsAuthOpen}>
+        <AuthenticationPanel handleRunByChild={handleRunByChild} handleRunButton={handleRunButton} setAuthType={setAuthType} setIsAuthOpen={setIsAuthOpen}>
 
         </AuthenticationPanel>
         <AuthenticationLogic handleRunButton={handleRunButton} authType={authType} setAuthType={setAuthType} isAuthOpen={isAuthOpen} setIsAuthOpen={setIsAuthOpen} setIsLoggedIn={setIsLoggedIn}>
