@@ -6,7 +6,8 @@ import styles from './AuthenticationLogic.module.css';
 const AuthenticationLogic = ({ hasStart, hasEnd, isAlgoStart, handleRunButton, authType, setAuthType, isAuthOpen, setIsAuthOpen, setIsLoggedIn }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [message, setMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [passMessage, setPassMessage] = useState('');
 
     const handleClose = () => {
         if(hasStart && hasEnd && isAlgoStart) {
@@ -14,10 +15,21 @@ const AuthenticationLogic = ({ hasStart, hasEnd, isAlgoStart, handleRunButton, a
         }
         setIsAuthOpen(false);
         setAuthType('');
-        setMessage('');
+        setErrorMessage('');
+        setPassMessage('');
         setUsername('');
         setPassword('');
     }
+
+    useEffect(() => {
+      if(passMessage || errorMessage) {
+        const timeout = setTimeout(() => {
+          setErrorMessage('');
+          setPassMessage('');
+        }, 3000);
+        return () => clearTimeout(timeout);
+      }
+    }, [passMessage, errorMessage]);
     
     // so window can be closed using esc 
     useEffect(() => {
@@ -51,21 +63,21 @@ const AuthenticationLogic = ({ hasStart, hasEnd, isAlgoStart, handleRunButton, a
         const data = await res.json();
     
         if(!res.ok) {
-          setMessage(data.error || 'Something went wrong');
+          setErrorMessage(data.error || 'Something went wrong');
         } else {
           if(authType === 'login') {
-            setMessage('Login successful!');
+            setPassMessage('Login successful!');
             setIsLoggedIn(true);
             localStorage.setItem('token', data.token);
           } else {
-            setMessage(data.msg || 'Registration successful!');
+            setPassMessage(data.msg || 'Registration successful!');
           }
           setTimeout(()=> {
             handleClose();
           }, 3000);
         }
       } catch (error) {
-        setMessage(`Network error: ${error.message}`);
+        setErrorMessage(`Network error: ${error.message}`);
       }
     }
     
@@ -75,7 +87,7 @@ const AuthenticationLogic = ({ hasStart, hasEnd, isAlgoStart, handleRunButton, a
         <div className={styles.authWindow}>
           <div>
               <div className={styles.topRow}>
-              <h2 className={styles.displayHeader}>{authType === 'login' ? 'Login' : 'Register'}</h2>
+              <h2 className={styles.displayHeader}>{authType === 'login' ? 'Log In' : 'Sign In'}</h2>
               <button onClick={()=>handleClose()} className={styles.closeButton}>X</button>
             </div>
             <form onSubmit={handleSubmit}>
@@ -101,7 +113,8 @@ const AuthenticationLogic = ({ hasStart, hasEnd, isAlgoStart, handleRunButton, a
               </button>
             </form>
       
-            {message && <p className={styles.message}>{message}</p>}
+            {passMessage && <p className={styles.passMessage}>{passMessage}</p>}
+            {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
           </div>
         </div>
       </div>

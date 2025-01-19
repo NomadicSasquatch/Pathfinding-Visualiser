@@ -81,9 +81,16 @@
     font-size: 26px;
 }
 
-.message {
+.errorMessage {
     font-size: 20px;
-    margin-left: 275px;
+    margin-left: 320px;
     margin-top: 20px;
     color: rgb(255, 0, 0);
+}
+
+.passMessage {
+    font-size: 20px;
+    margin-left: 320px;
+    margin-top: 20px;
+    color: rgb(0, 255, 0);
 }
