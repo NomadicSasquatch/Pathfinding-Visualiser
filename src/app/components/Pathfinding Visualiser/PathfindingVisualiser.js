@@ -798,10 +798,9 @@ export default function PathfindingVisualizer() {
   }
   //there should be a current user display
   const handleLoadButton = async () => {
-    const newGrid = grid.map((row) =>
-      row.map((node) => ({ ...node, isVisited: false, waveIndex: -1, isStart: false, isEnd: false, isInFinalPath: false, gCost: Infinity, hCost: Infinity, fCost: Infinity, parent: null}))
-    );
-    setGrid(newGrid);
+    handleClearPathButton();
+    setHasStart(null);
+    setHasEnd(null);
     if(isLoggedIn) {
       try {
         const response = await fetch(`http://localhost:4000/api/user/patterns/${selectedUserPatternSlot}`, {
@@ -841,12 +840,16 @@ export default function PathfindingVisualizer() {
   };
 
   const handleSaveButton = async () => {
+    const newGrid = grid.map((row) =>
+      row.map((node) => ({ ...node, isVisited: false, waveIndex: -1, isStart: false, isEnd: false, isInFinalPath: false, gCost: Infinity, hCost: Infinity, fCost: Infinity, parent: null}))
+    );
+    resetDataStructs();
     if(isLoggedIn) {
       console.log(selectedUserPatternSlot);
       try {
         const body = {
           name: `Pattern ${selectedUserPatternSlot}`,
-          grid: grid
+          grid: newGrid
         };
         const response = await fetch(`http://localhost:4000/api/user/patterns/${selectedUserPatternSlot}`, {
           method: 'PUT',
@@ -889,10 +892,10 @@ export default function PathfindingVisualizer() {
 
           </Slider>
           </div>
-        <AuthenticationPanel hasStart={hasStart} hasEnd={hasEnd} handleRunByChild={handleRunByChild} handleRunButton={handleRunButton} setAuthType={setAuthType} setIsAuthOpen={setIsAuthOpen}>
+        <AuthenticationPanel hasStart={hasStart} hasEnd={hasEnd} isAlgoStart={isAlgoStart} handleRunByChild={handleRunByChild} handleRunButton={handleRunButton} setAuthType={setAuthType} setIsAuthOpen={setIsAuthOpen}>
 
         </AuthenticationPanel>
-        <AuthenticationLogic hasStart={hasStart} hasEnd={hasEnd} handleRunButton={handleRunButton} authType={authType} setAuthType={setAuthType} isAuthOpen={isAuthOpen} setIsAuthOpen={setIsAuthOpen} setIsLoggedIn={setIsLoggedIn}>
+        <AuthenticationLogic hasStart={hasStart} hasEnd={hasEnd} isAlgoStart={isAlgoStart} handleRunButton={handleRunButton} authType={authType} setAuthType={setAuthType} isAuthOpen={isAuthOpen} setIsAuthOpen={setIsAuthOpen} setIsLoggedIn={setIsLoggedIn}>
 
         </AuthenticationLogic>
       </div>

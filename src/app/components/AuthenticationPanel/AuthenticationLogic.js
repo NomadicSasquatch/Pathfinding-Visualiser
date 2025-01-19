@@ -3,13 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import styles from './AuthenticationLogic.module.css';
 
-const AuthenticationLogic = ({ hasStart, hasEnd, handleRunButton, authType, setAuthType, isAuthOpen, setIsAuthOpen, setIsLoggedIn }) => {
+const AuthenticationLogic = ({ hasStart, hasEnd, isAlgoStart, handleRunButton, authType, setAuthType, isAuthOpen, setIsAuthOpen, setIsLoggedIn }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
 
     const handleClose = () => {
-        if(hasStart && hasEnd) {
+        if(hasStart && hasEnd && isAlgoStart) {
           handleRunButton();
         }
         setIsAuthOpen(false);

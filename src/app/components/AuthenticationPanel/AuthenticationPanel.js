@@ -3,11 +3,11 @@
 import React from 'react';
 import styles from './AuthenticationPanel.module.css';
 
-const AuthenticationPanel = ({ hasStart, hasEnd, handleRunByChild, handleRunButton, setAuthType, setIsAuthOpen}) => {
+const AuthenticationPanel = ({ hasStart, hasEnd, isAlgoStart, handleRunByChild, handleRunButton, setAuthType, setIsAuthOpen}) => {
     const handleLogin = () => {
         setAuthType(`login`);
         setIsAuthOpen(true);
-        if(hasStart && hasEnd) {
+        if(hasStart && hasEnd && isAlgoStart) {
             handleRunByChild(true);
             handleRunButton();
         }
@@ -16,7 +16,7 @@ const AuthenticationPanel = ({ hasStart, hasEnd, handleRunByChild, handleRunButt
     const handleSignIn = () => {
         setAuthType(`signin`);
         setIsAuthOpen(true);
-        if(hasStart && hasEnd) {
+        if(hasStart && hasEnd && isAlgoStart) {
             handleRunByChild(true);
             handleRunButton();
         }
