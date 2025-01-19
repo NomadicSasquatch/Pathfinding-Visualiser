@@ -112,9 +112,10 @@ const AuthenticationLogic = ({ hasStart, hasEnd, isAlgoStart, handleRunButton, a
                 {authType === 'login' ? 'Login' : 'Sign In'}
               </button>
             </form>
-      
-            {passMessage && <p className={styles.passMessage}>{passMessage}</p>}
-            {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
+            <div className={styles.messageContainer}>
+              {passMessage && <p className={styles.passMessage}>{passMessage}</p>}
+              {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
+            </div>
           </div>
         </div>
       </div>

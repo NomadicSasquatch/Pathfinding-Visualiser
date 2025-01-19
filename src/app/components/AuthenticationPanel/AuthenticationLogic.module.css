@@ -81,16 +81,23 @@
     font-size: 26px;
 }
 
+.messageContainer {
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
 .errorMessage {
     font-size: 20px;
-    margin-left: 320px;
     margin-top: 20px;
     color: rgb(255, 0, 0);
+    font-weight: bold;
 }
 
 .passMessage {
     font-size: 20px;
-    margin-left: 320px;
     margin-top: 20px;
     color: rgb(0, 255, 0);
+    font-weight: bold;
 }
