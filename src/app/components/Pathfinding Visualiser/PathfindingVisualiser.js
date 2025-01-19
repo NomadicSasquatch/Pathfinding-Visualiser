@@ -798,6 +798,10 @@ export default function PathfindingVisualizer() {
   }
   //there should be a current user display
   const handleLoadButton = async () => {
+    const newGrid = grid.map((row) =>
+      row.map((node) => ({ ...node, isVisited: false, waveIndex: -1, isStart: false, isEnd: false, isInFinalPath: false, gCost: Infinity, hCost: Infinity, fCost: Infinity, parent: null}))
+    );
+    setGrid(newGrid);
     if(isLoggedIn) {
       try {
         const response = await fetch(`http://localhost:4000/api/user/patterns/${selectedUserPatternSlot}`, {
