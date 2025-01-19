@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './AuthenticationLogic.module.css';
 
 const AuthenticationLogic = ({ authType, setAuthType, isAuthOpen, setIsAuthOpen, setIsLoggedIn }) => {
@@ -11,7 +11,37 @@ const AuthenticationLogic = ({ authType, setAuthType, isAuthOpen, setIsAuthOpen,
     const handleClose = () => {
         setIsAuthOpen(false);
         setAuthType('');
+        setMessage('');
+        setUsername('');
+        setPassword('');
     }
+    
+    // only window can be interacted with
+    useEffect(() => {
+      if (isAuthOpen) {
+        setTimeout(() => {
+          const focusableElements = document.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          );
+          if (focusableElements.length) {
+            focusableElements[0].focus();
+          }
+        }, 1000); // or 50ms if needed
+      }
+    }, [isAuthOpen]);
+    
+    // so window can be closed using esc 
+    useEffect(() => {
+      const handleKeyDown = (e) => {
+        if(e.key === 'Escape' && isAuthOpen) {
+          handleClose();
+        }
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [isAuthOpen, handleClose]);
+  
+    if(!isAuthOpen) return null;
     
     const handleSubmit = async (e) => {
       e.preventDefault();
