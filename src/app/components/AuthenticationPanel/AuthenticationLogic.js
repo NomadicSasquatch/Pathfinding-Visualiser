@@ -88,7 +88,7 @@ const AuthenticationLogic = ({ hasStart, hasEnd, isAlgoStart, handleRunButton, a
                 />
               </div>
               <div className={styles.formGroup}>
-                <label>Password:</label>
+                <label style={{paddingRight: 7}}>Password:</label>
                 <input
                   type="password"
                   value={password}
@@ -96,15 +96,12 @@ const AuthenticationLogic = ({ hasStart, hasEnd, isAlgoStart, handleRunButton, a
                   className={styles.input}
                 />
               </div>
-              <button type="submit" style={{marginLeft: 250}}>
+              <button type="submit" className={styles.button}>
                 {authType === 'login' ? 'Login' : 'Sign In'}
               </button>
             </form>
       
             {message && <p className={styles.message}>{message}</p>}
-          </div>
-          <div>
-              {username}
           </div>
         </div>
       </div>
