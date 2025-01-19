@@ -885,10 +885,10 @@ export default function PathfindingVisualizer() {
 
           </Slider>
           </div>
-        <AuthenticationPanel handleRunByChild={handleRunByChild} handleRunButton={handleRunButton} setAuthType={setAuthType} setIsAuthOpen={setIsAuthOpen}>
+        <AuthenticationPanel hasStart={hasStart} hasEnd={hasEnd} handleRunByChild={handleRunByChild} handleRunButton={handleRunButton} setAuthType={setAuthType} setIsAuthOpen={setIsAuthOpen}>
 
         </AuthenticationPanel>
-        <AuthenticationLogic handleRunButton={handleRunButton} authType={authType} setAuthType={setAuthType} isAuthOpen={isAuthOpen} setIsAuthOpen={setIsAuthOpen} setIsLoggedIn={setIsLoggedIn}>
+        <AuthenticationLogic hasStart={hasStart} hasEnd={hasEnd} handleRunButton={handleRunButton} authType={authType} setAuthType={setAuthType} isAuthOpen={isAuthOpen} setIsAuthOpen={setIsAuthOpen} setIsLoggedIn={setIsLoggedIn}>
 
         </AuthenticationLogic>
       </div>

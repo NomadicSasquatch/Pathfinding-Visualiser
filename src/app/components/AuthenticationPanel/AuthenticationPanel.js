@@ -3,19 +3,23 @@
 import React from 'react';
 import styles from './AuthenticationPanel.module.css';
 
-const AuthenticationPanel = ({ handleRunByChild, handleRunButton, setAuthType, setIsAuthOpen}) => {
+const AuthenticationPanel = ({ hasStart, hasEnd, handleRunByChild, handleRunButton, setAuthType, setIsAuthOpen}) => {
     const handleLogin = () => {
         setAuthType(`login`);
         setIsAuthOpen(true);
-        handleRunByChild(true);
-        handleRunButton();
+        if(hasStart && hasEnd) {
+            handleRunByChild(true);
+            handleRunButton();
+        }
     }
 
     const handleSignIn = () => {
         setAuthType(`signin`);
         setIsAuthOpen(true);
-        handleRunByChild(true);
-        handleRunButton();
+        if(hasStart && hasEnd) {
+            handleRunByChild(true);
+            handleRunButton();
+        }
     }
 
     return (
