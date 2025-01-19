@@ -80,3 +80,10 @@
 .input {
     font-size: 26px;
 }
+
+.message {
+    font-size: 20px;
+    margin-left: 275px;
+    margin-top: 20px;
+    color: rgb(255, 0, 0);
+}
