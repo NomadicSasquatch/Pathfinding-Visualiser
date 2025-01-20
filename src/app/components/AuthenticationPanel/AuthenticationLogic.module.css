@@ -17,9 +17,9 @@
     left: 36%;
     width: 800px;
     height: 500px;
-    background-color: rgb(91, 91, 91);
-    border: solid #0057b3;
-    border-width: 8px;
+    background-color: rgb(91, 91, 91);;
+    border: solid white;
+    border-width: 2px;
     border-radius: 10px;
     justify-content: center;
     align-items: center;
@@ -30,6 +30,8 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 140px;
+    background-color: #0057b3;
+    height: 45px;
 }
 
 .closeButton {
