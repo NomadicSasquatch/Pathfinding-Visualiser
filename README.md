@@ -60,9 +60,7 @@ An engaging, web-based visualiser for pathfinding algorithms, featuring user aut
 ### 3. Prerequisites
 - Node.js (v14 or later) installed globally
 - npm (comes with Node.js) or yarn package manager
-- MongoDB:
-Local installation, or
-Access to a cloud-hosted MongoDB cluster (e.g., MongoDB Atlas)
+- MongoDB: Local installation, or access to a cloud-hosted MongoDB cluster (e.g., MongoDB Atlas)
 
 
 ### 4. Installation and Running
