@@ -1,4 +1,3 @@
-  //test
   /* Step-wise BFS, animate while executing --> too slow */
   // const initBFS = () => {
   //   if(hasStart && hasEnd) {
