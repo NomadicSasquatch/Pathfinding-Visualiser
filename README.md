@@ -71,10 +71,10 @@ An engaging, web-based visualiser for pathfinding algorithms, featuring user aut
 
 ### 4. Installation and Running
 1. Clone the repository
-```
-git clone https://github.com/NomadicSasquatch/pathfinder.git
-cd pathfinder
-```
+   ```
+   git clone https://github.com/NomadicSasquatch/pathfinder.git
+   cd pathfinder
+   ```
 2. Install Dependencies
    - Frontend
      ```
